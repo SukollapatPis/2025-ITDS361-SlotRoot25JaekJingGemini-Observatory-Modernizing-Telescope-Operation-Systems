@@ -1,5 +1,5 @@
 # Usecase Diagram
-<img width="2198" height="3782" alt="software design drawio" src="https://github.com/user-attachments/assets/47a4c0f1-ffd7-4ee8-8d0e-0faeb9b30d90" />
+<img width="2218" height="3432" alt="soiftware design drawio" src="https://github.com/user-attachments/assets/302c1dfe-dfa7-4c13-b399-821af703c52c" />
 
 # 5 selected usecases
 1. สร้าง science plan

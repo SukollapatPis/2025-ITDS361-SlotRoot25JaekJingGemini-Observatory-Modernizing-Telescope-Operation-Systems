@@ -224,9 +224,7 @@
           <li>Astronomer ตรวจสอบรายละเอียดสรุป</li>
           <li>Astronomer กดปุ่ม "Submit"</li>
           <li>System ทำการตรวจสอบความครบถ้วนของข้อมูลขั้นสุดท้าย</li>
-          <li>System เปลี่ยนสถานะของ Science Plan จาก "Draft" เป็น "Submitted"</li>
-          <li>System บันทึกเวลาการส่ง และแจ้ง Science Observer ว่ามี Science Plan ใหม่รอการตรวจสอบ</li>
-          <li>System แสดงข้อความยืนยันว่า "ส่ง Science Plan เรียบร้อยแล้ว"</li>
+          <li>System เปลี่ยนสถานะของ Science Plan จาก "Draft" เป็น "Submitted" บันทึกเวลาการส่ง แจ้ง Science Observer ว่ามี Science Plan ใหม่รอการตรวจสอบ และแสดงข้อความยืนยันว่า "ส่ง Science Plan เรียบร้อยแล้ว"</li>
         </ol>
     </td>
   </tr>

@@ -304,7 +304,7 @@
         <ol>
           <li>Science Observer เลือกเมนูรายการ Science Plan ที่มีสถานะ "Submitted"</li>
           <li>System แสดงรายการ Science Plan ที่รอการตรวจสอบ</li>
-          <li>Science Observer เลือก Science Plan เพื่อดูรายละเอียด</li>
+          <li>Science Observer เลือก Science Plan</li>
           <li>System แสดงรายละเอียดของ Science Plan รวมถึงพารามิเตอร์และผลการทดสอบ</li>
           <li>Science Observer ทำการประเมินความปลอดภัยของอุปกรณ์และความเหมาะสมของ Science Plan</li>
           <li>Science Observer กด "Approve" เพื่อยืนยันการตรวจสอบ และให้ข้อเสนอแนะ</li>

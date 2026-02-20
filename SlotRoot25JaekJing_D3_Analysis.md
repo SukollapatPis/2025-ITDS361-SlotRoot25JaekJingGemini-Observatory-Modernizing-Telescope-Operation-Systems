@@ -199,7 +199,7 @@
   </tr>
   <tr>
     <td colspan="3">
-      <strong>Trigger: </strong>Astronomer กดปุ่ม "Submit" บน Science Plan ที่บันทึกไว้
+      <strong>Trigger: </strong>Astronomer ต้องการ Submit Science Plan ที่บันทึกไว้
       <br>
       <strong>Type: </strong>External
     </td>

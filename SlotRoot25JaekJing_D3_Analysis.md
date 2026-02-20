@@ -239,7 +239,7 @@
     <td colspan="3">
       <strong>Alternate/Exceptional Flow: </strong>
       <ul>
-        <li><b>4e ผู้ใช้ยกเลิกการส่ง:</b> System ปิดหน้าต่างยืนยันและ Science Plan ยังคงสถานะ "Draft"</li>
+        <li><b>3e ผู้ใช้ยกเลิกการส่ง:</b> System ปิดหน้าต่างยืนยันและ Science Plan ยังคงสถานะ "Draft"</li>
         <li><b>5a1 ข้อมูลไม่ครบ:</b> System ตรวจพบข้อมูลที่จำเป็นยังไม่ครบ จึงทำการไฮไลต์ช่องที่ขาด แสดงข้อความแจ้งเตือนและไม่อนุญาตให้ส่ง, Use case กลับไปยังขั้นตอนที่ 2 </li>
         <li><b>5a2 ข้อมูลผิดเงื่อนไขทางเทคนิค:</b> System ตรวจพบ Logical Conflict จึงทำการแสดง Error Message และคงสถานะของ Science Plan ไว้ที่ "Draft", Use case กลับไปยังขั้นตอนที่ 2 </li>
         <li><b>5a3 ระบบตรวจพบค่าที่ควรปรับปรุง:</b>System จะแสดง Warning แต่ยอมให้เลือก "Submit anyway" เพื่อดำเนินการต่อได้</li>

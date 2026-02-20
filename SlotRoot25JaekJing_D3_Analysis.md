@@ -342,6 +342,81 @@
 
 # UC-05: Create an observing program
 ## Usecase description 
+<table border="1" width="100%">
+  <tr>
+    <td><strong>Use Case Name:</strong> Create an observing program</td>
+    <td><strong>ID:</strong> UC-05</td>
+    <td><strong>Importance Level:</strong> High</td>
+  </tr>
+  <tr>
+    <td><strong>Primary Actor:</strong> Science Observer</td>
+    <td colspan="2">
+      <strong>Use Case Type:</strong> Detail and Real</td>
+  </tr>
+  <tr>
+    <td colspan="3">
+      <strong>Stakeholders and Interests:</strong> 
+      <br>
+      <pre><b>Science Observer: </b>ต้องการสร้าง Observing Program จาก Science Plan ที่อนุมัติแล้ว ให้พร้อมใช้งานในการสังเกตจริง โดยคงเจตนาของแผนและลดความเสี่ยงในการรันผิดพลาด</pre>
+       <pre><b>Telescope Operator:  </b>ต้องการโปรแกรมที่รันได้จริง มีข้อมูลครบ และตรวจสอบย้อนกลับได้ว่ามาจาก Science Plan ใด</pre>
+      </td>
+  </tr>
+  <tr>
+    <td colspan="3">
+      <strong>Brief Description: </strong>
+      <br>
+      <pre>Science Observer แปลง Science Plan ที่ผ่านการอนุมัติแล้วให้เป็น Observing Program เพื่อเตรียมสำหรับการรันจริง</pre>
+  </tr>
+  <tr>
+    <td colspan="3">
+      <strong>Trigger: </strong>Science Observer เปิดรายการ Science Plan ที่ผ่านการอนุมัติ และเลือกแผนเพื่อเริ่มสร้าง Observing Program
+      <br>
+      <strong>Type: </strong>External
+    </td>
+  </tr>
+  <tr>
+    <td colspan="3">
+      <strong>Relationships: </strong> 
+      <pre>
+        <b>Association: </b>Science Observer
+        <b>Include: </b>-
+        <b>Extend: </b>-
+        <b>Generalization</b>-
+      </pre>
+    </td>
+  </tr>
+  <tr>
+    <td colspan="3">
+      <strong>Normal Flow of Events: </strong>
+        <ol>
+          <li>System แสดงรายการ Science Plan ที่มีสถานะ "Validated"</li>
+          <li>Science Observer เลือก Science Plan และกดปุ่ม "Transform to Observing Program"</li>
+          <li>System แปลงข้อมูลจาก Science Plan เพื่อสร้าง Observing Program แบบร่าง</li>
+          <li>System แสดงรายละเอียดของ Observing Program ที่สร้างขึ้น</li>
+          <li>Science Observer ตรวจสอบและปรับแก้รายละเอียดที่จำเป็น</li>
+          <li>Science Observer กด "Save"</li>
+          <li>System ตรวจสอบความครบถ้วนและความถูกต้องของข้อมูล</li>
+          <li>System บันทึก Observing Program และกำหนดสถานะเป็น "Draft" พร้อมแสดงข้อความยืนยัน</li>
+        </ol>
+    </td>
+  </tr>
+  <tr>
+    <td colspan="3">
+      <strong>Subflow: </strong>-
+    </td>
+  </tr>
+  <tr>
+    <td colspan="3">
+      <strong>Alternate/Exceptional Flow: </strong>
+      <ul>
+        <li><b>2a Science Plan มี Version Conflict:</b> System แจ้งว่า "Source plan changed" และให้ Science Observer ทำการ Reload ก่อน, Use case กลับไปขั้นตอนที่ 1</li>
+        <li><b>3a แปลงข้อมูลล้มเหลว:</b> System ไม่สามารถสร้าง Observing Program จาก Science Plan ได้ จึงทำการแสดงข้อความ "Create failed"</li>
+        <li><b>7a ตรวจพบจุดเสี่ยง:</b> System แจ้งเตือนจุดเสี่ยง แต่อนุญาตให้ Science Observer เลือก "Approve anyway" เพื่อไปขั้นตอนที่ 8 ต่อได้</li>
+        <li><b>8e บันทึกข้อมูลล้มเหลว:</b> System ไม่สามารถบันทึกข้อมูลได้ จึงทำการแสดงข้อความว่าไม่สามารถบันทึกได้</li>
+      </ul>
+    </td>
+  </tr>
+</table>
 
 ## Activity diagram
 

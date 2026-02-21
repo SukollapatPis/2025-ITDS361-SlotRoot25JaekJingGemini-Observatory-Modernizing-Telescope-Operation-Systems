@@ -323,7 +323,6 @@
       <strong>Alternate/Exceptional Flow: </strong>
       <ul>
         <li><b>2a Science Plan มี Version Conflict:</b> Science Plan ถูกอัปเดตใหม่ขณะกำลังเปิดดู System แจ้งเตือนและบังคับให้ Reload ข้อมูลล่าสุด, Use case กลับไปยังขั้นตอนที่ 1</li>
-        <li><b>4a อุปกรณ์เปลี่ยนสถานะ:</b> System แจ้งเตือนว่าอุปกรณ์ที่ระบุใน Science Plan ไม่พร้อมใช้งาน และไม่อนุญาตให้ดำเนินการอนุมัติ</li>
         <li><b>7a1 ตรวจพบจุดเสี่ยง:</b> System แจ้งเตือนจุดเสี่ยง แต่อนุญาตให้ Science Observer เลือก "Approve anyway" เพื่อไปขั้นตอนที่ 8 ต่อได้</li>
         <li><b>7a2 ข้อมูลไม่สมบูรณ์หรือขัดแย้ง:</b> System แสดงรายการ Error แบบชี้จุด และเปลี่ยนสถานะเป็น "Needs Revision"</li>
         <li><b>8e บันทึกข้อมูลล้มเหลว:</b> System ไม่สามารถบันทึกข้อมูลได้ จึงทำการแสดงข้อความ "Validation could not be saved" และคงสถานะของ Science Plan ไว้ที่ "Submitted"</li>

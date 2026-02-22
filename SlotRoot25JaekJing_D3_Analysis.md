@@ -143,7 +143,7 @@
             </ol>
           </li>
           <li>System จำลองการสังเกต แสดง Interactive Visualization และตรวจสอบข้อจำกัดทางกายภาพโดยอัตโนมัติ</li>
-          <li>System แสดง Simulation Result พร้อมสถานะ "ผ่าน" และรายละเอียด Log</li>
+          <li>System แสดง Simulation Result พร้อมสถานะ "ผ่าน"</li>
           <li>Astronomer ดูผลลัพธ์และกดปุ่ม “Confirm Result” เพื่อบันทึกสถานะผลการทดสอบ</li>
         </ol>
     </td>

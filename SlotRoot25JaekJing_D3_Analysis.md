@@ -437,6 +437,5 @@
 <img width="987" height="1643" alt="image" src="https://github.com/user-attachments/assets/d8d52c18-fafc-491e-86d0-0c7d236b8dcf" />
 
 ## Sequence diagram
-<img width="2118" height="3425" alt="UC-05" src="https://github.com/user-attachments/assets/f110c95e-da0b-4d82-944b-37250d577e28" />
-
+<img width="1799" height="3099" alt="UC-05" src="https://github.com/user-attachments/assets/148b2d1a-00ab-459c-a71a-360b6b429405" />
 ---

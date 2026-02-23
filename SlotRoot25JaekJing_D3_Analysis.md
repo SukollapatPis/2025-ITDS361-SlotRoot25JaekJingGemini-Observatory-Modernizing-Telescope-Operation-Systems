@@ -82,10 +82,10 @@
 </table>
 
 ## Activity diagram
-<img width="853" height="1303" alt="image" src="https://github.com/user-attachments/assets/01fcd23b-3fbf-45a8-ae17-26fd960f9bc5" />
+<img width="753" height="1325" alt="image" src="https://github.com/user-attachments/assets/9079ec76-9e40-47d9-a743-0a40844efaad" />
 
 ## Sequence diagram
-<img width="2532" height="3099" alt="UC-01" src="https://github.com/user-attachments/assets/5143e55c-032f-4de4-b633-31420824bcf1" />
+<img width="1843" height="2296" alt="UC-01" src="https://github.com/user-attachments/assets/35cd7f38-eb97-47b9-8d3e-503427ebc5d9" />
 
 ---
 

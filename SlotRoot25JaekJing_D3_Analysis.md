@@ -1,5 +1,5 @@
 # Class diagram
-
+<img width="1238" height="1448" alt="image" src="https://github.com/user-attachments/assets/30f1ea8f-a6ba-4e4f-b3bc-5bf8ba4d9e18" />
 ---
 
 # UC-01: Create a science plan
@@ -82,8 +82,10 @@
 </table>
 
 ## Activity diagram
+<img width="853" height="1303" alt="image" src="https://github.com/user-attachments/assets/01fcd23b-3fbf-45a8-ae17-26fd960f9bc5" />
 
 ## Sequence diagram
+<img width="2532" height="3099" alt="UC-01" src="https://github.com/user-attachments/assets/5143e55c-032f-4de4-b633-31420824bcf1" />
 
 ---
 
@@ -169,8 +171,10 @@
 </table>
 
 ## Activity diagram
+<img width="672" height="1359" alt="image" src="https://github.com/user-attachments/assets/468b6108-7d67-4cb9-a014-d59c3d039005" />
 
 ## Sequence diagram
+<img width="2244" height="2296" alt="UC-02" src="https://github.com/user-attachments/assets/82419000-5128-479f-8814-2d8692c022be" />
 
 ---
 
@@ -254,8 +258,10 @@
 </table>
 
 ## Activity diagram
+<img width="886" height="1393" alt="image" src="https://github.com/user-attachments/assets/e812a31e-4234-42ec-855c-d62d546703a1" />
 
 ## Sequence diagram
+<img width="2183" height="2804" alt="UC-03" src="https://github.com/user-attachments/assets/09f728a0-731b-4c46-a29a-30e7f6633db4" />
 
 ---
 
@@ -340,8 +346,10 @@
 </table>
 
 ## Activity diagram
+<img width="966" height="1695" alt="image" src="https://github.com/user-attachments/assets/f18bbb1f-40b4-4228-b7ab-201b79d3dff2" />
 
 ## Sequence diagram
+<img width="1789" height="3425" alt="UC-04" src="https://github.com/user-attachments/assets/d91fb56b-4e20-4086-9c70-ead24cbc8aa8" />
 
 ---
 
@@ -426,7 +434,9 @@
 </table>
 
 ## Activity diagram
+<img width="987" height="1643" alt="image" src="https://github.com/user-attachments/assets/d8d52c18-fafc-491e-86d0-0c7d236b8dcf" />
 
 ## Sequence diagram
+<img width="2118" height="3425" alt="UC-05" src="https://github.com/user-attachments/assets/f110c95e-da0b-4d82-944b-37250d577e28" />
 
 ---

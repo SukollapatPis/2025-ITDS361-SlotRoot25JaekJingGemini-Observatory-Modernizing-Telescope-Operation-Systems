@@ -1,5 +1,6 @@
 # Class diagram
 <img width="1238" height="1448" alt="image" src="https://github.com/user-attachments/assets/30f1ea8f-a6ba-4e4f-b3bc-5bf8ba4d9e18" />
+
 ---
 
 # UC-01: Create a science plan
@@ -85,7 +86,7 @@
 <img width="753" height="1325" alt="image" src="https://github.com/user-attachments/assets/9079ec76-9e40-47d9-a743-0a40844efaad" />
 
 ## Sequence diagram
-<img width="1843" height="2296" alt="UC-01" src="https://github.com/user-attachments/assets/35cd7f38-eb97-47b9-8d3e-503427ebc5d9" />
+<img width="2022" height="2537" alt="UC-01" src="https://github.com/user-attachments/assets/51ca813a-67e4-4c94-b35d-1269f5015168" />
 
 ---
 

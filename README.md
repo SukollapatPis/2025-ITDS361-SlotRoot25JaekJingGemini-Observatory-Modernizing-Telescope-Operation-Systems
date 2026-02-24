@@ -1,1 +1,2 @@
 # 2025-ITDS361-SlotRoot25JaekJing
+<img src="https://blogger.googleusercontent.com/img/a/AVvXsEg8Ei50fpMOIdLlOi3Qkqgvr_TPE6J_1zQm-87dGxfjfcp0GELnGmTwmy4EB_ro8MqRUn1UITQGkbyOgA_YgglbfDwKF6B1nom83XVMCoHkn1Aj8AaEqk6rmWl0s6F07h2YvgcU4Dr7L5G8_m0G_kDUoGtoDzpQtAguypa7a5MIC66V3OPJe5S76JDWpNAI" width="100%">

@@ -4,21 +4,27 @@ import LoginForm from '../components/auth/LoginForm';
 
 const LoginPage = () => {
   return (
-    <div className="flex items-center justify-center min-h-screen bg-slate-100">
-      <div className="w-full max-w-md">
-
-        <div className="mb-8 text-center">
-          <div className="inline-flex items-center justify-center w-16 h-16 bg-indigo-600 rounded-2xl mb-4">
-            <Telescope className="w-9 h-9 text-white" strokeWidth={1.8} />
+    <div className="min-h-screen bg-slate-50 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
+      <div className="sm:mx-auto sm:w-full sm:max-w-md">
+        {/* ส่วน Logo กล้องโทรทรรศน์ */}
+        <div className="flex justify-center">
+          <div className="bg-indigo-600 p-3 rounded-xl shadow-lg">
+            <Telescope className="h-10 w-10 text-white" />
           </div>
-          <h1 className="text-3xl font-bold text-slate-800">Gemini Observatory</h1>
-          <p className="mt-2 text-sm text-slate-500">Sign in to access the Control System</p>
         </div>
+        <h2 className="mt-6 text-center text-3xl font-extrabold text-slate-900 tracking-tight">
+          Gemini Observatory
+        </h2>
+        <p className="mt-2 text-center text-sm text-slate-600">
+          Sign in to access the Control System
+        </p>
+      </div>
 
-        <div className="w-full p-8 bg-white shadow-lg rounded-2xl">
+      <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
+        {/* Card สีขาวที่บรรจุฟอร์ม */}
+        <div className="bg-white py-8 px-4 shadow-xl sm:rounded-2xl sm:px-10 border border-slate-100 mx-4 sm:mx-0">
           <LoginForm />
         </div>
-
       </div>
     </div>
   );

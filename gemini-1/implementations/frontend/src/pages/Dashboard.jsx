@@ -1,19 +1,21 @@
 import React from 'react';
-import { useLocation } from 'react-router-dom';
+import { useLocation, Navigate } from 'react-router-dom';
 
 const Dashboard = () => {
   const location = useLocation();
-  const { name, role } = location.state || {};
+  const { role } = location.state || {};
 
-  const roleLabel = role === 'ASTRONOMER' ? 'Astronomer' : 'Observer';
+  // redirect ตาม role อัตโนมัติ
+  if (role === 'OBSERVER') {
+    return <Navigate to="/dashboard/observer" state={location.state} replace />;
+  }
 
-  return (
-    <div className="flex items-center justify-center min-h-screen bg-slate-100">
-      <h1 className="text-3xl font-bold text-slate-800">
-        Welcome {name} the {roleLabel}
-      </h1>
-    </div>
-  );
+  if (role === 'ASTRONOMER') {
+    return <Navigate to="/dashboard/astronomer" state={location.state} replace />;
+  }
+
+  // ถ้าไม่มี role ให้กลับหน้า login
+  return <Navigate to="/" replace />;
 };
 
 export default Dashboard;

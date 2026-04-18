@@ -1,12 +1,26 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { loginAPI } from '../../services/authService';
 
 const LoginForm = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [errors, setErrors] = useState({ email: '', password: '' });
   const navigate = useNavigate();
+
+  const mockUsers = [
+    {
+      email: 'edwin@gemini.edu',
+      password: 'password123',
+      name: 'Edwin Hubble',
+      role: 'ASTRONOMER'  // ✅ แก้แล้ว
+    },
+    {
+      email: 'jocelyn@gemini.edu',
+      password: 'password123',
+      name: 'Jocelyn Bell',
+      role: 'OBSERVER'    // ✅ แก้แล้ว
+    }
+  ];
 
   const validateEmail = (value) => {
     if (!value) return 'Email is required.';
@@ -21,16 +35,36 @@ const LoginForm = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
     const emailErr = validateEmail(email);
     const passwordErr = validatePassword(password);
     setErrors({ email: emailErr, password: passwordErr });
+
     if (emailErr || passwordErr) return;
 
+    // แก้ไขเฉพาะส่วนใน handleSubmit ของ LoginForm.jsx
     try {
-      const data = await loginAPI(email, password);
-      if (data.success) {
-        navigate('/dashboard', { state: { name: data.name, role: data.role } });
-      }
+      const user = mockUsers.find(
+        (u) => u.email === email && u.password === password
+      );
+
+      if (!user) throw new Error('Invalid');
+
+      localStorage.setItem('user', JSON.stringify(user));
+
+      // 🟢 1. ตรวจสอบ Role เพื่อเลือก Path ให้ถูกต้องตาม App.jsx
+      const targetPath = user.role === 'ASTRONOMER'
+        ? '/dashboard/astronomer'
+        : '/dashboard/observer';
+
+      navigate(targetPath, {
+        state: {
+          name: user.name,
+          role: user.role,
+          justLoggedIn: true // ส่งค่าไปแสดง Toast สีเขียว
+        }
+      });
+
     } catch (err) {
       setErrors({ email: 'Invalid email or password.', password: ' ' });
     }

@@ -23,10 +23,19 @@ public class SciencePlanDTO {
     // DataProcessingRequirements
     private String fileType;
     private String fileQuality;
+    private String colorType;
     private double exposure;
     private double contrast;
     private double brightness;
     private double saturation;
+
+    public String getColorType() {
+        return colorType;
+    }
+
+    public void setColorType(String colorType) {
+        this.colorType = colorType;
+    }
 
     public int getId() {return id;}
 

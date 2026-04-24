@@ -36,6 +36,7 @@ public class SciencePlanFactory {
         if (plan.getRequirements() != null) {
             dto.setFileType(plan.getRequirements().getFileType().name());
             dto.setFileQuality(plan.getRequirements().getFileQuality().name());
+            dto.setColorType(plan.getRequirements().getColorType().name());
             dto.setExposure(plan.getRequirements().getExposure());
             dto.setContrast(plan.getRequirements().getContrast());
             dto.setBrightness(plan.getRequirements().getBrightness());
@@ -63,7 +64,7 @@ public class SciencePlanFactory {
         plan.setLastModified(LocalDateTime.now());
 
         if (dto.getTelescopeSite() != null) {
-            plan.setTelescopeSite(TelescopeSite.valueOf(dto.getTelescopeSite()));
+            plan.setTelescopeSite(TelescopeSite.valueOf(dto.getTelescopeSite().toUpperCase()));
         }
 
         if (dto.getTargetName() != null) {
@@ -74,11 +75,17 @@ public class SciencePlanFactory {
             plan.setRequirements(new DataProcessingRequirements());
         }
 
-        plan.getRequirements().setFileType(FileType.valueOf(dto.getFileType()));
-        plan.getRequirements().setFileQuality(FileQuality.valueOf(dto.getFileQuality()));
+        plan.getRequirements().setFileType(FileType.valueOf(dto.getFileType().toUpperCase()));
+        plan.getRequirements().setFileQuality(FileQuality.valueOf(dto.getFileQuality().toUpperCase()));
+        plan.getRequirements().setColorType(ColorType.valueOf(dto.getColorType().toUpperCase()));
         plan.getRequirements().setExposure(dto.getExposure());
         plan.getRequirements().setContrast(dto.getContrast());
         plan.getRequirements().setBrightness(dto.getBrightness());
         plan.getRequirements().setSaturation(dto.getSaturation());
+    }
+
+    private static String capitalizeFirst(String str) {
+        if (str == null || str.isEmpty()) return str;
+        return str.substring(0, 1).toUpperCase() + str.substring(1).toLowerCase();
     }
 }

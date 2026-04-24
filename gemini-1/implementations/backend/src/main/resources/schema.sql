@@ -46,3 +46,4 @@ CREATE TABLE IF NOT EXISTS science_plans (
     CONSTRAINT fk_submitter FOREIGN KEY (submitter_id) REFERENCES users(id),
     CONSTRAINT fk_requirements FOREIGN KEY (requirements_id) REFERENCES data_processing_requirements(id)
     );
+

@@ -130,11 +130,39 @@ public class SciencePlanServiceProxy implements SciencePlanService {
         }
     }
 
-    @Override public void invalidatePlan(int planId, String feedback) { actualService.invalidatePlan(planId, feedback); }
+    @Override
+    public void invalidatePlan(int planId, String feedback) {
+        User user = getCurrentUser();
+        SciencePlan plan = actualService.getPlanById(planId);
+
+        if (accessControl.canValidate(user, plan)) {
+
+            String logFeedback = (feedback == null || feedback.isEmpty()) ? "No feedback provided" : feedback;
+
+            try {
+                actualService.invalidatePlan(planId, logFeedback);
+
+                logger.log("INVALIDATE", "WARNING",
+                        "Plan invalidated by " + user.getName() + ". Reason: " + logFeedback,
+                        user.getName(), planId);
+
+                System.out.println("[Proxy] Plan " + planId + " has been invalidated with feedback.");
+
+            } catch (Exception e) {
+                logger.log("INVALIDATE", "ERROR", "Failed to invalidate plan: " + e.getMessage(), user.getName(), planId);
+                throw e;
+            }
+        } else {
+            logger.log("INVALIDATE", "WARNING", "Unauthorized invalidation attempt by " + (user != null ? user.getName() : "Unknown"), "SYSTEM", planId);
+            throw new RuntimeException("Only Science Observers can invalidate plans");
+        }
+    }
+
+
     @Override public List<SciencePlan> getSubmittedPlans() { return actualService.getSubmittedPlans(); }
     @Override public SciencePlan getPlanById(int planId) { return actualService.getPlanById(planId); }
     @Override
-    public List<SciencePlan> getPlansByCreator(String userId) {
+    public List<SciencePlan> getPlansByCreator(int userId) {
         return actualService.getPlansByCreator(userId);
     }
     @Override public List<SciencePlan> getPlansByStatus(PlanStatus state) {

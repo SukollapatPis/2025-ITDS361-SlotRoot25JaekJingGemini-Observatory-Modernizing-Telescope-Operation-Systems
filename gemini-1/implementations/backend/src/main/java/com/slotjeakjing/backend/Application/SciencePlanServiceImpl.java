@@ -37,7 +37,6 @@ public class SciencePlanServiceImpl implements SciencePlanService {
         if (user instanceof User.Astronomer astronomer) {
             plan.setCreator(astronomer);
         }
-
         return repository.save(plan);
     }
 
@@ -103,8 +102,8 @@ public class SciencePlanServiceImpl implements SciencePlanService {
     }
 
     @Override
-    public List<SciencePlan> getPlansByCreator(String userId) {
-        return repository.findByCreatorName(userId);
+    public List<SciencePlan> getPlansByCreator(int userId) {
+        return repository.findByCreator_Id(userId);
     }
 
     @Override

@@ -36,7 +36,7 @@ public class SciencePlanController {
     }
 
     @GetMapping("/user/{userId}")
-    public ResponseEntity<List<SciencePlan>> requestSciencePlanList(@PathVariable String userId) {
+    public ResponseEntity<List<SciencePlan>> requestSciencePlanList(@PathVariable int userId) {
         List<SciencePlan> userPlans = sciencePlanService.getPlansByCreator(userId);
         return ResponseEntity.ok(userPlans);
     }

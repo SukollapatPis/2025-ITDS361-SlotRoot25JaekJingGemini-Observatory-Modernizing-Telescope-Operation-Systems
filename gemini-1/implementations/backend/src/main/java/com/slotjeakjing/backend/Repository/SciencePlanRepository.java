@@ -10,5 +10,5 @@ import java.util.List;
 public interface SciencePlanRepository extends JpaRepository<SciencePlan, Integer> {
     List<SciencePlan> findByState(PlanStatus state);
 
-    List<SciencePlan> findByCreatorName(String name);
+    List<SciencePlan> findByCreator_Id(int creatorId);
 }

@@ -21,10 +21,8 @@ public class LegacyOCSService {
             ocsDatabase.add(legacyPlan);
 
             realOCS.createSciencePlan(legacyPlan);
-            realOCS.submitSciencePlan(legacyPlan);
 
             System.out.println("[LegacyOCSService] Success: Plan " + legacyPlan.getObjectives() + " is now in OCS.");
-            System.out.println("Plan Submitted Successfully");
         }
     }
 

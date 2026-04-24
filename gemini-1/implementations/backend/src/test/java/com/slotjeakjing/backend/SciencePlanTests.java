@@ -82,7 +82,7 @@ class SciencePlanTests {
         System.out.println("Plan stored in DB with ID: " + planId);
 
         // ===============================
-        // STEP 3: Test
+        // STEP 3: Test ข้ามการ submit เพราะทำพร้อมการ create
         // ===============================
         System.out.println("\n>>> [STEP 3] Astronomer: Testing plan");
 

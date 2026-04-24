@@ -15,6 +15,6 @@ public interface SciencePlanService {
     void invalidatePlan(int planId, String feedback);
     List<SciencePlan> getSubmittedPlans();
     SciencePlan getPlanById(int planId);
-    List<SciencePlan> getPlansByCreator(String userId);
+    List<SciencePlan> getPlansByCreator(int userId);
     List<SciencePlan> getPlansByStatus(PlanStatus state);
 }

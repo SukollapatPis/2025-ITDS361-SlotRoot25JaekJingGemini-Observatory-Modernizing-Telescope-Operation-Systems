@@ -10,7 +10,7 @@ import jakarta.persistence.*;
 public class DataProcessingRequirements {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Enumerated(EnumType.STRING)

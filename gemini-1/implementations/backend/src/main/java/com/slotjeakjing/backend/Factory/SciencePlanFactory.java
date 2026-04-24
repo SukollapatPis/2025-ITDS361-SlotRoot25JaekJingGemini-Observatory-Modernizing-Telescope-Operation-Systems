@@ -5,6 +5,8 @@ import com.slotjeakjing.backend.Enum.*;
 import com.slotjeakjing.backend.Domain.Model.*;
 
 import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.util.Date;
 
 public class SciencePlanFactory {
 
@@ -23,8 +25,8 @@ public class SciencePlanFactory {
         dto.setPlanName(plan.getPlanName());
         dto.setFunding(plan.getFunding());
         dto.setObjective(plan.getObjective());
-        dto.setStartDate(plan.getStartDate());
-        dto.setEndDate(plan.getEndDate());
+        dto.setStartDate(Date.from(LocalDateTime.now().atZone(ZoneId.systemDefault()).toInstant()));
+        dto.setEndDate(Date.from(LocalDateTime.now().atZone(ZoneId.systemDefault()).toInstant()));
         dto.setTelescopeSite(plan.getTelescopeSite().name());
 
         if (plan.getTarget() != null) {
@@ -56,8 +58,8 @@ public class SciencePlanFactory {
         plan.setPlanName(dto.getPlanName());
         plan.setFunding(dto.getFunding());
         plan.setObjective(dto.getObjective());
-        plan.setStartDate(dto.getStartDate());
-        plan.setEndDate(dto.getEndDate());
+        dto.setStartDate(Date.from(LocalDateTime.now().atZone(ZoneId.systemDefault()).toInstant()));
+        dto.setEndDate(Date.from(LocalDateTime.now().atZone(ZoneId.systemDefault()).toInstant()));
         plan.setLastModified(LocalDateTime.now());
 
         if (dto.getTelescopeSite() != null) {

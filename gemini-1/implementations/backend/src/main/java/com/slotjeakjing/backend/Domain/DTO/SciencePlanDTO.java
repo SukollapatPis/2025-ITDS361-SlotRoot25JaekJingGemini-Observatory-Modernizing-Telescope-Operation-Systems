@@ -11,8 +11,8 @@ public class SciencePlanDTO {
     private String planName;
     private double funding;
     private String objective;
-    private LocalDateTime  startDate;
-    private LocalDateTime endDate;
+    private Date   startDate;
+    private Date  endDate;
     private String telescopeSite;
     private String creator;
     private String submitter;
@@ -64,19 +64,19 @@ public class SciencePlanDTO {
         this.objective = objective;
     }
 
-    public LocalDateTime  getStartDate() {
+    public Date   getStartDate() {
         return startDate;
     }
 
-    public void setStartDate(LocalDateTime  startDate) {
+    public void setStartDate(Date   startDate) {
         this.startDate = startDate;
     }
 
-    public LocalDateTime  getEndDate() {
+    public Date   getEndDate() {
         return endDate;
     }
 
-    public void setEndDate(LocalDateTime  endDate) {
+    public void setEndDate(Date   endDate) {
         this.endDate = endDate;
     }
 

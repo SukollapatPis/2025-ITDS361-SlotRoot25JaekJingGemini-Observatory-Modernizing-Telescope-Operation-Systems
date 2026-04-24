@@ -16,7 +16,11 @@ public class AccessControlService {
     }
 
     public boolean canSubmit(User user, SciencePlan plan) {
-        return user instanceof User.Astronomer && plan.getState() == PlanStatus.TESTED;
+        return user instanceof User.Astronomer ;
+    }
+
+    public boolean canTest(User user, SciencePlan plan) {
+        return user instanceof User.Astronomer && plan.getState() == PlanStatus.SUBMITTED ;
     }
 
     public boolean canValidate(User user, SciencePlan plan) {

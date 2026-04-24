@@ -65,11 +65,13 @@ public class SciencePlanServiceImpl implements SciencePlanService {
     public void submitPlan(int planId) {
         SciencePlan plan = getPlanById(planId);
         User user = (User) session.getAttribute("currentUser");
+        SciencePlanDTO dto = SciencePlanFactory.convertToDTO(plan);
 
         if (user instanceof User.Astronomer) {
             plan.setSubmitter((User.Astronomer) user);
         }
         plan.setState(PlanStatus.SUBMITTED);
+        ocsClient.submitPlan(dto);
         repository.save(plan);
     }
 

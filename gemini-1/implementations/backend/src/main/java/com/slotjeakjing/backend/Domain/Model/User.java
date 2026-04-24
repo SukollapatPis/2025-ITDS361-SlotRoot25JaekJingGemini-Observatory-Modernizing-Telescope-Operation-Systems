@@ -8,7 +8,7 @@ import jakarta.persistence.*;
 @DiscriminatorColumn(name = "user_type", discriminatorType = DiscriminatorType.STRING)
 public abstract class User {
     @Id
-    @GeneratedValue(strategy= GenerationType.AUTO)
+    @GeneratedValue(strategy= GenerationType.IDENTITY)
     private Integer id;
     private String name;
     private String passwd;

@@ -17,10 +17,8 @@ public class LegacyOCSAdapter implements OCSClient {
     public void submitPlan(SciencePlanDTO dto) {
         if (dto == null) return;
 
-        // สร้าง Object จากคลาสหลักของ OCS โดยตรง
         SciencePlan legacyPlan = new SciencePlan();
 
-        // Mapping ข้อมูลจาก DTO
         legacyPlan.setCreator(dto.getCreator());
         legacyPlan.setSubmitter(dto.getSubmitter());
         legacyPlan.setFundingInUSD(dto.getFunding());

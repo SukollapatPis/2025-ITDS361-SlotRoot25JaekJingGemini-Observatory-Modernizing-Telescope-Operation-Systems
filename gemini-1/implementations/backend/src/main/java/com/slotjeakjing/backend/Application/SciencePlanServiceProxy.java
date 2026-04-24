@@ -111,20 +111,22 @@ public class SciencePlanServiceProxy implements SciencePlanService {
         SciencePlan plan = actualService.getPlanById(planId);
 
         logger.log("TEST", "INFO", "Testing plan with OCS Legacy System", user.getName(), planId);
+        if (accessControl.canTest(user, plan)) {
+            try {
+                String result = actualService.testPlan(planId);
 
-        try {
-            String result = actualService.testPlan(planId);
-
-            if (result.equalsIgnoreCase("Pass")) {
-                logger.log("TEST", "INFO", "OCS Test Passed", "SYSTEM", planId);
-            } else {
-                logger.log("TEST", "WARNING", "OCS Test Failed: " + result, "SYSTEM", planId);
+                if (result.equalsIgnoreCase("Pass")) {
+                    logger.log("TEST", "INFO", "OCS Test Passed", "SYSTEM", planId);
+                } else {
+                    logger.log("TEST", "WARNING", "OCS Test Failed: " + result, "SYSTEM", planId);
+                }
+                return result;
+            } catch (Exception e) {
+                logger.log("TEST", "ERROR", "Test connection failed", "SYSTEM", planId);
+                return "Error: " + e.getMessage();
             }
-
-            return result;
-        } catch (Exception e) {
-            logger.log("TEST", "ERROR", "Test connection failed", "SYSTEM", planId);
-            return "Error: " + e.getMessage();
+        } else {
+            throw new RuntimeException("Unauthorized test attempt");
         }
     }
 

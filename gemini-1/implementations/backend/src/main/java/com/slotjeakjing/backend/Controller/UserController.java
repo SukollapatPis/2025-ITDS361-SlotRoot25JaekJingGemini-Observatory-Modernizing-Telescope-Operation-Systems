@@ -55,7 +55,6 @@ public class UserController {
         Optional<User> optionalUser = userService.findByEmail(email);
         if (optionalUser.isPresent()) {
             User user = optionalUser.get();
-            session.setAttribute("currentUser", user);
             if (userService.login(email, password)) {
 
                 String role = "USER";
@@ -64,6 +63,7 @@ public class UserController {
                 } else if (user instanceof User.ScienceObserver) {
                     role = "SCIENCE_OBSERVER";
                 }
+                session.setAttribute("currentUser", user);
 
                 return ResponseEntity.ok(Map.of(
                         "success", true,

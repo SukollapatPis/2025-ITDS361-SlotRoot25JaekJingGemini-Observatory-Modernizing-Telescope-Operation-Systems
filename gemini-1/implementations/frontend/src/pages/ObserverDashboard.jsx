@@ -11,6 +11,25 @@ const MOCK_PLANS = [
     creator: 'Dr. Edwin Hubble',
     target: 'M31',
     status: 'SUBMITTED',
+    funding: 50000,
+    startDate: '2026-04-01',
+    endDate: '2026-04-15',
+    telescope: 'Hawaii',
+    objective: 'Detailed mapping of the Andromeda galaxy spiral arms.',
+    dataProcessing: {
+      fileType: 'RAW',
+      fileQuality: 'Fine',
+      colorMode: 'Color',
+      contrast: 1.2,
+      exposure: 2,
+      brightness: 1,
+      saturation: 1.5,
+      luminance: 1,
+      hue: 0,
+    },
+    editHistory: [
+      { timestamp: 'Mar 22, 2026 22:30:00', change: 'Changed funding from "45000" to "50000"' },
+    ],
     updatedAt: '2025-04-17T10:30:00Z',
   },
   {
@@ -19,6 +38,23 @@ const MOCK_PLANS = [
     creator: 'Dr. Vera Rubin',
     target: 'M1',
     status: 'SUBMITTED',
+    funding: 30000,
+    startDate: '2026-05-01',
+    endDate: '2026-05-10',
+    telescope: 'Chile',
+    objective: 'Spectroscopic analysis of the Crab Nebula pulsar wind.',
+    dataProcessing: {
+      fileType: 'FITS',
+      fileQuality: 'Fine',
+      colorMode: 'Grayscale',
+      contrast: 1,
+      exposure: 3,
+      brightness: 1.2,
+      saturation: 1,
+      luminance: 1.1,
+      hue: 0,
+    },
+    editHistory: [],
     updatedAt: '2025-04-16T08:15:00Z',
   },
   {
@@ -27,6 +63,23 @@ const MOCK_PLANS = [
     creator: 'Dr. Carl Sagan',
     target: 'Jupiter',
     status: 'VALIDATED',
+    funding: 75000,
+    startDate: '2026-03-01',
+    endDate: '2026-03-20',
+    telescope: 'Hawaii',
+    objective: 'Study of Jupiter atmospheric band dynamics and storm patterns.',
+    dataProcessing: {
+      fileType: 'RAW',
+      fileQuality: 'Fine',
+      colorMode: 'Color',
+      contrast: 1.5,
+      exposure: 1,
+      brightness: 1,
+      saturation: 1.8,
+      luminance: 1,
+      hue: 10,
+    },
+    editHistory: [],
     updatedAt: '2025-04-15T14:22:00Z',
   },
   {
@@ -35,6 +88,23 @@ const MOCK_PLANS = [
     creator: 'Dr. Cecilia Payne',
     target: 'M45',
     status: 'INVALIDATED',
+    funding: 20000,
+    startDate: '2026-02-01',
+    endDate: '2026-02-15',
+    telescope: 'Chile',
+    objective: 'Photometric survey of the Pleiades open star cluster.',
+    dataProcessing: {
+      fileType: 'JPEG',
+      fileQuality: 'Normal',
+      colorMode: 'Color',
+      contrast: 1.0,
+      exposure: 2,
+      brightness: 1,
+      saturation: 1.0,
+      luminance: 1,
+      hue: 0,
+    },
+    editHistory: [],
     updatedAt: '2025-04-14T09:00:00Z',
   },
   {
@@ -43,6 +113,23 @@ const MOCK_PLANS = [
     creator: 'Dr. Roger Penrose',
     target: 'Sgr A*',
     status: 'RUNNING',
+    funding: 120000,
+    startDate: '2026-04-10',
+    endDate: '2026-04-30',
+    telescope: 'Hawaii',
+    objective: 'Imaging and analysis of the Sagittarius A* event horizon shadow.',
+    dataProcessing: {
+      fileType: 'RAW',
+      fileQuality: 'Fine',
+      colorMode: 'Grayscale',
+      contrast: 2.0,
+      exposure: 5,
+      brightness: 0.8,
+      saturation: 0,
+      luminance: 1.5,
+      hue: 0,
+    },
+    editHistory: [],
     updatedAt: '2025-04-13T16:45:00Z',
   },
 ]
@@ -70,36 +157,112 @@ function StatusBadge({ status }) {
 // PLAN DETAILS
 // ============================================================
 function PlanDetails({ plan }) {
-  const date = new Date(plan.updatedAt).toLocaleString('en-US', {
-    dateStyle: 'medium',
-    timeStyle: 'short',
-  })
+  const dp = plan.dataProcessing || {}
   return (
-    <div className="detail-grid">
-      <div className="detail-item">
-        <label>Plan ID</label>
-        <p className="plan-id">{plan.planId}</p>
+    <div>
+      {/* Basic Info */}
+      <div className="detail-grid">
+        <div className="detail-item detail-full" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+          <div>
+            <label>Plan Name</label>
+            <p style={{ fontWeight: 600 }}>{plan.planName}</p>
+          </div>
+          <div style={{ textAlign: 'right' }}>
+            <label>Status</label>
+            <p><StatusBadge status={plan.status} /></p>
+          </div>
+        </div>
+        <div className="detail-item">
+          <label>Creator</label>
+          <p>{plan.creator}</p>
+        </div>
+        <div className="detail-item">
+          <label>Funding</label>
+          <p>${plan.funding?.toLocaleString()}</p>
+        </div>
+        <div className="detail-item">
+          <label>Start Date</label>
+          <p>{plan.startDate}</p>
+        </div>
+        <div className="detail-item">
+          <label>End Date</label>
+          <p>{plan.endDate}</p>
+        </div>
+        <div className="detail-item">
+          <label>Telescope</label>
+          <p>{plan.telescope}</p>
+        </div>
+        <div className="detail-item">
+          <label>Target</label>
+          <p>{plan.target}</p>
+        </div>
+        <div className="detail-item detail-full">
+          <label>Objective</label>
+          <div style={{ background: 'var(--bg)', border: '1px solid var(--border)', borderRadius: 8, padding: '10px 12px', marginTop: 4 }}>
+            <p>{plan.objective}</p>
+          </div>
+        </div>
       </div>
-      <div className="detail-item">
-        <label>Status</label>
-        <p><StatusBadge status={plan.status} /></p>
-      </div>
-      <div className="detail-item detail-full">
-        <label>Plan Name</label>
-        <p>{plan.planName}</p>
-      </div>
-      <div className="detail-item">
-        <label>Creator</label>
-        <p>{plan.creator}</p>
-      </div>
-      <div className="detail-item">
-        <label>Target</label>
-        <p>{plan.target}</p>
-      </div>
-      <div className="detail-item">
-        <label>Last Modified</label>
-        <p>{date}</p>
-      </div>
+
+      {/* Data Processing Requirements */}
+      {plan.dataProcessing && (
+        <div style={{ borderTop: '1px solid var(--border)', marginTop: 20, paddingTop: 16 }}>
+          <p style={{ fontWeight: 700, fontSize: 14, marginBottom: 14 }}>Data Processing Requirements</p>
+          <div className="detail-grid">
+            <div className="detail-item">
+              <label>File Type</label>
+              <p>{dp.fileType}</p>
+            </div>
+            <div className="detail-item">
+              <label>File Quality</label>
+              <p>{dp.fileQuality}</p>
+            </div>
+            <div className="detail-item">
+              <label>Color Mode</label>
+              <p>{dp.colorMode}</p>
+            </div>
+            <div className="detail-item">
+              <label>Contrast</label>
+              <p>{dp.contrast}</p>
+            </div>
+            <div className="detail-item">
+              <label>Exposure</label>
+              <p>{dp.exposure}</p>
+            </div>
+            <div className="detail-item">
+              <label>Brightness</label>
+              <p>{dp.brightness}</p>
+            </div>
+            <div className="detail-item">
+              <label>Saturation</label>
+              <p>{dp.saturation}</p>
+            </div>
+            <div className="detail-item">
+              <label>Luminance</label>
+              <p>{dp.luminance}</p>
+            </div>
+            <div className="detail-item">
+              <label>Hue</label>
+              <p>{dp.hue}</p>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Edit History Log */}
+      {plan.editHistory && plan.editHistory.length > 0 && (
+        <div style={{ borderTop: '1px solid var(--border)', marginTop: 20, paddingTop: 16 }}>
+          <p style={{ fontWeight: 700, fontSize: 14, marginBottom: 12 }}>Edit History Log</p>
+          {plan.editHistory.map((entry, i) => (
+            <div key={i} style={{ background: 'var(--bg)', border: '1px solid var(--border)', borderRadius: 8, padding: '10px 14px', marginBottom: 8 }}>
+              <p style={{ fontSize: 12, color: 'var(--brand)', fontWeight: 600, marginBottom: 6 }}>{entry.timestamp}</p>
+              <ul style={{ paddingLeft: 16, margin: 0 }}>
+                <li style={{ fontSize: 13 }}>{entry.change}</li>
+              </ul>
+            </div>
+          ))}
+        </div>
+      )}
     </div>
   )
 }

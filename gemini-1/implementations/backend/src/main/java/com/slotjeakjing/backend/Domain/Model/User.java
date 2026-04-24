@@ -1,4 +1,4 @@
-package com.slotjeakjing.backend.Model;
+package com.slotjeakjing.backend.Domain.Model;
 
 import jakarta.persistence.*;
 

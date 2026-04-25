@@ -8,14 +8,18 @@ import java.util.Date;
 
 public class SciencePlanDTO {
     private int id;
+    private int ocsPlanNo;
     private String planName;
     private double funding;
+
+
     private String objective;
     private Date   startDate;
     private Date  endDate;
     private String telescopeSite;
     private String creator;
     private String submitter;
+    private String status;
 
     //StarSystem
     private String targetName;
@@ -31,6 +35,22 @@ public class SciencePlanDTO {
 
     public String getColorType() {
         return colorType;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+    public int getOcsPlanNo() {
+        return ocsPlanNo;
+    }
+
+    public void setOcsPlanNo(int ocsPlanNo) {
+        this.ocsPlanNo = ocsPlanNo;
     }
 
     public void setColorType(String colorType) {

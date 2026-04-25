@@ -20,7 +20,7 @@ public class AccessControlService {
     }
 
     public boolean canTest(User user, SciencePlan plan) {
-        return user instanceof User.Astronomer && plan.getState() == PlanStatus.SUBMITTED ;
+        return user instanceof User.Astronomer ;
     }
 
     public boolean canValidate(User user, SciencePlan plan) {

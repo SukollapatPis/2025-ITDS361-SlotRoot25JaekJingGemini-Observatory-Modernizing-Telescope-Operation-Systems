@@ -51,26 +51,28 @@ public class SciencePlanServiceImpl implements SciencePlanService {
 
     @Override
     public String testPlan(int planId) {
+
         SciencePlan plan = getPlanById(planId);
 
-        SciencePlanDTO dto = SciencePlanFactory.convertToDTO(plan);
-
-        String result = ocsClient.testPlan(dto);
-
-        return result;
+        return ocsClient.testPlan(plan.getOcsPlanNo());
     }
 
     @Transactional
     public void submitPlan(int planId) {
+
         SciencePlan plan = getPlanById(planId);
         User user = (User) session.getAttribute("currentUser");
+
+        if (user instanceof User.Astronomer astronomer) {
+            plan.setSubmitter(astronomer);
+        }
+
         SciencePlanDTO dto = SciencePlanFactory.convertToDTO(plan);
 
-        if (user instanceof User.Astronomer) {
-            plan.setSubmitter((User.Astronomer) user);
-        }
-        plan.setState(PlanStatus.SUBMITTED);
-        ocsClient.submitPlan(dto);
+        int ocsPlanNo = ocsClient.submitPlan(dto);
+
+        plan.setOcsPlanNo(ocsPlanNo);
+
         repository.save(plan);
     }
 

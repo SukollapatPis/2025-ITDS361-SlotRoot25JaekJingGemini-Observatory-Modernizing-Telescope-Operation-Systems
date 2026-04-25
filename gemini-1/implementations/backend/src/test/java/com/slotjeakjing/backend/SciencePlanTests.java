@@ -55,19 +55,18 @@ class SciencePlanTests {
 
         SciencePlanDTO dto = new SciencePlanDTO();
         dto.setPlanName("Deep Space Observation");
-        dto.setCreator("Dr. Smith");
-        dto.setFunding(15000.0);
+        dto.setCreator("Dr. Ploy");
+        dto.setFunding(1000.0);
         dto.setObjective("Observe distant galaxies");
-        dto.setTargetName("Orion");
+        dto.setTargetName("Auriga");
         dto.setTelescopeSite("HAWAII");
-        // ใน SciencePlanTests.java
-        LocalDateTime start = LocalDateTime.of(2026, 5, 1, 10, 0, 0); // 1 May 2026 10:00
-        LocalDateTime end = LocalDateTime.of(2026, 5, 10, 10, 0, 0);  // 10 May 2026 10:00
+        LocalDateTime start = LocalDateTime.of(2026, 4, 22, 23, 0, 0);
+        LocalDateTime end = LocalDateTime.of(2026, 4, 23, 2, 0, 0);
 
         dto.setStartDate(Date.from(start.atZone(ZoneId.systemDefault()).toInstant()));
         dto.setEndDate(Date.from(end.atZone(ZoneId.systemDefault()).toInstant()));
 
-        dto.setFileType("PNG");
+        dto.setFileType("JPEG");
         dto.setFileQuality("LOW");
         dto.setColorType("COLOR");
 

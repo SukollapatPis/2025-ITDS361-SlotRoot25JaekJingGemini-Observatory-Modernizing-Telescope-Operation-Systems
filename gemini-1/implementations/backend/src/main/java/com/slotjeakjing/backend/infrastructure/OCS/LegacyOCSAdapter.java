@@ -7,7 +7,6 @@ import edu.gemini.app.ocs.model.SciencePlan;
 import org.springframework.stereotype.Component;
 
 import java.text.SimpleDateFormat;
-import java.util.Locale;
 
 @Component
 public class LegacyOCSAdapter implements OCSClient {
@@ -15,8 +14,9 @@ public class LegacyOCSAdapter implements OCSClient {
     private final LegacyOCSService legacyOCSService = new LegacyOCSService(true);
 
     @Override
-    public void submitPlan(SciencePlanDTO dto) {
-        if (dto == null) return;
+    public int submitPlan(SciencePlanDTO dto) {
+
+        if (dto == null) throw new RuntimeException("DTO is null");
 
         SciencePlan legacyPlan = new SciencePlan();
 
@@ -26,41 +26,44 @@ public class LegacyOCSAdapter implements OCSClient {
         legacyPlan.setObjectives(dto.getObjective());
 
         SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+
         if (dto.getStartDate() != null)
             legacyPlan.setStartDate(sdf.format(dto.getStartDate()));
 
         if (dto.getEndDate() != null)
             legacyPlan.setEndDate(sdf.format(dto.getEndDate()));
 
-        if (dto.getTargetName() != null) {
-            legacyPlan.setStarSystem(StarSystem.CONSTELLATIONS.valueOf(dto.getTargetName()));
-        }
-        if (dto.getTelescopeSite() != null) {
-            legacyPlan.setTelescopeLocation(SciencePlan.TELESCOPELOC.valueOf(dto.getTelescopeSite()));
-        }
+        if (dto.getTargetName() != null)
+            legacyPlan.setStarSystem(
+                    StarSystem.CONSTELLATIONS.valueOf(dto.getTargetName())
+            );
+
+        if (dto.getTelescopeSite() != null)
+            legacyPlan.setTelescopeLocation(
+                    SciencePlan.TELESCOPELOC.valueOf(dto.getTelescopeSite())
+            );
 
         DataProcRequirement dpr = new DataProcRequirement();
+        dpr.setFileType(dto.getFileType());
+        dpr.setFileQuality(dto.getFileQuality());
+        dpr.setColorType(dto.getColorType());
+        dpr.setExposure(dto.getExposure());
+        dpr.setContrast(dto.getContrast());
+        dpr.setBrightness(dto.getBrightness());
+        dpr.setSaturation(dto.getSaturation());
+
         legacyPlan.setDataProcRequirements(dpr);
 
         System.out.println("[Adapter] Calling LegacyOCSService to create plan in OCS...");
-        legacyOCSService.sendLegacyPlan(legacyPlan);
+
+        return legacyOCSService.sendLegacyPlan(legacyPlan);
     }
 
     @Override
-    public String testPlan(SciencePlanDTO dto) {
-        if (dto == null) return "DTO is null";
+    public String testPlan(int ocsPlanNo) {
 
-        SciencePlan legacyPlan = new SciencePlan();
-        legacyPlan.setFundingInUSD(dto.getFunding());
-        legacyPlan.setObjectives(dto.getObjective());
+        System.out.println("[Adapter] Testing REAL OCS planNo = " + ocsPlanNo);
 
-        if (dto.getTargetName() != null) {
-            legacyPlan.setStarSystem(StarSystem.CONSTELLATIONS.valueOf(dto.getTargetName()));
-        }
-        if (dto.getTelescopeSite() != null) {
-            legacyPlan.setTelescopeLocation(SciencePlan.TELESCOPELOC.valueOf(dto.getTelescopeSite()));
-        }
-
-        return legacyOCSService.testLegacyPlan(legacyPlan);
+        return legacyOCSService.testLegacyPlan(ocsPlanNo);
     }
 }

@@ -13,6 +13,7 @@ public class SciencePlan {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int planId;
+    private int ocsPlanNo;
 
     private String planName;
     private double funding;
@@ -57,6 +58,14 @@ public class SciencePlan {
 
     public void setPlanId(int planId) {
         this.planId = planId;
+    }
+
+    public int getOcsPlanNo() {
+        return ocsPlanNo;
+    }
+
+    public void setOcsPlanNo(int ocsPlanNo) {
+        this.ocsPlanNo = ocsPlanNo;
     }
 
     public String getPlanName() {

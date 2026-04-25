@@ -12,8 +12,12 @@ public class SciencePlanFactory {
 
     public static SciencePlan createPlan(SciencePlanDTO dto) {
         SciencePlan plan = new SciencePlan();
+
         updateEntityFromDTO(plan, dto);
+
         plan.setState(PlanStatus.CREATED);
+        plan.setLastModified(LocalDateTime.now());
+
         return plan;
     }
 
@@ -21,37 +25,50 @@ public class SciencePlanFactory {
         if (plan == null) return null;
 
         SciencePlanDTO dto = new SciencePlanDTO();
-
+        dto.setId(plan.getPlanId());
         dto.setPlanName(plan.getPlanName());
         dto.setFunding(plan.getFunding());
         dto.setObjective(plan.getObjective());
+
         dto.setStartDate(
                 plan.getStartDate() != null
-                        ? Date.from(plan.getStartDate().atZone(ZoneId.systemDefault()).toInstant())
+                        ? Date.from(plan.getStartDate()
+                        .atZone(ZoneId.systemDefault()).toInstant())
                         : null
         );
 
         dto.setEndDate(
                 plan.getEndDate() != null
-                        ? Date.from(plan.getEndDate().atZone(ZoneId.systemDefault()).toInstant())
+                        ? Date.from(plan.getEndDate()
+                        .atZone(ZoneId.systemDefault()).toInstant())
                         : null
         );
-        dto.setTelescopeSite(plan.getTelescopeSite().name());
+
+        if (plan.getTelescopeSite() != null) {
+            dto.setTelescopeSite(plan.getTelescopeSite().name());
+        }
 
         if (plan.getTarget() != null) {
             dto.setTargetName(plan.getTarget().name());
         }
 
-        if (plan.getRequirements() != null) {
-            dto.setFileType(plan.getRequirements().getFileType().name());
-            dto.setFileQuality(plan.getRequirements().getFileQuality().name());
-            dto.setColorType(plan.getRequirements().getColorType().name());
-            dto.setExposure(plan.getRequirements().getExposure());
-            dto.setContrast(plan.getRequirements().getContrast());
-            dto.setBrightness(plan.getRequirements().getBrightness());
-            dto.setSaturation(plan.getRequirements().getSaturation());
-        }
+        DataProcessingRequirements req = plan.getRequirements();
+        if (req != null) {
 
+            if (req.getFileType() != null)
+                dto.setFileType(req.getFileType().name());
+
+            if (req.getFileQuality() != null)
+                dto.setFileQuality(req.getFileQuality().name());
+
+            if (req.getColorType() != null)
+                dto.setColorType(req.getColorType().name());
+
+            dto.setExposure(req.getExposure());
+            dto.setContrast(req.getContrast());
+            dto.setBrightness(req.getBrightness());
+            dto.setSaturation(req.getSaturation());
+        }
 
         if (plan.getCreator() != null) {
             dto.setCreator(plan.getCreator().getName());
@@ -65,10 +82,14 @@ public class SciencePlanFactory {
     }
 
     public static void updateEntityFromDTO(SciencePlan plan, SciencePlanDTO dto) {
+
+        if (dto == null || plan == null) return;
+
         plan.setPlanName(dto.getPlanName());
         plan.setFunding(dto.getFunding());
         plan.setObjective(dto.getObjective());
         plan.setLastModified(LocalDateTime.now());
+
         if (dto.getStartDate() != null) {
             plan.setStartDate(
                     dto.getStartDate()
@@ -88,23 +109,65 @@ public class SciencePlanFactory {
         }
 
         if (dto.getTelescopeSite() != null) {
-            plan.setTelescopeSite(TelescopeSite.valueOf(dto.getTelescopeSite().toUpperCase()));
+            try {
+                plan.setTelescopeSite(
+                        TelescopeSite.valueOf(dto.getTelescopeSite().toUpperCase())
+                );
+            } catch (Exception e) {
+                plan.setTelescopeSite(null);
+            }
         }
 
         if (dto.getTargetName() != null) {
-            plan.setTarget(StarSystem.CONSTELLATIONS.valueOf(dto.getTargetName()));
+            try {
+                plan.setTarget(
+                        StarSystem.CONSTELLATIONS.valueOf(dto.getTargetName())
+                );
+            } catch (Exception e) {
+                plan.setTarget(null);
+            }
         }
 
         if (plan.getRequirements() == null) {
             plan.setRequirements(new DataProcessingRequirements());
         }
 
-        plan.getRequirements().setFileType(FileType.valueOf(dto.getFileType().toUpperCase()));
-        plan.getRequirements().setFileQuality(FileQuality.valueOf(dto.getFileQuality().toUpperCase()));
-        plan.getRequirements().setColorType(ColorType.valueOf(dto.getColorType().toUpperCase()));
-        plan.getRequirements().setExposure(dto.getExposure());
-        plan.getRequirements().setContrast(dto.getContrast());
-        plan.getRequirements().setBrightness(dto.getBrightness());
-        plan.getRequirements().setSaturation(dto.getSaturation());
+        DataProcessingRequirements req = plan.getRequirements();
+
+        // ---------- SAFE ENUM MAPPING ----------
+        if (dto.getFileType() != null) {
+            try {
+                req.setFileType(
+                        FileType.valueOf(dto.getFileType().toUpperCase())
+                );
+            } catch (Exception e) {
+                req.setFileType(null);
+            }
+        }
+
+        if (dto.getFileQuality() != null) {
+            try {
+                req.setFileQuality(
+                        FileQuality.valueOf(dto.getFileQuality().toUpperCase())
+                );
+            } catch (Exception e) {
+                req.setFileQuality(null);
+            }
+        }
+
+        if (dto.getColorType() != null) {
+            try {
+                req.setColorType(
+                        ColorType.valueOf(dto.getColorType().toUpperCase())
+                );
+            } catch (Exception e) {
+                req.setColorType(null);
+            }
+        }
+
+        req.setExposure(dto.getExposure());
+        req.setContrast(dto.getContrast());
+        req.setBrightness(dto.getBrightness());
+        req.setSaturation(dto.getSaturation());
     }
 }

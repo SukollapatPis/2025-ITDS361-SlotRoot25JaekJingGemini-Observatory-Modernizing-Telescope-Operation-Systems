@@ -207,7 +207,7 @@ public class UserController {
 | **ธรรมเนียมปฏิบัติของเฟรมเวิร์ก (Framework convention)** | scope เริ่มต้นของ Spring (`singleton`) สอดคล้องกับพฤติกรรมที่ควรจะเป็นของ service components แบบ stateless ใน Web Application |
 
 
-**หตุผลที่ Singleton มีความเหมาะ:** `UserService` เป็นแบบ stateless (มีเพียงการอ้างอิงแบบ final ไปยัง repository ซึ่งถูกกำหนดค่าเพียงครั้งเดียว) การใช้อินสแตนซ์ร่วมกันเพียงตัวเดียว ปลอดภัย และ มีประสิทธิภาพสูงสุด
+**เหตุผลที่ Singleton มีความเหมาะ:** `UserService` เป็นแบบ stateless (มีเพียงการอ้างอิงแบบ final ไปยัง repository ซึ่งถูกกำหนดค่าเพียงครั้งเดียว) การใช้อินสแตนซ์ร่วมกันเพียงตัวเดียว ปลอดภัย และ มีประสิทธิภาพสูงสุด
 
 ---
 
@@ -312,7 +312,7 @@ public ResponseEntity<Map<String, Object>> login(@RequestBody Map<String, String
 
 | ข้อดี | คำอธิบาย |
 |---------|-------------|
-| **ลดความซับซ้อนของคอนโทรลเลอร์ (Reduced controller complexity)** | เอนด์พอยต์การเข้าสู่ระบบมีความสะอาดและอ่านง่าย โดยไม่มีตรรกะทางธุรกิจปะปนอยู่ |
+| **ลดความซับซ้อนของคอนโทรลเลอร์ (Reduced controller complexity)** | endpoint การเข้าสู่ระบบมีความสะอาดและอ่านง่าย โดยไม่มีตรรกะทางธุรกิจปะปนอยู่ |
 | **ความสามารถในการทดสอบ (Testability)** | คอนโทรลเลอร์สามารถถูกทดสอบได้ด้วย mock `UserService` โดยไม่ต้องพึ่งพาฐานข้อมูลจริง |
 | **การแยกส่วนความรับผิดชอบ (Separation of concerns)** | Business rules (authentication logic) จะอยู่ใน service ไม่ใช่อยู่ในตัวจัดการ HTTP |
 

@@ -18,7 +18,7 @@
 
   ---
 
-  [🚀 Get Started](#how-to-run--slotroot25-jaekjing) • [🏗️ Design Patterns](#design-pattern-analysis--slotroot25-jaekjing-gemini-1) • [⚖️ License](#ลิขสิทธิ์และข้อกำหนดการใช้งาน-copyright-and-terms-of-use)
+[🚀 Get Started](#-how-to-run--slotroot25-jaekjing) • [🏗️ Design Patterns](#️-design-pattern-analysis--slotroot25-jaekjing-gemini-1) • [⚖️ License](#️-ลิขสิทธิ์และข้อกำหนดการใช้งาน-copyright-and-terms-of-use)
 
 </div>
 

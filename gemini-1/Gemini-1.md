@@ -44,10 +44,12 @@
 # 🚀 How to Run — SlotRoot25 JaekJing
 ## Prerequisites
 
-| Tool | Required Version | Check |
-|------|-----------------|-------|
-| Java (JDK) | XX or later | `java -version` |
-| Git | Any recent | `git --version` |
+| Tool | Required Version | Check | Note |
+|------|-----------------|-------|------|
+| **Java (JDK)** | 17 or later | `java -version` | สำหรับ Backend (Spring Boot) |
+| **Node.js** | 18.x or later | `node -v` | สำหรับ Frontend (React) |
+| **npm** | 9.x or later | `npm -v` | มาพร้อมกับ Node.js |
+| **Git** | Any recent | `git --version` | สำหรับ Clone โปรเจกต์ |
 
 ## Project Structure
 

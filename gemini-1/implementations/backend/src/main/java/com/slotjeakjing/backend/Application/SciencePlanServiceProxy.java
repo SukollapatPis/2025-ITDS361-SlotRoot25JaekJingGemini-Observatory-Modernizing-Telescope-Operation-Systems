@@ -115,10 +115,10 @@ public class SciencePlanServiceProxy implements SciencePlanService {
             try {
                 String result = actualService.testPlan(planId);
 
-                if (result.equalsIgnoreCase("Pass")) {
-                    logger.log("TEST", "INFO", "OCS Test Passed", "SYSTEM", planId);
-                } else {
+                if (result != null && result.contains("Please check")) {
                     logger.log("TEST", "WARNING", "OCS Test Failed: " + result, "SYSTEM", planId);
+                } else {
+                    logger.log("TEST", "INFO", "OCS Test Passed", "SYSTEM", planId);
                 }
                 return result;
             } catch (Exception e) {

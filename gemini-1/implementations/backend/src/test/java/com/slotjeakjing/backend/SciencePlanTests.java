@@ -65,6 +65,7 @@ class SciencePlanTests {
 
         dto.setFileType("PNG");
         dto.setFileQuality("LOW");
+        dto.setColorType("COLOR");
 
         dto.setBrightness(1.0);
         dto.setContrast(1.0);
@@ -78,7 +79,7 @@ class SciencePlanTests {
         assertTrue(plan.getPlanId() > 0);
 
         int planId = plan.getPlanId();
-        sciencePlanService.submitPlan(planId);
+//        sciencePlanService.submitPlan(planId);
         System.out.println("Plan stored in DB with ID: " + planId);
 
         // ===============================

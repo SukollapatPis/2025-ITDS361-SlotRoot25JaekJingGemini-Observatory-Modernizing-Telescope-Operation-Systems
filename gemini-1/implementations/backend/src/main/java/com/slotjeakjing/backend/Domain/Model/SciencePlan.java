@@ -29,7 +29,7 @@ public class SciencePlan {
 
     private LocalDateTime lastModified;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "creator_id")
     private User.Astronomer creator;
 
@@ -43,7 +43,7 @@ public class SciencePlan {
     @Enumerated(EnumType.STRING)
     private PlanStatus state;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "submitter_id")
     private User.Astronomer submitter;
 

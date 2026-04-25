@@ -20,9 +20,11 @@ public class LegacyOCSService {
         if (plan instanceof SciencePlan legacyPlan) {
 
             String result = realOCS.createSciencePlan(legacyPlan);
-
             if (result.contains("-1")) {
-                throw new RuntimeException("OCS failed: " + result);
+                System.out.println("[LegacyOCSService] FAILED: OCS rejected the plan.");
+                throw new RuntimeException("Input data is not compatible with the legacy OCS system.");
+            } else {
+                System.out.println("[LegacyOCSService] Success: Plan is now in OCS.");
             }
             int planNo = legacyPlan.getPlanNo();
             ocsDatabase.put(planNo, legacyPlan);

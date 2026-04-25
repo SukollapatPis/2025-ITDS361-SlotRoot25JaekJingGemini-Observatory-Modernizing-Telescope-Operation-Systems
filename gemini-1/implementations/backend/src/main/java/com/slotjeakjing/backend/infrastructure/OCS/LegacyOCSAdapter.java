@@ -1,6 +1,7 @@
 package com.slotjeakjing.backend.infrastructure.OCS;
 
 import com.slotjeakjing.backend.Domain.DTO.SciencePlanDTO;
+import com.slotjeakjing.backend.Enum.PlanStatus;
 import edu.gemini.app.ocs.model.DataProcRequirement;
 import edu.gemini.app.ocs.model.StarSystem;
 import edu.gemini.app.ocs.model.SciencePlan;
@@ -15,9 +16,7 @@ public class LegacyOCSAdapter implements OCSClient {
 
     @Override
     public int submitPlan(SciencePlanDTO dto) {
-
         if (dto == null) throw new RuntimeException("DTO is null");
-
         SciencePlan legacyPlan = new SciencePlan();
 
         legacyPlan.setCreator(dto.getCreator());

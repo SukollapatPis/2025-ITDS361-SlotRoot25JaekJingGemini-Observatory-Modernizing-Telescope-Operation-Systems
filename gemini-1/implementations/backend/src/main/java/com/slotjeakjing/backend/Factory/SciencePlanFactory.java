@@ -29,7 +29,7 @@ public class SciencePlanFactory {
         dto.setPlanName(plan.getPlanName());
         dto.setFunding(plan.getFunding());
         dto.setObjective(plan.getObjective());
-
+        dto.setStatus(plan.getState().name());
         dto.setStartDate(
                 plan.getStartDate() != null
                         ? Date.from(plan.getStartDate()

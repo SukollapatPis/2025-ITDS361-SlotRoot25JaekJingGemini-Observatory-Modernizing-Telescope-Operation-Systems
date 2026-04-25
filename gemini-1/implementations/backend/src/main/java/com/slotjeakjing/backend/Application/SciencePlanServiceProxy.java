@@ -159,7 +159,9 @@ public class SciencePlanServiceProxy implements SciencePlanService {
     }
 
 
-    @Override public List<SciencePlan> getSubmittedPlans() { return actualService.getSubmittedPlans(); }
+    @Override public List<SciencePlan> getSubmittedPlans() {
+        return actualService.getSubmittedPlans();
+    }
     @Override public SciencePlan getPlanById(int planId) { return actualService.getPlanById(planId); }
     @Override
     public List<SciencePlan> getPlansByCreator(int userId) {

@@ -141,8 +141,15 @@ public class SciencePlanServiceImpl implements SciencePlanService {
         List<SciencePlan> plans = repository.findByState(state);
         if (plans == null || plans.isEmpty()) {
             if (state == PlanStatus.SUBMITTED) {
-                throw new RuntimeException(
+                throw new ResponseStatusException(
+                        HttpStatus.BAD_REQUEST,
                         "There are currently no submitted science plans."
+                );
+            }
+            if (state == PlanStatus.CREATED) {
+                throw new ResponseStatusException(
+                        HttpStatus.BAD_REQUEST,
+                        "No available science plans for testing."
                 );
             }
 

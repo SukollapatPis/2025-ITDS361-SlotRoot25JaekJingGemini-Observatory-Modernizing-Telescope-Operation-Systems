@@ -52,13 +52,6 @@ public class SciencePlanController {
             @PathVariable PlanStatus state) {
         List<SciencePlan> statusPlans =
                 sciencePlanService.getPlansByStatus(state);
-        if (state == PlanStatus.SUBMITTED &&
-                (statusPlans == null || statusPlans.isEmpty())) {
-            throw new ResponseStatusException(
-                    HttpStatus.BAD_REQUEST,
-                    "No available science plans for testing."
-            );
-        }
         return ResponseEntity.ok(statusPlans);
     }
 

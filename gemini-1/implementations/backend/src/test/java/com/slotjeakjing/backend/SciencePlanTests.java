@@ -60,8 +60,12 @@ class SciencePlanTests {
         dto.setObjective("Observe distant galaxies");
         dto.setTargetName("Orion");
         dto.setTelescopeSite("HAWAII");
-        dto.setStartDate(Date.from(LocalDateTime.now().atZone(ZoneId.systemDefault()).toInstant()));
-        dto.setEndDate(Date.from(LocalDateTime.now().atZone(ZoneId.systemDefault()).toInstant()));
+        // ใน SciencePlanTests.java
+        LocalDateTime start = LocalDateTime.of(2026, 5, 1, 10, 0, 0); // 1 May 2026 10:00
+        LocalDateTime end = LocalDateTime.of(2026, 5, 10, 10, 0, 0);  // 10 May 2026 10:00
+
+        dto.setStartDate(Date.from(start.atZone(ZoneId.systemDefault()).toInstant()));
+        dto.setEndDate(Date.from(end.atZone(ZoneId.systemDefault()).toInstant()));
 
         dto.setFileType("PNG");
         dto.setFileQuality("LOW");
@@ -79,7 +83,7 @@ class SciencePlanTests {
         assertTrue(plan.getPlanId() > 0);
 
         int planId = plan.getPlanId();
-//        sciencePlanService.submitPlan(planId);
+        sciencePlanService.submitPlan(planId);
         System.out.println("Plan stored in DB with ID: " + planId);
 
         // ===============================
@@ -103,7 +107,6 @@ class SciencePlanTests {
         sciencePlanService.approvePlan(planId);
 
         System.out.println("Plan VALIDATED");
-
 
     }
 }

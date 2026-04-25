@@ -21,8 +21,16 @@ public class LegacyOCSService {
             ocsDatabase.add(legacyPlan);
 
             realOCS.createSciencePlan(legacyPlan);
+            realOCS.submitSciencePlan(legacyPlan);
 
-            System.out.println("[LegacyOCSService] Success: Plan " + legacyPlan.getObjectives() + " is now in OCS.");
+            String result = realOCS.createSciencePlan(legacyPlan);
+
+            if (result.contains("-1")) {
+                System.out.println("[LegacyOCSService] FAILED: OCS rejected the plan.");
+                throw new RuntimeException("OCS Submission Failed: " + result);
+            } else {
+                System.out.println("[LegacyOCSService] Success: Plan is now in OCS.");
+            }
         }
     }
 

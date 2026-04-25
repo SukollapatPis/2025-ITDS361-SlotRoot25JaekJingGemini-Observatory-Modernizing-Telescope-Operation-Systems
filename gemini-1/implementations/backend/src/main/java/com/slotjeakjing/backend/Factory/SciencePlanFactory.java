@@ -25,8 +25,17 @@ public class SciencePlanFactory {
         dto.setPlanName(plan.getPlanName());
         dto.setFunding(plan.getFunding());
         dto.setObjective(plan.getObjective());
-        dto.setStartDate(Date.from(LocalDateTime.now().atZone(ZoneId.systemDefault()).toInstant()));
-        dto.setEndDate(Date.from(LocalDateTime.now().atZone(ZoneId.systemDefault()).toInstant()));
+        dto.setStartDate(
+                plan.getStartDate() != null
+                        ? Date.from(plan.getStartDate().atZone(ZoneId.systemDefault()).toInstant())
+                        : null
+        );
+
+        dto.setEndDate(
+                plan.getEndDate() != null
+                        ? Date.from(plan.getEndDate().atZone(ZoneId.systemDefault()).toInstant())
+                        : null
+        );
         dto.setTelescopeSite(plan.getTelescopeSite().name());
 
         if (plan.getTarget() != null) {
@@ -59,9 +68,24 @@ public class SciencePlanFactory {
         plan.setPlanName(dto.getPlanName());
         plan.setFunding(dto.getFunding());
         plan.setObjective(dto.getObjective());
-        dto.setStartDate(Date.from(LocalDateTime.now().atZone(ZoneId.systemDefault()).toInstant()));
-        dto.setEndDate(Date.from(LocalDateTime.now().atZone(ZoneId.systemDefault()).toInstant()));
         plan.setLastModified(LocalDateTime.now());
+        if (dto.getStartDate() != null) {
+            plan.setStartDate(
+                    dto.getStartDate()
+                            .toInstant()
+                            .atZone(ZoneId.systemDefault())
+                            .toLocalDateTime()
+            );
+        }
+
+        if (dto.getEndDate() != null) {
+            plan.setEndDate(
+                    dto.getEndDate()
+                            .toInstant()
+                            .atZone(ZoneId.systemDefault())
+                            .toLocalDateTime()
+            );
+        }
 
         if (dto.getTelescopeSite() != null) {
             plan.setTelescopeSite(TelescopeSite.valueOf(dto.getTelescopeSite().toUpperCase()));
@@ -82,10 +106,5 @@ public class SciencePlanFactory {
         plan.getRequirements().setContrast(dto.getContrast());
         plan.getRequirements().setBrightness(dto.getBrightness());
         plan.getRequirements().setSaturation(dto.getSaturation());
-    }
-
-    private static String capitalizeFirst(String str) {
-        if (str == null || str.isEmpty()) return str;
-        return str.substring(0, 1).toUpperCase() + str.substring(1).toLowerCase();
     }
 }

@@ -7,6 +7,7 @@ import edu.gemini.app.ocs.model.SciencePlan;
 import org.springframework.stereotype.Component;
 
 import java.text.SimpleDateFormat;
+import java.util.Locale;
 
 @Component
 public class LegacyOCSAdapter implements OCSClient {
@@ -25,8 +26,11 @@ public class LegacyOCSAdapter implements OCSClient {
         legacyPlan.setObjectives(dto.getObjective());
 
         SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
-        if (dto.getStartDate() != null) legacyPlan.setStartDate(sdf.format(dto.getStartDate()));
-        if (dto.getEndDate() != null) legacyPlan.setEndDate(sdf.format(dto.getEndDate()));
+        if (dto.getStartDate() != null)
+            legacyPlan.setStartDate(sdf.format(dto.getStartDate()));
+
+        if (dto.getEndDate() != null)
+            legacyPlan.setEndDate(sdf.format(dto.getEndDate()));
 
         if (dto.getTargetName() != null) {
             legacyPlan.setStarSystem(StarSystem.CONSTELLATIONS.valueOf(dto.getTargetName()));

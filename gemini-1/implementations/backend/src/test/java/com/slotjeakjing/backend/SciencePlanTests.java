@@ -59,47 +59,42 @@ class SciencePlanTests {
         session.setAttribute("currentUser", astronomer);
 
         SciencePlanDTO dto = new SciencePlanDTO();
-        dto.setPlanName("Deep Space Observation");
-        dto.setCreator("Dr. Ploy");
-        dto.setFunding(1000.0);
-        dto.setObjective("Observe distant galaxies");
+        dto.setPlanName("Success Test Plan");
+        dto.setCreator("Dr. Smith");
+        dto.setFunding(5000.0);
+        dto.setObjective("Testing successful flow");
+
         dto.setTargetName("Auriga");
+
         dto.setTelescopeSite("HAWAII");
 
-        LocalDateTime start = LocalDateTime.of(2026, 4, 22, 23, 0, 0);
-        LocalDateTime end = LocalDateTime.of(2026, 4, 23, 2, 0, 0);
+        LocalDateTime start = LocalDateTime.of(2026, 2, 1, 22, 0, 0);
+        LocalDateTime end   = LocalDateTime.of(2026, 2, 28, 23, 0, 0);
 
         dto.setStartDate(Date.from(start.atZone(ZoneId.systemDefault()).toInstant()));
         dto.setEndDate(Date.from(end.atZone(ZoneId.systemDefault()).toInstant()));
 
         dto.setFileType("JPEG");
-        dto.setFileQuality("LOW");
+        dto.setFileQuality("Low");
         dto.setColorType("COLOR");
-        dto.setBrightness(1.0);
+
+        dto.setExposure(10.0);
         dto.setContrast(1.0);
-        dto.setExposure(1.0);
-        dto.setSaturation(1.0);
+        dto.setBrightness(10.0);
+        dto.setSaturation(10.0);
 
         SciencePlan plan = sciencePlanService.createPlan(dto);
 
         assertNotNull(plan);
+
         int planId = plan.getPlanId();
 
         printAllOCSPlans("AFTER CREATE");
 
         // ===============================
-        // STEP 2: SUBMIT
+        // STEP 2: TEST
         // ===============================
-        System.out.println(">>> [STEP 2] Submit");
-
-        sciencePlanService.submitPlan(planId);
-
-        printAllOCSPlans("AFTER SUBMIT");
-
-        // ===============================
-        // STEP 3: TEST
-        // ===============================
-        System.out.println(">>> [STEP 3] Test");
+        System.out.println(">>> [STEP 2] Test");
 
         String result = sciencePlanService.testPlan(planId);
 
@@ -107,6 +102,16 @@ class SciencePlanTests {
         System.out.println("OCS Result: " + result);
 
         printAllOCSPlans("AFTER TEST");
+
+
+        // ===============================
+        // STEP 3: SUBMIT
+        // ===============================
+        System.out.println(">>> [STEP 3] Submit");
+
+        sciencePlanService.submitPlan(planId);
+
+        printAllOCSPlans("AFTER SUBMIT");
 
         // ===============================
         // STEP 4: APPROVE

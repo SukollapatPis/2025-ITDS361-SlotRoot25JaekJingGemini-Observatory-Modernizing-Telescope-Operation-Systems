@@ -15,8 +15,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.time.LocalDateTime;
 import java.util.List;
-import java.util.NoSuchElementException;
 
 @Service
 public class SciencePlanServiceImpl implements SciencePlanService {
@@ -43,6 +43,9 @@ public class SciencePlanServiceImpl implements SciencePlanService {
             throw new SecurityException("Permission denied");
         }
         plan.setCreator((User.Astronomer) user);
+        int ocsPlanNo = ocsClient.createPlan(dto);
+        plan.setOcsPlanNo(ocsPlanNo);
+        plan.setLastModified(LocalDateTime.now());
         return repository.save(plan);
     }
 
@@ -56,15 +59,23 @@ public class SciencePlanServiceImpl implements SciencePlanService {
         }
         validateDates(dto);
         SciencePlanFactory.updateEntityFromDTO(plan, dto);
+        plan.setLastModified(LocalDateTime.now());
         repository.save(plan);
     }
 
-    @Override
     public String testPlan(int planId) {
 
-        SciencePlan plan = getPlanById(planId);
+        SciencePlan plan = repository.findById(planId)
+                .orElseThrow(() -> new RuntimeException("Plan not found"));
 
-        return ocsClient.testPlan(plan.getOcsPlanNo());
+        String result = ocsClient.testPlan(plan.getOcsPlanNo());
+
+        if (result != null && result.contains("OK")) {
+            plan.setState(PlanStatus.TESTED);
+            plan.setLastModified(LocalDateTime.now());
+            repository.save(plan);
+        }
+        return result;
     }
 
     @Transactional
@@ -76,9 +87,8 @@ public class SciencePlanServiceImpl implements SciencePlanService {
         }
         plan.setSubmitter((User.Astronomer) user);
         plan.changeState(PlanStatus.SUBMITTED);
-        SciencePlanDTO dto = SciencePlanFactory.convertToDTO(plan);
-        int ocsPlanNo = ocsClient.submitPlan(dto);
-        plan.setOcsPlanNo(ocsPlanNo);
+        plan.setLastModified(LocalDateTime.now());
+        ocsClient.changeStatus(plan.getOcsPlanNo(), "SUBMITTED");
         repository.save(plan);
     }
 
@@ -104,6 +114,7 @@ public class SciencePlanServiceImpl implements SciencePlanService {
             throw new SecurityException("Permission denied");
         }
         plan.changeState(PlanStatus.INVALIDATED);
+        plan.setLastModified(LocalDateTime.now());
         ocsClient.changeStatus(plan.getOcsPlanNo(), "INVALIDATED");
         repository.save(plan);
     }

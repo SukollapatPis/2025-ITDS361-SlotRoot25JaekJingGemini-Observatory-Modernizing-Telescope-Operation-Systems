@@ -53,15 +53,7 @@ public class LegacyOCSService {
     }
 
     public String testLegacyPlan(int planNo) {
-
         SciencePlan sp = getPlan(planNo);
-
-        System.out.println("========= OCS DEBUG =========");
-        System.out.println("PlanNo: " + sp.getPlanNo());
-        System.out.println("Status: " + sp.getStatus());
-        System.out.println("DPR: " + sp.getDataProcRequirements());
-        System.out.println("=============================");
-
         return realOCS.testSciencePlan(sp);
     }
 

@@ -16,7 +16,7 @@ public class LegacyOCSAdapter implements OCSClient {
     private final LegacyOCSService legacyOCSService = new LegacyOCSService(true);
 
     @Override
-    public int submitPlan(SciencePlanDTO dto) {
+    public int createPlan(SciencePlanDTO dto) {
         if (dto == null) throw new RuntimeException("DTO is null");
         SciencePlan legacyPlan = new SciencePlan();
 
@@ -44,9 +44,9 @@ public class LegacyOCSAdapter implements OCSClient {
             );
 
         DataProcRequirement dpr = new DataProcRequirement();
-        dpr.setFileType(dto.getFileType());
-        dpr.setFileQuality(dto.getFileQuality());
-        dpr.setColorType(dto.getColorType());
+        dpr.setFileType(mapFileType(dto.getFileType()));
+        dpr.setFileQuality(mapFileQuality(dto.getFileQuality()));
+        dpr.setColorType(mapColorType(dto.getColorType()));
         dpr.setExposure(dto.getExposure());
         dpr.setContrast(dto.getContrast());
         dpr.setBrightness(dto.getBrightness());
@@ -75,5 +75,49 @@ public class LegacyOCSAdapter implements OCSClient {
     @Override
     public List<SciencePlan> getAllSciencePlans() {
         return legacyOCSService.getAllPlans();
+    }
+
+    private String mapFileType(String value) {
+
+        if (value == null) return null;
+
+        switch (value.toUpperCase()) {
+            case "PNG":
+                return "PNG";
+            case "JPEG":
+                return "JPEG";
+            case "RAW":
+                return "RAW";
+            default:
+                return null;
+        }
+    }
+
+    private String mapFileQuality(String value) {
+
+        if (value == null) return null;
+
+        switch (value.toUpperCase()) {
+            case "LOW":
+                return "Low";
+            case "FINE":
+                return "Fine";
+            default:
+                return null;
+        }
+    }
+
+    private String mapColorType(String value) {
+
+        if (value == null) return null;
+
+        switch (value.toUpperCase()) {
+            case "COLOR":
+                return "Color mode";
+            case "BW":
+                return "B&W mode";
+            default:
+                return null;
+        }
     }
 }

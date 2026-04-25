@@ -82,10 +82,10 @@ public class SciencePlanController {
 
         if (result) {
             sciencePlanService.approvePlan(planId);
-            return ResponseEntity.ok("Science Plan validated and approved");
+            return ResponseEntity.ok("Validate Science Plan Succeed ID: " +planId);
         } else {
             sciencePlanService.invalidatePlan(planId, feedback);
-            return ResponseEntity.ok("Science Plan invalidated with feedback: " + feedback);
+            return ResponseEntity.ok("Validate failed. " + feedback);
         }
     }
 

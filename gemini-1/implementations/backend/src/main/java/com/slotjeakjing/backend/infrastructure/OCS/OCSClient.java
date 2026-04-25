@@ -6,7 +6,7 @@ import edu.gemini.app.ocs.model.SciencePlan;
 import java.util.List;
 
 public interface OCSClient {
-    int submitPlan(SciencePlanDTO dto);
+    int createPlan(SciencePlanDTO dto);
     String testPlan(int ocsPlanNo);
     void changeStatus(int ocsPlanNo, String status);
     List<SciencePlan> getAllSciencePlans();

@@ -70,7 +70,7 @@ public class SciencePlanServiceProxy implements SciencePlanService {
             SciencePlan updatedPlan = actualService.getPlanById(planId);
             SciencePlanDTO dto = SciencePlanFactory.convertToDTO(updatedPlan);
 
-            ocsClient.submitPlan(dto);
+            ocsClient.createPlan(dto);
 
             logger.log("SUBMIT", "INFO", "Plan submitted successfully to OCS by " + user.getName(), user.getName(), planId);
         } catch (Exception e) {

@@ -148,7 +148,7 @@ public class SciencePlanFactory {
         if (dto.getFileQuality() != null) {
             try {
                 req.setFileQuality(
-                        FileQuality.valueOf(dto.getFileQuality().toUpperCase())
+                        FileQuality.valueOf(dto.getFileQuality())
                 );
             } catch (Exception e) {
                 req.setFileQuality(null);
@@ -157,9 +157,16 @@ public class SciencePlanFactory {
 
         if (dto.getColorType() != null) {
             try {
-                req.setColorType(
-                        ColorType.valueOf(dto.getColorType().toUpperCase())
-                );
+                String color = dto.getColorType().trim();
+
+                if (color.equalsIgnoreCase("Color mode")) {
+                    req.setColorType(ColorType.COLOR);
+                } else if (color.equalsIgnoreCase("B&W mode")) {
+                    req.setColorType(ColorType.BW);
+                } else {
+                    req.setColorType(ColorType.valueOf(color.toUpperCase()));
+                }
+
             } catch (Exception e) {
                 req.setColorType(null);
             }

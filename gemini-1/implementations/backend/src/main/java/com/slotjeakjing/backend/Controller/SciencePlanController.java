@@ -71,7 +71,7 @@ public class SciencePlanController {
     @PostMapping("/{planId}/submit")
     public ResponseEntity<String> submitSciencePlan(@PathVariable int planId) {
         sciencePlanService.submitPlan(planId);
-        return ResponseEntity.ok("Science Plan submitted successfully to OCS");
+        return ResponseEntity.ok("Science Plan submitted successfully");
     }
 
     @PostMapping("/{planId}/validate")

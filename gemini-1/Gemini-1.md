@@ -88,19 +88,22 @@ cd gemini-1/implementations/frontend บลาๆๆๆๆ
 ---
 ## 4 — Available Endpoints
 
-| Method | Path | Description |
-|--------|------|-------------|
-| GET | `/all` | List all users |
-| GET | `/add-astronomer?name=X&email=Y` | Create an Astronomer user |
-| GET | `/add-scienceObserver?name=X&email=Y` | Create a Science Observer user |
-| POST | `/login` | Authenticate a user |
+| Method | Path | Description | Required Parameters / Body |
+|:---:|:---|:---|:---|
+| `GET` | `/...` | ... | ... |
+| `GET` | `/...` | ... | ... |
+| `POST` | `/...` | ... | ... |
+| `...` | `/...` | ... | ... |
 
-### Login request body (JSON)
+---
+
+### Request Body Format (Mockup)
+สำหรับ Endpoint ที่ต้องส่งข้อมูลแบบ JSON กรุณาใส่ตัวอย่างด้านล่างนี้:
 
 ```json
 {
-  "email": "บลาๆๆๆๆ@gmail.com",
-  "password": "บลาๆๆๆๆ"
+  "key": "value",
+  "key": "value"
 }
 ```
 

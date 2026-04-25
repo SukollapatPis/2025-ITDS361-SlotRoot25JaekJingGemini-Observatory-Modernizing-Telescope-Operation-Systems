@@ -5,6 +5,7 @@ import com.slotjeakjing.backend.Domain.DTO.SciencePlanDTO;
 import com.slotjeakjing.backend.Domain.Model.SciencePlan;
 import com.slotjeakjing.backend.Domain.Model.User;
 import com.slotjeakjing.backend.Repository.UserRepository;
+import com.slotjeakjing.backend.infrastructure.OCS.OCSClient;
 import jakarta.servlet.http.HttpSession;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,6 +13,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.util.ArrayList;
 import java.util.Date;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -28,11 +30,14 @@ class SciencePlanTests {
     @Autowired
     private UserRepository userRepository;
 
+    @Autowired
+    private OCSClient ocsClient;
+
     @Test
     void testStandardFlow() {
 
         // ===============================
-        // เตรียม User และ save ลง DB ก่อน
+        // เตรียม User
         // ===============================
         User.Astronomer astronomer = new User.Astronomer();
         astronomer.setName("Dr. Smith");
@@ -47,9 +52,9 @@ class SciencePlanTests {
         observer = userRepository.save(observer);
 
         // ===============================
-        // STEP 1: สร้างแผน
+        // STEP 1: CREATE
         // ===============================
-        System.out.println(">>> [STEP 1] Astronomer: Creating Science Plan");
+        System.out.println(">>> [STEP 1] Create");
 
         session.setAttribute("currentUser", astronomer);
 
@@ -60,6 +65,7 @@ class SciencePlanTests {
         dto.setObjective("Observe distant galaxies");
         dto.setTargetName("Auriga");
         dto.setTelescopeSite("HAWAII");
+
         LocalDateTime start = LocalDateTime.of(2026, 4, 22, 23, 0, 0);
         LocalDateTime end = LocalDateTime.of(2026, 4, 23, 2, 0, 0);
 
@@ -69,7 +75,6 @@ class SciencePlanTests {
         dto.setFileType("JPEG");
         dto.setFileQuality("LOW");
         dto.setColorType("COLOR");
-
         dto.setBrightness(1.0);
         dto.setContrast(1.0);
         dto.setExposure(1.0);
@@ -77,35 +82,59 @@ class SciencePlanTests {
 
         SciencePlan plan = sciencePlanService.createPlan(dto);
 
-
         assertNotNull(plan);
-        assertTrue(plan.getPlanId() > 0);
-
         int planId = plan.getPlanId();
-        sciencePlanService.submitPlan(planId);
-        System.out.println("Plan stored in DB with ID: " + planId);
+
+        printAllOCSPlans("AFTER CREATE");
 
         // ===============================
-        // STEP 3: Test ข้ามการ submit เพราะทำพร้อมการ create
+        // STEP 2: SUBMIT
         // ===============================
-        System.out.println("\n>>> [STEP 3] Astronomer: Testing plan");
+        System.out.println(">>> [STEP 2] Submit");
+
+        sciencePlanService.submitPlan(planId);
+
+        printAllOCSPlans("AFTER SUBMIT");
+
+        // ===============================
+        // STEP 3: TEST
+        // ===============================
+        System.out.println(">>> [STEP 3] Test");
 
         String result = sciencePlanService.testPlan(planId);
 
         assertNotNull(result);
-
         System.out.println("OCS Result: " + result);
 
+        printAllOCSPlans("AFTER TEST");
+
         // ===============================
-        // STEP 4: Approve
+        // STEP 4: APPROVE
         // ===============================
-        System.out.println("\n>>> [STEP 4] Observer Validating");
+        System.out.println(">>> [STEP 4] Approve");
 
         session.setAttribute("currentUser", observer);
 
         sciencePlanService.approvePlan(planId);
 
-        System.out.println("Plan VALIDATED");
+        printAllOCSPlans("AFTER APPROVE");
+    }
 
+    private void printAllOCSPlans(String title) {
+
+        System.out.println("\n========= " + title + " =========");
+
+        ArrayList<edu.gemini.app.ocs.model.SciencePlan> sciencePlans =
+                new ArrayList<>(ocsClient.getAllSciencePlans());
+
+        if (sciencePlans.isEmpty()) {
+            System.out.println("No plans in OCS");
+        }
+
+        for (edu.gemini.app.ocs.model.SciencePlan sp : sciencePlans) {
+            System.out.println(sp);
+        }
+
+        System.out.println("===============================\n");
     }
 }

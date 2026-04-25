@@ -6,8 +6,10 @@ import com.slotjeakjing.backend.Domain.Model.SciencePlan;
 import com.slotjeakjing.backend.Domain.Model.StarSystem;
 import com.slotjeakjing.backend.Enum.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.Arrays;
 import java.util.HashMap;
@@ -46,8 +48,17 @@ public class SciencePlanController {
     }
 
     @GetMapping("/status/{state}")
-    public ResponseEntity<List<SciencePlan>> requestSciencePlanList(@PathVariable PlanStatus state) {
-        List<SciencePlan> statusPlans = sciencePlanService.getPlansByStatus(state);
+    public ResponseEntity<List<SciencePlan>> requestSciencePlanList(
+            @PathVariable PlanStatus state) {
+        List<SciencePlan> statusPlans =
+                sciencePlanService.getPlansByStatus(state);
+        if (state == PlanStatus.SUBMITTED &&
+                (statusPlans == null || statusPlans.isEmpty())) {
+            throw new ResponseStatusException(
+                    HttpStatus.BAD_REQUEST,
+                    "No available science plans for testing."
+            );
+        }
         return ResponseEntity.ok(statusPlans);
     }
 

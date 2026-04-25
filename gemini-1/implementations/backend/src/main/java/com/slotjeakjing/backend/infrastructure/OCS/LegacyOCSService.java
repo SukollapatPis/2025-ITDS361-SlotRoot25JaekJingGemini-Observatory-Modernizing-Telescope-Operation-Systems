@@ -2,6 +2,8 @@ package com.slotjeakjing.backend.infrastructure.OCS;
 
 import edu.gemini.app.ocs.OCS;
 import edu.gemini.app.ocs.model.SciencePlan;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -22,7 +24,9 @@ public class LegacyOCSService {
             String result = realOCS.createSciencePlan(legacyPlan);
             if (result.contains("-1")) {
                 System.out.println("[LegacyOCSService] FAILED: OCS rejected the plan.");
-                throw new RuntimeException("Input data is not compatible with the legacy OCS system.");
+                throw new ResponseStatusException(
+                        HttpStatus.BAD_REQUEST,
+                        "Input data is not compatible with the legacy OCS system.");
             } else {
                 System.out.println("[LegacyOCSService] Success: Plan is now in OCS.");
             }
@@ -31,14 +35,18 @@ public class LegacyOCSService {
             System.out.println("[LegacyOCSService] Created in OCS with planNo = " + planNo);
             return planNo;
         }
-        throw new RuntimeException("Invalid plan object");
+        throw new ResponseStatusException(
+                HttpStatus.BAD_REQUEST,
+                "Invalid plan object");
     }
 
     public SciencePlan getPlan(int planNo) {
         SciencePlan sp = ocsDatabase.get(planNo);
 
         if (sp == null) {
-            throw new RuntimeException("Plan not found in OCS: " + planNo);
+            throw new ResponseStatusException(
+                    HttpStatus.BAD_REQUEST,
+                    "Plan not found in OCS: " + planNo);
         }
 
         return sp;
@@ -58,7 +66,31 @@ public class LegacyOCSService {
     }
 
     public List<SciencePlan> getAllPlans() {
-        return new ArrayList<>(ocsDatabase.values());
+
+        List<SciencePlan> plans = realOCS.getAllSciencePlans();
+
+        if (plans == null || plans.isEmpty()) {
+            throw new ResponseStatusException(
+                    HttpStatus.BAD_REQUEST,
+                    "There are currently no science plans in OCS."
+            );
+        }
+
+        return plans;
     }
 
+    public void changeStatus(int planNo, String status) {
+
+        SciencePlan plan = getPlan(planNo);
+
+        plan.setStatus(SciencePlan.STATUS.valueOf(status));
+
+        realOCS.updateSciencePlanStatus(
+                planNo,
+                SciencePlan.STATUS.valueOf(status)
+        );
+
+        System.out.println("[LegacyOCSService] OCS Plan " + planNo +
+                " changed status to " + status);
+    }
 }

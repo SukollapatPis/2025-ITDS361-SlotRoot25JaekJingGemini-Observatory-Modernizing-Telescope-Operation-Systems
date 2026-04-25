@@ -10,8 +10,10 @@ import com.slotjeakjing.backend.infrastructure.OCS.OCSClient;
 import com.slotjeakjing.backend.infrastructure.security.AccessControlService;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -89,6 +91,7 @@ public class SciencePlanServiceImpl implements SciencePlanService {
             throw new SecurityException("Permission denied");
         }
         plan.changeState(PlanStatus.VALIDATED);
+        ocsClient.changeStatus(plan.getOcsPlanNo(), "VALIDATED");
         repository.save(plan);
     }
 
@@ -101,6 +104,7 @@ public class SciencePlanServiceImpl implements SciencePlanService {
             throw new SecurityException("Permission denied");
         }
         plan.changeState(PlanStatus.INVALIDATED);
+        ocsClient.changeStatus(plan.getOcsPlanNo(), "INVALIDATED");
         repository.save(plan);
     }
 
@@ -112,7 +116,8 @@ public class SciencePlanServiceImpl implements SciencePlanService {
     @Override
     public SciencePlan getPlanById(int planId) {
         return repository.findById(planId)
-                .orElseThrow(() -> new NoSuchElementException("Your selected science plan does not exist."));
+                .orElseThrow(() -> new ResponseStatusException(
+                        HttpStatus.BAD_REQUEST,"Your selected science plan does not exist."));
     }
 
     @Override

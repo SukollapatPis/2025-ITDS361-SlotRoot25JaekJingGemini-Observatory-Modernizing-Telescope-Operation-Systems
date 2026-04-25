@@ -8,6 +8,7 @@ import edu.gemini.app.ocs.model.SciencePlan;
 import org.springframework.stereotype.Component;
 
 import java.text.SimpleDateFormat;
+import java.util.List;
 
 @Component
 public class LegacyOCSAdapter implements OCSClient {
@@ -64,5 +65,15 @@ public class LegacyOCSAdapter implements OCSClient {
         System.out.println("[Adapter] Testing REAL OCS planNo = " + ocsPlanNo);
 
         return legacyOCSService.testLegacyPlan(ocsPlanNo);
+    }
+
+    @Override
+    public void changeStatus(int ocsPlanNo, String status) {
+        legacyOCSService.changeStatus(ocsPlanNo, status);
+    }
+
+    @Override
+    public List<SciencePlan> getAllSciencePlans() {
+        return legacyOCSService.getAllPlans();
     }
 }

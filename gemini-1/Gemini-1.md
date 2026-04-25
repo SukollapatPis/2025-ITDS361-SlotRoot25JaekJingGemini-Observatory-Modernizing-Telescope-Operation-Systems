@@ -143,8 +143,7 @@ Test reports are generated at:
 4. [Pattern 3 — Facade (Service Layer)](#pattern-3--facade-service-layer)
 5. [Pattern 4 — Factory Method (Partial — User Hierarchy)](#pattern-4--factory-method-partial--user-hierarchy)
 6. [Pattern 5 — MVC Architectural Pattern](#pattern-5--mvc-architectural-pattern)
-7. [Recommendations](#recommendations)
-8. [Conclusion](#conclusion)
+7. [Conclusion](#conclusion)
 
 ---
 

@@ -110,7 +110,7 @@ public class SciencePlanServiceImpl implements SciencePlanService {
     public void invalidatePlan(int planId, String feedback) {
         User user = (User) session.getAttribute("currentUser");
         SciencePlan plan = getPlanById(planId);
-        if (!access.canSubmit(user, plan)) {
+        if (!access.canValidate(user, plan)) {
             throw new SecurityException("Permission denied");
         }
         plan.changeState(PlanStatus.INVALIDATED);

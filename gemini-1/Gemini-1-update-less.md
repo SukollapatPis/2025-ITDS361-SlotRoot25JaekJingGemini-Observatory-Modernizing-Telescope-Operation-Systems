@@ -201,12 +201,23 @@ Test reports are generated at:
 
 1. [Summary Table](#summary-table)
 2. [Pattern 1 — Singleton](#pattern-1--singleton)
-3. [Pattern 2 — Proxy (SciencePlanServiceProxy)](#pattern-2--proxy-scienceplanserviceproxy)
-4. [Pattern 3 — Adapter (LegacyOCSAdapter)](#pattern-3--adapter-legacyocsadapter)
-5. [Pattern 4 — Factory (SciencePlanFactory)](#pattern-4--factory-static-factory-method)
+3. [Pattern 2 — Proxy](#pattern-2--proxy)
+4. [Pattern 3 — Adapter](#pattern-3--adapter)
+5. [Pattern 4 — Factory](#pattern-4--factory)
 6. [Pattern 5 — MVC Architectural Pattern](#pattern-5--mvc-architectural-pattern)
 7. [Conclusion](#conclusion)
 
+---
+
+## Summary Table
+
+| # | Pattern Name | Category | Where It Is Used |
+|---|-------------|----------|-----------------|
+| 1 | **Singleton** | Creational | Service layer, Controllers, Logging component |
+| 2 | **Proxy** | Structural | Service layer (access control & logging wrapper) |
+| 3 | **Adapter** | Structural | Legacy OCS integration layer |
+| 4 | **Factory** | Creational | Science Plan creation logic |
+| 5 | **MVC** | Architectural | Overall system architecture |
 
 ---
 
@@ -215,96 +226,105 @@ Test reports are generated at:
 ### Category
 **Creational Pattern**
 
+### แนวคิด
+ควบคุมให้คลาสหนึ่งๆ มี Object เพียงตัวเดียวในระบบ
 
 ### เหตุผลที่เลือกใช้ Singleton
 
 | ข้อดี | คำอธิบาย |
 |---------|-------------|
-| **ประสิทธิภาพด้านทรัพยากร (Resource efficiency)** | การสร้าง Service ใหม่ต่อหนึ่ง request จะเป็นการสิ้นเปลือง เนื่องจาก service ไม่มี state ที่เปลี่ยนแปลงได้ต่อ request |
-| **การควบคุมสถานะที่ใช้ร่วมกัน (Shared state control)** | อินสแตนซ์ service เพียงตัวเดียวรับประกันพฤติกรรมที่สม่ำเสมอสำหรับทุก operation |
-| **ธรรมเนียมปฏิบัติของเฟรมเวิร์ก (Framework convention)** | scope เริ่มต้นของ Spring (`singleton`) สอดคล้องกับพฤติกรรมที่ควรจะเป็นของ service components แบบ stateless ใน Web Application |
+| **ประสิทธิภาพด้านทรัพยากร** | ไม่จำเป็นต้องสร้าง Object ใหม่ทุก request เนื่องจาก service ไม่มีข้อมูลส่วนตัวที่เปลี่ยนแปลงเฉพาะต่อ request |
+| **พฤติกรรมที่สม่ำเสมอ** | Object เดียวกันถูกใช้ร่วมกันทั่วระบบ ทำให้การทำงานสอดคล้องกันเสมอ |
+| **มาตรฐานของ Framework** | Spring Boot ใช้ Singleton เป็นค่าเริ่มต้นสำหรับ component ทุกตัว |
 
-**เหตุผลที่ Singleton มีความเหมาะสม:** `UserService`, `SciencePlanServiceProxy`, `SciencePlanServiceImpl`, และ `AuditLogger` ล้วนเป็น stateless (ไม่มี mutable instance state) Spring Container จัดการ lifecycle และรับประกัน instance เดียวต่อ application context โดยอัตโนมัติผ่าน annotation ต่างๆ โดยเฉพาะ `AuditLogger` ที่ annotated ด้วย `@Component` ทำให้ถูก inject เป็น singleton เดียวกันในทุก class ที่ต้องการใช้งาน
+**สรุป:** Services, Controllers, และ Logging component ในระบบล้วนเป็น Singleton ที่ Spring จัดการให้โดยอัตโนมัติ ทำให้ประหยัดทรัพยากรและมีพฤติกรรมที่คาดเดาได้
 
 ---
 
-## Pattern 2 — Proxy (SciencePlanServiceProxy)
+## Pattern 2 — Proxy
 
 ### Category
 **Structural Pattern**
 
+### แนวคิด
+สร้างตัวแทนมาคั่นกลาง เพื่อควบคุมการเข้าถึง object จริง โดยเพิ่มการตรวจสอบสิทธิ์และการบันทึก log ก่อนส่งต่อคำสั่ง
 
 ### เหตุผลที่เลือกใช้ Proxy
 
 | ข้อดี | คำอธิบาย |
 |---------|-------------|
-| **การควบคุมการเข้าถึง (Access control)** | `SciencePlanServiceProxy` ตรวจสอบสิทธิ์ผ่าน `AccessControlService` ก่อนทุก operation โดยที่ Real Subject (`SciencePlanServiceImpl`) ไม่ต้องสนใจ |
-| **Audit logging** | `AuditLogger` บันทึกทุก event ก่อนและหลังการเรียกใช้ Real Subject โดยไม่แทรกซึมเข้า Business Logic |
-| **Single Responsibility** | `SciencePlanServiceImpl` มุ่งเน้นที่ Business Logic ส่วน Proxy ดูแลเรื่อง Cross-cutting Concerns (security, logging) แยกต่างหาก |
+| **การควบคุมการเข้าถึง** | ตรวจสอบสิทธิ์ของผู้ใช้ก่อนทุก operation โดยที่ business logic หลักไม่ต้องสนใจ |
+| **การบันทึก Audit Log** | บันทึกทุก event ก่อนและหลังการทำงานจริง โดยไม่แทรกซึมเข้า business logic |
+| **การแยกหน้าที่** | ส่วน business logic มุ่งเน้นที่การทำงานหลัก ส่วน Proxy ดูแลเรื่อง security และ logging แยกต่างหาก |
 
-**เหตุผลที่ Proxy มีความเหมาะสม:** `SciencePlanServiceProxy` เป็น textbook Proxy pattern โดยมี interface เหมือน Real Subject ทุกประการ (`implements SciencePlanService`) แต่ดักทำงานพิเศษ (access control + audit logging) ก่อนส่งต่อให้ `SciencePlanServiceImpl` จัดการ Business Logic จริง
+**สรุป:** ระบบใช้ Proxy layer คั่นกลางระหว่าง Controller กับ Service จริง เพื่อตรวจสอบสิทธิ์และบันทึก log ทุก operation โดยอัตโนมัติ
 
 ---
 
-## Pattern 3 — Adapter (LegacyOCSAdapter)
+## Pattern 3 — Adapter
 
 ### Category
 **Structural Pattern**
 
+### แนวคิด
+สร้างตัวกลางแปลง Interface เพื่อให้ระบบใหม่กับระบบเก่า (Legacy) ที่มี API แตกต่างกันสามารถทำงานร่วมกันได้
 
 ### เหตุผลที่เลือกใช้ Adapter
 
 | ข้อดี | คำอธิบาย |
 |---------|-------------|
-| **แยก Legacy API ออกจากโค้ดหลัก (Isolation of Legacy API)** | โค้ดใน Application layer ใช้แค่ `OCSClient` interface โดยไม่รู้ว่าข้างหลังคือ Legacy OCS หรือไม่ |
-| **แปลง Type และ Format อัตโนมัติ (Type/format translation)** | Adapter แปลง `SciencePlanDTO` (ระบบใหม่) ไปเป็น `edu.gemini.app.ocs.model.SciencePlan` (ระบบ Legacy) รวมถึงแปลง enum และ date format |
-| **ความสามารถในการเปลี่ยนระบบ (Replaceability)** | หากต้องการเปลี่ยนระบบ OCS ในอนาคต เพียงสร้าง Adapter ใหม่ที่ implement `OCSClient` โดยไม่ต้องแก้ไขโค้ดส่วนอื่น |
+| **แยก Legacy API ออกจากโค้ดหลัก** | โค้ดหลักไม่ต้องรู้จัก format หรือ API ของระบบเก่าเลย |
+| **แปลง format ข้อมูลอัตโนมัติ** | Adapter แปลงข้อมูลจาก format ของระบบใหม่ไปเป็น format ที่ระบบ Legacy OCS เข้าใจ |
+| **ความยืดหยุ่นในอนาคต** | หากต้องการเปลี่ยนระบบ OCS เพียงสร้าง Adapter ใหม่ โดยไม่ต้องแก้ไขโค้ดส่วนอื่น |
 
-**เหตุผลที่ Adapter มีความเหมาะสม:** ระบบต้องติดต่อกับ Gemini OCS Library ซึ่งเป็นระบบภายนอก (Legacy) ที่มี API แตกต่างจากระบบใหม่ทั้งหมด `LegacyOCSAdapter` ทำหน้าที่เป็นตัวกลางแปลงภาษาระหว่าง modern DTO-based API กับ legacy API โดยที่ทั้ง Application layer และ OCS Library ไม่ต้องรู้จักกันตรงๆ
+**สรุป:** ระบบต้องติดต่อกับ Gemini OCS ซึ่งเป็นระบบ Legacy ที่มี API ต่างออกไป Adapter ทำหน้าที่แปลงข้อมูลระหว่างสองระบบ ทำให้ทั้งสองฝ่ายไม่ต้องรู้จักกันโดยตรง
 
 ---
 
-## Pattern 4 — Factory (Static Factory Method)
+## Pattern 4 — Factory
 
 ### Category
 **Creational Pattern**
 
-
+### แนวคิด
+รวม logic การสร้าง Object ไว้ที่เดียว แทนที่จะกระจายการสร้างไปทั่วโค้ด
 
 ### เหตุผลที่เลือกใช้ Factory
 
 | ข้อดี | คำอธิบาย |
 |---------|-------------|
-| **รวม object creation logic (Centralized creation logic)** | ตรรกะการแปลง DTO → Entity อยู่ที่เดียวใน `SciencePlanFactory` ไม่กระจายใน Service หรือ Controller |
-| **ลด code duplication** | `createPlan()` และ `updateEntityFromDTO()` ถูกใช้ซ้ำใน `SciencePlanServiceImpl` และ `SciencePlanServiceProxy` ทำให้ไม่ต้องเขียน mapping ซ้ำ |
-| **ตั้งค่า Default State (Default state initialization)** | Factory กำหนด `PlanStatus.CREATED` และ `lastModified` ให้อัตโนมัติ ผู้เรียกใช้ไม่ต้องกังวล |
+| **รวม logic การสร้าง Object ไว้ที่เดียว** | ทุกส่วนของระบบที่ต้องการสร้าง Science Plan ใช้ Factory เดียวกัน ไม่ต้องเขียนซ้ำ |
+| **ลด Code ซ้ำซ้อน** | การแมปข้อมูลและการกำหนดค่าเริ่มต้นต่างๆ อยู่ในที่เดียว |
+| **ตั้งค่าเริ่มต้นอัตโนมัติ** | Factory กำหนด status เริ่มต้นและเวลาที่แก้ไขล่าสุดให้อัตโนมัติ ผู้เรียกใช้ไม่ต้องกังวล |
 
-**เหตุผลที่ Factory มีความเหมาะสม:** `SciencePlanFactory` รวม object creation logic ของ `SciencePlan` ไว้ที่เดียว รวมถึงการตั้งค่า initial state และการแมป enum/date จาก DTO โดยที่ Service layer ไม่ต้องรู้รายละเอียดการสร้าง object
+**สรุป:** Factory รวม logic การสร้าง Science Plan ไว้ที่เดียว ทำให้ทุก service ที่ต้องการสร้าง plan ใช้วิธีเดียวกัน และมั่นใจได้ว่า object ที่ได้มีข้อมูลครบถ้วน
 
 ---
 
 ## Pattern 5 — MVC Architectural Pattern
 
 ### Category
-**Architectural / Behavioral Pattern**
+**Architectural Pattern**
 
+### แนวคิด
+แบ่งระบบออกเป็น 3 ส่วนหลัก ได้แก่ Model (ข้อมูล), View (การแสดงผล), และ Controller (การจัดการ request)
 
 ### วิธีการนำ MVC มาใช้งาน
 
-- **Model (`User.java`, `SciencePlan.java`, `DataProcessingRequirements.java`):** กำหนดโครงสร้างข้อมูล ใช้ JPA Annotation สำหรับการจัดเก็บข้อมูล (persistence) เป็นแหล่งความจริงเดียว (single source of truth) ของนิยามข้อมูลในระบบ
-- **View:** ไม่มี HTML template นี่คือ REST API ดังนั้น "วิว" จึงเป็นเนื้อหา JSON ที่ส่งกลับมาผ่าน `ResponseEntity` โดย Annotation `@ResponseBody` ของ Spring จะทำการแปลง Java objects ให้เป็น JSON โดยอัตโนมัติ
-- **Controller (`UserController.java`, `SciencePlanController.java`):** รับ HTTP requests ผ่าน `@GetMapping` / `@PostMapping` / `@PutMapping`, สกัดเอาข้อมูลนำเข้า, มอบหมายการทำงานให้กับ service, และจัดรูปแบบการตอบกลับ
+- **Model:** กำหนดโครงสร้างข้อมูลของระบบ เช่น ข้อมูลผู้ใช้และ Science Plan
+- **View:** เนื่องจากเป็น REST API ดังนั้น "View" คือข้อมูล JSON ที่ส่งกลับให้ผู้เรียกใช้งาน
+- **Controller:** รับ HTTP request, ส่งต่อให้ Service ทำงาน, และส่งผลลัพธ์กลับ
 
-รูปแบบ MVC ดั้งเดิมถูกขยายเพิ่มเติมด้วย **Service Layer + Proxy** ที่คั่นระหว่าง Controller และ Model ซึ่งถือเป็นมาตรฐานในแอปพลิเคชัน Spring ระดับ enterprise (บางครั้งเรียกว่า MVC+S หรือ layered architecture)
+ระบบได้เพิ่ม **Service Layer** เข้าไปด้วย ซึ่งเป็นมาตรฐานใน Spring Boot สำหรับแยก business logic ออกจาก Controller
 
 ### เหตุผลที่เลือกใช้ MVC
 
 | ข้อดี | คำอธิบาย |
 |---------|-------------|
-| **การแยกส่วนความรับผิดชอบ (Separation of concerns)** | การจัดการ HTTP, business logic และ การจัดเก็บข้อมูลถูกแยกออกจากกันอย่างเป็นอิสระ |
-| **ความสามารถในการทดสอบแยกอิสระ (Independent testability)** | แต่ละชั้นสามารถทำ unit-test แบบแยกอิสระได้ |
-| **ความสอดคล้องกับเฟรมเวิร์ก (Framework alignment)** | Spring Boot ถูกสร้างขึ้นโดยมีพื้นฐานมาจาก MVC การพยายามฝืนใช้รูปแบบอื่นจะเพิ่มความซับซ้อนโดยไม่จำเป็น |
-| **ความสามารถในการบำรุงรักษา (Maintainability)** | การเพิ่ม endpoint ใหม่ต้องการเพียงการเปลี่ยนแปลงใน Controller เท่านั้น ไม่ใช่ใน Model หรือ Service |
+| **การแยกส่วนความรับผิดชอบ** | การจัดการ request, business logic และ ข้อมูลถูกแยกออกจากกัน |
+| **ทดสอบง่าย** | แต่ละส่วนสามารถทดสอบได้อิสระ |
+| **มาตรฐานของ Spring Boot** | Spring Boot ถูกออกแบบมาสำหรับ MVC โดยเฉพาะ |
+| **บำรุงรักษาง่าย** | การเพิ่ม feature ใหม่แก้ไขเฉพาะส่วนที่เกี่ยวข้อง ไม่กระทบส่วนอื่น |
 
 ---
 ---
@@ -315,11 +335,11 @@ Test reports are generated at:
 
 ### Summary
 
-- แพตเทิร์น **Singleton** ถูกนำมาใช้งานผ่าน Spring Container สำหรับ service และ controller ทุกตัว
-- **Proxy Pattern** ถูก implement อย่างชัดเจนผ่าน `SciencePlanServiceProxy` ซึ่งทำหน้าที่เป็น Access Control และ Audit Logging layer ก่อนส่งต่อให้ `SciencePlanServiceImpl` — นอกจากนี้ Spring Data JPA repositories ก็เป็น Proxy เช่นกัน
-- **Adapter Pattern** ถูก implement ผ่าน `LegacyOCSAdapter` เพื่อเชื่อมระบบใหม่กับ Gemini OCS Library ที่มี API format แตกต่างกัน
-- **Factory Pattern** ถูก implement ผ่าน `SciencePlanFactory` ที่รวม object creation logic และ DTO-to-Entity mapping ไว้ที่เดียว
-- **MVC Architectural Pattern** ถูกประยุกต์ใช้อย่างเหมาะสมด้วยการแบ่งชั้นการทำงานที่ชัดเจน ครอบคลุมทั้ง `UserController`, `SciencePlanController`, domain models, และ repositories
+- **Singleton** — Spring จัดการให้โดยอัตโนมัติ ทำให้ทุก service และ component ใช้งาน resource อย่างมีประสิทธิภาพ
+- **Proxy** — ใช้เป็น layer กลางสำหรับตรวจสอบสิทธิ์และบันทึก log ก่อนส่งต่อให้ service จริงทำงาน
+- **Adapter** — ใช้เชื่อมต่อกับระบบ Legacy OCS ที่มี API ต่างออกไป โดยไม่กระทบโค้ดหลัก
+- **Factory** — รวม logic การสร้าง Science Plan ไว้ที่เดียว ลด code ซ้ำซ้อนทั่วระบบ
+- **MVC** — เป็นโครงสร้างหลักของระบบ แบ่งหน้าที่ชัดเจนระหว่าง Controller, Service, และ Data layer
 
 ---
 ---

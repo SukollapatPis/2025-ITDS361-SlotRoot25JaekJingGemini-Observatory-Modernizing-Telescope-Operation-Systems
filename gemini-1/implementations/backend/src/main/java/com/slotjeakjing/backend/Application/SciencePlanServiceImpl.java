@@ -168,4 +168,18 @@ public class SciencePlanServiceImpl implements SciencePlanService {
             );
         }
     }
+
+    @Override
+    public List<SciencePlan> getAllPlans() {
+        List<SciencePlan> plans = repository.findAll();
+
+        if (plans == null || plans.isEmpty()) {
+            throw new ResponseStatusException(
+                    HttpStatus.BAD_REQUEST,
+                    "There are currently no science plans in the system."
+            );
+        }
+
+        return plans;
+    }
 }

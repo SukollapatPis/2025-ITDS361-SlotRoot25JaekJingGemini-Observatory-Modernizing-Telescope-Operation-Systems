@@ -29,6 +29,12 @@ public class SciencePlanController {
         return ResponseEntity.ok(createdPlan);
     }
 
+    @GetMapping
+    public ResponseEntity<List<SciencePlan>> getAllSciencePlans() {
+        List<SciencePlan> plans = sciencePlanService.getAllPlans();
+        return ResponseEntity.ok(plans);
+    }
+
     @PutMapping("/{planId}")
     public ResponseEntity<String> updateSciencePlanDetails(@PathVariable int planId, @RequestBody SciencePlanDTO dto) {
         sciencePlanService.updatePlan(planId, dto);

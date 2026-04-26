@@ -17,4 +17,5 @@ public interface SciencePlanService {
     SciencePlan getPlanById(int planId);
     List<SciencePlan> getPlansByCreator(int userId);
     List<SciencePlan> getPlansByStatus(PlanStatus state);
+    List<SciencePlan> getAllPlans();
 }

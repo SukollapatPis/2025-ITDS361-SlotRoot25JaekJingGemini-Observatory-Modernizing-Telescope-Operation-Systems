@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { Telescope } from "lucide-react";
 import TestPlanModal from "../components/TestPlanModal";
@@ -18,6 +18,8 @@ export default function TestPlanPage() {
   const [testResult, setTestResult] = useState(null);
   const [isTesting, setIsTesting] = useState(false);
 
+  const testRequestIdRef = useRef(0);
+
   useEffect(() => {
     const savedUser = localStorage.getItem("user");
     if (savedUser) {
@@ -29,33 +31,6 @@ export default function TestPlanPage() {
   useEffect(() => {
     fetchPlans();
   }, []);
-
-  const handleTestPlan = async (plan) => {
-    setSelectedPlan(plan);
-    setIsTestModalOpen(true);
-    setIsTesting(true);
-    setTestResult(null);
-
-    try {
-      const res = await fetch(`/api/science-plans/${plan.planId}/test`, {
-        method: "POST",
-      });
-
-      const text = await res.text();
-
-      if (!res.ok) {
-        setTestResult(`ERROR: ${text}`);
-        return;
-      }
-
-      setTestResult(text);
-    } catch (err) {
-      console.error("Test error:", err);
-      setTestResult("Failed to test plan. Please try again.");
-    } finally {
-      setIsTesting(false);
-    }
-  };
 
   const fetchPlans = () => {
     fetch("/api/science-plans/status/CREATED")
@@ -82,10 +57,13 @@ export default function TestPlanPage() {
             exposure: p.requirements?.exposure,
             brightness: p.requirements?.brightness,
             saturation: p.requirements?.saturation,
-            luminance: "-",
-            hue: "-",
+            luminance: p.requirements?.luminance,
+            hue: p.requirements?.hue,
+            highlights: p.requirements?.highlights,
+            shadows: p.requirements?.shadows,
+            whites: p.requirements?.whites,
+            blacks: p.requirements?.blacks,
           },
-
           updatedAt: p.lastModified,
           raw: p,
         }));
@@ -111,19 +89,30 @@ export default function TestPlanPage() {
       return sortBy === "modified-newest" ? db - da : da - db;
     });
 
-  const startTest = async () => {
+  const startTest = async (plan) => {
+    if (!plan) return;
+
+    const planId = plan.planId;
+    const requestId = Date.now();
+    testRequestIdRef.current = requestId;
+
+    console.log("START TEST PLAN ID:", planId);
+
     setIsTesting(true);
     setTestResult(null);
 
     try {
-      const res = await fetch(
-        `/api/science-plans/${selectedPlan.planId}/test`,
-        {
-          method: "POST",
-        },
-      );
+      const res = await fetch(`/api/science-plans/${planId}/test`, {
+        method: "POST",
+      });
 
       const text = await res.text();
+
+      console.log("TEST RESULT FOR PLAN:", planId, text);
+
+      if (testRequestIdRef.current !== requestId) {
+        return;
+      }
 
       if (!res.ok) {
         setTestResult(`ERROR: ${text}`);
@@ -132,9 +121,13 @@ export default function TestPlanPage() {
 
       setTestResult(text);
     } catch (err) {
-      setTestResult("Failed to test plan.");
+      if (testRequestIdRef.current === requestId) {
+        setTestResult("Failed to test plan.");
+      }
     } finally {
-      setIsTesting(false);
+      if (testRequestIdRef.current === requestId) {
+        setIsTesting(false);
+      }
     }
   };
 
@@ -235,7 +228,10 @@ export default function TestPlanPage() {
                       <button
                         className="btn-test"
                         onClick={() => {
+                          testRequestIdRef.current = Date.now();
                           setSelectedPlan(plan);
+                          setTestResult(null);
+                          setIsTesting(false);
                           setIsTestModalOpen(true);
                         }}
                       >

@@ -216,7 +216,6 @@ Test reports are generated at:
 | 2 | **Proxy** | Structural | Service layer (access control & logging wrapper) |
 | 3 | **Adapter** | Structural | Legacy OCS integration layer |
 | 4 | **Factory** | Creational | Science Plan creation logic |
-| 5 | **MVC** | Architectural | Overall system architecture |
 
 ---
 

@@ -170,4 +170,5 @@ public class SciencePlanServiceProxy implements SciencePlanService {
     @Override public List<SciencePlan> getPlansByStatus(PlanStatus state) {
         return actualService.getPlansByStatus(state);
     }
+    @Override public List<SciencePlan> getAllPlans () { return actualService.getAllPlans(); }
 }

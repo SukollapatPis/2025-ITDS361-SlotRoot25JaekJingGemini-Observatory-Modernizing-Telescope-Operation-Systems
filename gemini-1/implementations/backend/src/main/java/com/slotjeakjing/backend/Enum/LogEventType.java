@@ -1,0 +1,15 @@
+package com.slotjeakjing.backend.Enum;
+
+public enum LogEventType {
+    CREATE_PLAN_REQUEST,
+    PLAN_CREATED,
+    PLAN_UPDATED,
+    PLAN_TESTED,
+    PLAN_SUBMITTED,
+    INVALIDATE_REQUEST,
+    VALIDATE_REQUEST,
+    VALIDATE_SUCCESS,
+    SIMULATION_RUN,
+    ACCESS_DENIED,
+    VERSION_CONFLICT
+}

@@ -1,8 +1,9 @@
 package com.slotjeakjing.backend.Controller;
 
-import com.slotjeakjing.backend.Model.User;
-import com.slotjeakjing.backend.Repositories.UserRepository;
-import com.slotjeakjing.backend.Service.UserService;
+import com.slotjeakjing.backend.Domain.Model.User;
+import com.slotjeakjing.backend.Repository.UserRepository;
+import com.slotjeakjing.backend.Application.UserService;
+import jakarta.servlet.http.HttpSession;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -47,7 +48,7 @@ public class UserController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<Map<String, Object>> login(@RequestBody Map<String, String> body) {
+    public ResponseEntity<Map<String, Object>> login(@RequestBody Map<String, String> body, HttpSession session) {
         String email = body.get("email");
         String password = body.get("password");
 
@@ -62,6 +63,7 @@ public class UserController {
                 } else if (user instanceof User.ScienceObserver) {
                     role = "SCIENCE_OBSERVER";
                 }
+                session.setAttribute("currentUser", user);
 
                 return ResponseEntity.ok(Map.of(
                         "success", true,

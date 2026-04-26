@@ -107,6 +107,8 @@ gemini-1/implementations/
 │   │           └── SciencePlanTests.java
 │   ├── build.gradle
 │   └── gradlew
+│   ├── data/
+│   │   └── test.db.mv.db
 ├── frontend/                         ← React application
 │   ├── src/
 │   │   ├── components/
@@ -124,8 +126,6 @@ gemini-1/implementations/
 │   ├── public/
 │   ├── index.html
 │   └── package.json
-└── data/                             ← H2 database file
-    └── test.db.mv.db
 ```
 ---
 

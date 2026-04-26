@@ -106,9 +106,9 @@ gemini-1/implementations/
 │   │           ├── BackendApplicationTests.java
 │   │           └── SciencePlanTests.java
 │   ├── build.gradle
-│   └── gradlew
-│   ├── data/
-│   │   └── test.db.mv.db
+│   ├── gradlew
+│   └── data/
+│       └── test.db.mv.db
 ├── frontend/                         ← React application
 │   ├── src/
 │   │   ├── components/

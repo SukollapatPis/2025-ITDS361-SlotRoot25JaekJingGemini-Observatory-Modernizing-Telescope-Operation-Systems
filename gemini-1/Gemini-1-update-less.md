@@ -204,8 +204,7 @@ Test reports are generated at:
 3. [Pattern 2 — Proxy](#pattern-2--proxy)
 4. [Pattern 3 — Adapter](#pattern-3--adapter)
 5. [Pattern 4 — Factory](#pattern-4--factory)
-6. [Pattern 5 — MVC Architectural Pattern](#pattern-5--mvc-architectural-pattern)
-7. [Conclusion](#conclusion)
+6. [Conclusion](#conclusion)
 
 ---
 
@@ -272,7 +271,7 @@ Test reports are generated at:
 
 | ข้อดี | คำอธิบาย |
 |---------|-------------|
-| **แยก Legacy API ออกจากโค้ดหลัก** | โค้ดหลักไม่ต้องรู้จัก format หรือ API ของระบบเก่าเลย |
+| **แยก Legacy API ออกจากโค้ดหลัก** | โค้ดหลักไม่ต้องรู้จัก format หรือ API ของระบบเก่า |
 | **แปลง format ข้อมูลอัตโนมัติ** | Adapter แปลงข้อมูลจาก format ของระบบใหม่ไปเป็น format ที่ระบบ Legacy OCS เข้าใจ |
 | **ความยืดหยุ่นในอนาคต** | หากต้องการเปลี่ยนระบบ OCS เพียงสร้าง Adapter ใหม่ โดยไม่ต้องแก้ไขโค้ดส่วนอื่น |
 
@@ -294,36 +293,9 @@ Test reports are generated at:
 |---------|-------------|
 | **รวม logic การสร้าง Object ไว้ที่เดียว** | ทุกส่วนของระบบที่ต้องการสร้าง Science Plan ใช้ Factory เดียวกัน ไม่ต้องเขียนซ้ำ |
 | **ลด Code ซ้ำซ้อน** | การแมปข้อมูลและการกำหนดค่าเริ่มต้นต่างๆ อยู่ในที่เดียว |
-| **ตั้งค่าเริ่มต้นอัตโนมัติ** | Factory กำหนด status เริ่มต้นและเวลาที่แก้ไขล่าสุดให้อัตโนมัติ ผู้เรียกใช้ไม่ต้องกังวล |
 
 **สรุป:** Factory รวม logic การสร้าง Science Plan ไว้ที่เดียว ทำให้ทุก service ที่ต้องการสร้าง plan ใช้วิธีเดียวกัน และมั่นใจได้ว่า object ที่ได้มีข้อมูลครบถ้วน
 
----
-
-## Pattern 5 — MVC Architectural Pattern
-
-### Category
-**Architectural Pattern**
-
-### แนวคิด
-แบ่งระบบออกเป็น 3 ส่วนหลัก ได้แก่ Model (ข้อมูล), View (การแสดงผล), และ Controller (การจัดการ request)
-
-### วิธีการนำ MVC มาใช้งาน
-
-- **Model:** กำหนดโครงสร้างข้อมูลของระบบ เช่น ข้อมูลผู้ใช้และ Science Plan
-- **View:** เนื่องจากเป็น REST API ดังนั้น "View" คือข้อมูล JSON ที่ส่งกลับให้ผู้เรียกใช้งาน
-- **Controller:** รับ HTTP request, ส่งต่อให้ Service ทำงาน, และส่งผลลัพธ์กลับ
-
-ระบบได้เพิ่ม **Service Layer** เข้าไปด้วย ซึ่งเป็นมาตรฐานใน Spring Boot สำหรับแยก business logic ออกจาก Controller
-
-### เหตุผลที่เลือกใช้ MVC
-
-| ข้อดี | คำอธิบาย |
-|---------|-------------|
-| **การแยกส่วนความรับผิดชอบ** | การจัดการ request, business logic และ ข้อมูลถูกแยกออกจากกัน |
-| **ทดสอบง่าย** | แต่ละส่วนสามารถทดสอบได้อิสระ |
-| **มาตรฐานของ Spring Boot** | Spring Boot ถูกออกแบบมาสำหรับ MVC โดยเฉพาะ |
-| **บำรุงรักษาง่าย** | การเพิ่ม feature ใหม่แก้ไขเฉพาะส่วนที่เกี่ยวข้อง ไม่กระทบส่วนอื่น |
 
 ---
 ---
@@ -338,7 +310,6 @@ Test reports are generated at:
 - **Proxy** — ใช้เป็น layer กลางสำหรับตรวจสอบสิทธิ์และบันทึก log ก่อนส่งต่อให้ service จริงทำงาน
 - **Adapter** — ใช้เชื่อมต่อกับระบบ Legacy OCS ที่มี API ต่างออกไป โดยไม่กระทบโค้ดหลัก
 - **Factory** — รวม logic การสร้าง Science Plan ไว้ที่เดียว ลด code ซ้ำซ้อนทั่วระบบ
-- **MVC** — เป็นโครงสร้างหลักของระบบ แบ่งหน้าที่ชัดเจนระหว่าง Controller, Service, และ Data layer
 
 ---
 ---

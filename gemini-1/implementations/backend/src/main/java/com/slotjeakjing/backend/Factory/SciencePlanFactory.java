@@ -68,6 +68,12 @@ public class SciencePlanFactory {
             dto.setContrast(req.getContrast());
             dto.setBrightness(req.getBrightness());
             dto.setSaturation(req.getSaturation());
+            dto.setHighlights(req.getHighlights());
+            dto.setShadows(req.getShadows());
+            dto.setWhites(req.getWhites());
+            dto.setBlacks(req.getBlacks());
+            dto.setLuminance(req.getLuminance());
+            dto.setHue(req.getHue());
         }
 
         if (plan.getCreator() != null) {
@@ -176,5 +182,11 @@ public class SciencePlanFactory {
         req.setContrast(dto.getContrast());
         req.setBrightness(dto.getBrightness());
         req.setSaturation(dto.getSaturation());
+        req.setHighlights(dto.getHighlights());
+        req.setShadows(dto.getShadows());
+        req.setWhites(dto.getWhites());
+        req.setBlacks(dto.getBlacks());
+        req.setLuminance(dto.getLuminance());
+        req.setHue(dto.getHue());
     }
 }

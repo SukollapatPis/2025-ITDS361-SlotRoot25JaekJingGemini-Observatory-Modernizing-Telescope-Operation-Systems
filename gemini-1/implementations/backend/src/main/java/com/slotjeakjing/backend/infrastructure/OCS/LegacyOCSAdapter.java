@@ -51,6 +51,12 @@ public class LegacyOCSAdapter implements OCSClient {
         dpr.setContrast(dto.getContrast());
         dpr.setBrightness(dto.getBrightness());
         dpr.setSaturation(dto.getSaturation());
+        dpr.setHighlights(dto.getHighlights());
+        dpr.setShadows(dto.getShadows());
+        dpr.setWhites(dto.getWhites());
+        dpr.setBlacks(dto.getBlacks());
+        dpr.setLuminance(dto.getLuminance());
+        dpr.setHue(dto.getHue());
 
         legacyPlan.setDataProcRequirements(dpr);
 

@@ -32,6 +32,60 @@ public class SciencePlanDTO {
     private double contrast;
     private double brightness;
     private double saturation;
+    private double highlights;
+    private double shadows;
+    private double whites;
+    private double blacks;
+    private double luminance;
+    private double hue;
+
+    public double getHighlights() {
+        return highlights;
+    }
+
+    public void setHighlights(double highlights) {
+        this.highlights = highlights;
+    }
+
+    public double getShadows() {
+        return shadows;
+    }
+
+    public void setShadows(double shadows) {
+        this.shadows = shadows;
+    }
+
+    public double getWhites() {
+        return whites;
+    }
+
+    public void setWhites(double whites) {
+        this.whites = whites;
+    }
+
+    public double getBlacks() {
+        return blacks;
+    }
+
+    public void setBlacks(double blacks) {
+        this.blacks = blacks;
+    }
+
+    public double getLuminance() {
+        return luminance;
+    }
+
+    public void setLuminance(double luminance) {
+        this.luminance = luminance;
+    }
+
+    public double getHue() {
+        return hue;
+    }
+
+    public void setHue(double hue) {
+        this.hue = hue;
+    }
 
     public String getColorType() {
         return colorType;

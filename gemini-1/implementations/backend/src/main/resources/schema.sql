@@ -24,7 +24,13 @@ CREATE TABLE IF NOT EXISTS data_processing_requirements (
     exposure DOUBLE,
     contrast DOUBLE,
     brightness DOUBLE,
-    saturation DOUBLE
+    saturation DOUBLE,
+    highlights DOUBLE,
+    shadows DOUBLE,
+    whites DOUBLE,
+    blacks DOUBLE,
+    luminance DOUBLE,
+    hue DOUBLE
     );
 
 CREATE TABLE IF NOT EXISTS science_plans (

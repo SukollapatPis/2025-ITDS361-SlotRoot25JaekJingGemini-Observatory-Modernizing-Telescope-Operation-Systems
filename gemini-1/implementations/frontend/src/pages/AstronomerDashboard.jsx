@@ -1,55 +1,78 @@
-import React, { useState, useEffect } from 'react'
-import { useNavigate, useLocation } from 'react-router-dom'
-import { Telescope } from 'lucide-react';
+import React, { useState, useEffect } from "react";
+import { useNavigate, useLocation } from "react-router-dom";
+import { Telescope } from "lucide-react";
 
 // ============================================================
 // MOCK DATA
 // ============================================================
 const mockPlans = [
   {
-    planId: 'SP-1001',
-    planName: 'Andromeda Galaxy Survey',
-    target: 'M31',
-    telescope: 'Hawaii',
-    status: 'CREATED',
-    funding: '$50,000',
-    startDate: '2026-04-01',
-    endDate: '2026-04-15',
-    creator: 'Dr. Edwin Hubble',
-    objective: 'Detailed mapping of the Andromeda galaxy spiral arms.',
-    dataProcessing: { fileType: 'RAW', fileQuality: 'Fine', colorMode: 'Color', contrast: 1.2, exposure: 2, brightness: 1, saturation: 1.5, luminance: 1, hue: 0 },
+    planId: "SP-1001",
+    planName: "Andromeda Galaxy Survey",
+    target: "M31",
+    telescope: "Hawaii",
+    status: "CREATED",
+    funding: "$50,000",
+    startDate: "2026-04-01",
+    endDate: "2026-04-15",
+    creator: "Dr. Edwin Hubble",
+    objective: "Detailed mapping of the Andromeda galaxy spiral arms.",
+    dataProcessing: {
+      fileType: "RAW",
+      fileQuality: "Fine",
+      colorMode: "Color",
+      contrast: 1.2,
+      exposure: 2,
+      brightness: 1,
+      saturation: 1.5,
+      luminance: 1,
+      hue: 0,
+    },
     history: [],
-    updatedAt: '2025-04-17T10:30:00Z',
+    updatedAt: "2025-04-17T10:30:00Z",
   },
   {
-    planId: 'SP-1002',
-    planName: 'Crab Nebula Spectroscopy',
-    target: 'M1',
-    telescope: 'Chile',
-    status: 'SUBMITTED',
-    funding: '$30,000',
-    startDate: '2026-05-01',
-    endDate: '2026-05-10',
-    creator: 'Dr. Edwin Hubble',
-    objective: 'Spectroscopic analysis of the Crab Nebula pulsar wind.',
-    dataProcessing: { fileType: 'FITS', fileQuality: 'Fine', colorMode: 'Grayscale', contrast: 1, exposure: 3, brightness: 1.2, saturation: 1, luminance: 1.1, hue: 0 },
+    planId: "SP-1002",
+    planName: "Crab Nebula Spectroscopy",
+    target: "M1",
+    telescope: "Chile",
+    status: "SUBMITTED",
+    funding: "$30,000",
+    startDate: "2026-05-01",
+    endDate: "2026-05-10",
+    creator: "Dr. Edwin Hubble",
+    objective: "Spectroscopic analysis of the Crab Nebula pulsar wind.",
+    dataProcessing: {
+      fileType: "FITS",
+      fileQuality: "Fine",
+      colorMode: "Grayscale",
+      contrast: 1,
+      exposure: 3,
+      brightness: 1.2,
+      saturation: 1,
+      luminance: 1.1,
+      hue: 0,
+    },
     history: [],
-    updatedAt: '2025-04-16T08:15:00Z',
+    updatedAt: "2025-04-16T08:15:00Z",
   },
-]
+];
 
 // ============================================================
 // STATUS BADGE COMPONENT
 // ============================================================
 const statusConfig = {
-  CREATED: { label: 'CREATED', className: 'badge-created' },
-  SUBMITTED: { label: 'SUBMITTED', className: 'badge-submitted' },
-  INVALIDATED: { label: 'INVALIDATED', className: 'badge-invalidated' },
-}
+  CREATED: { label: "CREATED", className: "badge-created" },
+  SUBMITTED: { label: "SUBMITTED", className: "badge-submitted" },
+  INVALIDATED: { label: "INVALIDATED", className: "badge-invalidated" },
+};
 
 function StatusBadge({ status }) {
-  const cfg = statusConfig[status] || { label: status, className: 'badge-created' }
-  return <span className={`badge ${cfg.className}`}>{cfg.label}</span>
+  const cfg = statusConfig[status] || {
+    label: status,
+    className: "badge-created",
+  };
+  return <span className={`badge ${cfg.className}`}>{cfg.label}</span>;
 }
 
 // ============================================================
@@ -61,28 +84,46 @@ function Toast({ toasts }) {
       {toasts.map((t) => (
         <div key={t.id} className="toast toast-success">
           <svg width="18" height="18" viewBox="0 0 20 20" fill="#16A34A">
-            <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+            <path
+              fillRule="evenodd"
+              d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+              clipRule="evenodd"
+            />
           </svg>
           {t.message}
         </div>
       ))}
     </div>
-  )
+  );
 }
 
 // ============================================================
 // MODAL COMPONENT
 // ============================================================
 function Modal({ isOpen, onClose, title, children, footer }) {
-  if (!isOpen) return null
+  if (!isOpen) return null;
   return (
-    <div className="overlay" onClick={(e) => e.target.classList.contains('overlay') && onClose()}>
+    <div
+      className="overlay"
+      onClick={(e) => e.target.classList.contains("overlay") && onClose()}
+    >
       <div className="modal">
         <div className="modal-header">
           <h2 className="modal-title">{title}</h2>
           <button className="modal-close" onClick={onClose}>
-            <svg width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
-              <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+            <svg
+              width="20"
+              height="20"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+              strokeWidth="2"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="M6 18L18 6M6 6l12 12"
+              />
             </svg>
           </button>
         </div>
@@ -90,7 +131,7 @@ function Modal({ isOpen, onClose, title, children, footer }) {
         {footer && <div className="modal-footer">{footer}</div>}
       </div>
     </div>
-  )
+  );
 }
 
 // ============================================================
@@ -101,14 +142,40 @@ function PlanDetails({ plan }) {
   return (
     <div className="plan-details-content">
       <div className="detail-grid">
-        <div className="detail-item"><label>Plan Name</label><p>{plan.planName}</p></div>
-        <div className="detail-item"><label>Status</label><p><StatusBadge status={plan.status} /></p></div>
-        <div className="detail-item"><label>Creator</label><p>{plan.creator}</p></div>
-        <div className="detail-item"><label>Funding</label><p>{plan.funding}</p></div>
-        <div className="detail-item"><label>Start Date</label><p>{plan.startDate}</p></div>
-        <div className="detail-item"><label>End Date</label><p>{plan.endDate}</p></div>
-        <div className="detail-item"><label>Telescope</label><p>{plan.telescope}</p></div>
-        <div className="detail-item"><label>Target</label><p>{plan.target}</p></div>
+        <div className="detail-item">
+          <label>Plan Name</label>
+          <p>{plan.planName}</p>
+        </div>
+        <div className="detail-item">
+          <label>Status</label>
+          <p>
+            <StatusBadge status={plan.status} />
+          </p>
+        </div>
+        <div className="detail-item">
+          <label>Creator</label>
+          <p>{plan.creator}</p>
+        </div>
+        <div className="detail-item">
+          <label>Funding</label>
+          <p>{plan.funding}</p>
+        </div>
+        <div className="detail-item">
+          <label>Start Date</label>
+          <p>{plan.startDate}</p>
+        </div>
+        <div className="detail-item">
+          <label>End Date</label>
+          <p>{plan.endDate}</p>
+        </div>
+        <div className="detail-item">
+          <label>Telescope</label>
+          <p>{plan.telescope}</p>
+        </div>
+        <div className="detail-item">
+          <label>Target</label>
+          <p>{plan.target}</p>
+        </div>
       </div>
       <div className="detail-section">
         <label>Objective</label>
@@ -118,100 +185,179 @@ function PlanDetails({ plan }) {
       <div className="detail-section">
         <h4>Data Processing Requirements</h4>
         <div className="detail-grid-3">
-          <div className="detail-item"><label>File Type</label><p>{plan.dataProcessing?.fileType}</p></div>
-          <div className="detail-item"><label>File Quality</label><p>{plan.dataProcessing?.fileQuality}</p></div>
-          <div className="detail-item"><label>Color Mode</label><p>{plan.dataProcessing?.colorMode}</p></div>
-          <div className="detail-item"><label>Contrast</label><p>{plan.dataProcessing?.contrast}</p></div>
-          <div className="detail-item"><label>Exposure</label><p>{plan.dataProcessing?.exposure}</p></div>
-          <div className="detail-item"><label>Brightness</label><p>{plan.dataProcessing?.brightness}</p></div>
-          <div className="detail-item"><label>Saturation</label><p>{plan.dataProcessing?.saturation}</p></div>
-          <div className="detail-item"><label>Luminance</label><p>{plan.dataProcessing?.luminance}</p></div>
-          <div className="detail-item"><label>Hue</label><p>{plan.dataProcessing?.hue}</p></div>
-        </div>
-      </div>
-      <div className="detail-section">
-        <h4>Edit History Log</h4>
-        <div className="info-box history-box">
-          {plan.history?.map((h, i) => (
-            <div key={i} className="history-item">
-              <span className="history-date">{h.date}</span>
-              <ul className="history-log"><li>{h.log}</li></ul>
-            </div>
-          ))}
+          <div className="detail-item">
+            <label>File Type</label>
+            <p>{plan.dataProcessing?.fileType}</p>
+          </div>
+          <div className="detail-item">
+            <label>File Quality</label>
+            <p>{plan.dataProcessing?.fileQuality}</p>
+          </div>
+          <div className="detail-item">
+            <label>Color Mode</label>
+            <p>{plan.dataProcessing?.colorMode}</p>
+          </div>
+          <div className="detail-item">
+            <label>Contrast</label>
+            <p>{plan.dataProcessing?.contrast}</p>
+          </div>
+          <div className="detail-item">
+            <label>Exposure</label>
+            <p>{plan.dataProcessing?.exposure}</p>
+          </div>
+          <div className="detail-item">
+            <label>Brightness</label>
+            <p>{plan.dataProcessing?.brightness}</p>
+          </div>
+          <div className="detail-item">
+            <label>Saturation</label>
+            <p>{plan.dataProcessing?.saturation}</p>
+          </div>
+          <div className="detail-item">
+            <label>Luminance</label>
+            <p>{plan.dataProcessing?.luminance}</p>
+          </div>
+          <div className="detail-item">
+            <label>Hue</label>
+            <p>{plan.dataProcessing?.hue}</p>
+          </div>
         </div>
       </div>
     </div>
-  )
+  );
 }
 
 // ============================================================
 // MAIN COMPONENT
 // ============================================================
 export function AstronomerDashboard() {
-  const navigate = useNavigate()
-  const location = useLocation()
+  const navigate = useNavigate();
+  const location = useLocation();
 
-  const [plans] = useState(mockPlans)
-  const [searchTerm, setSearchTerm] = useState('')
-  const [statusFilter, setStatusFilter] = useState('ALL')
-  const [sortBy, setSortBy] = useState('modified-newest')
-  const [toasts, setToasts] = useState([])
-  const [isModalOpen, setIsModalOpen] = useState(false)
-  const [isTestModalOpen, setIsTestModalOpen] = useState(false)
-  const [selectedPlan, setSelectedPlan] = useState(null)
+  const [plans, setPlans] = useState([]);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [statusFilter, setStatusFilter] = useState("ALL");
+  const [sortBy, setSortBy] = useState("modified-newest");
+  const [toasts, setToasts] = useState([]);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isTestModalOpen, setIsTestModalOpen] = useState(false);
+  const [selectedPlan, setSelectedPlan] = useState(null);
 
   // ✅ ดึงชื่อและ role จาก localStorage (จาก login response)
-  const [user, setUser] = useState({ name: '', role: '' })
+  const [user, setUser] = useState({ name: "", role: "" });
 
   useEffect(() => {
-    const savedUser = localStorage.getItem('user')
+    const savedUser = localStorage.getItem("user");
     if (savedUser) {
-      const parsed = JSON.parse(savedUser)
-      const roleLabel = parsed.role === 'SCIENCE_OBSERVER' ? 'Science Observer'
-        : parsed.role === 'ASTRONOMER' ? 'Astronomer'
-        : parsed.role || ''
-      setUser({ name: parsed.name || '', role: roleLabel })
+      const parsed = JSON.parse(savedUser);
+      const roleLabel =
+        parsed.role === "SCIENCE_OBSERVER"
+          ? "Science Observer"
+          : parsed.role === "ASTRONOMER"
+            ? "Astronomer"
+            : parsed.role || "";
+      setUser({ name: parsed.name || "", role: roleLabel });
     }
 
     if (location.state?.justLoggedIn) {
-      const id = Date.now()
-      setToasts([{ id, message: `Welcome back, ${JSON.parse(localStorage.getItem('user') || '{}').name || ''}!` }])
-      const newState = { ...location.state }; delete newState.justLoggedIn;
-      navigate(location.pathname, { replace: true, state: newState })
-      setTimeout(() => setToasts((prev) => prev.filter((t) => t.id !== id)), 3500)
+      const id = Date.now();
+      setToasts([
+        {
+          id,
+          message: `Welcome back, ${JSON.parse(localStorage.getItem("user") || "{}").name || ""}!`,
+        },
+      ]);
+      const newState = { ...location.state };
+      delete newState.justLoggedIn;
+      navigate(location.pathname, { replace: true, state: newState });
+      setTimeout(
+        () => setToasts((prev) => prev.filter((t) => t.id !== id)),
+        3500,
+      );
     }
 
     if (location.state?.justSaved) {
-      const id = Date.now()
-      setToasts([{ id, message: location.state.message }])
-      const newState = { ...location.state }; delete newState.justSaved; delete newState.message;
-      navigate(location.pathname, { replace: true, state: newState })
-      setTimeout(() => setToasts((prev) => prev.filter((t) => t.id !== id)), 4500)
+      const id = Date.now();
+      setToasts([{ id, message: location.state.message }]);
+      const newState = { ...location.state };
+      delete newState.justSaved;
+      delete newState.message;
+      navigate(location.pathname, { replace: true, state: newState });
+      setTimeout(
+        () => setToasts((prev) => prev.filter((t) => t.id !== id)),
+        4500,
+      );
     }
-  }, [location, navigate])
+  }, [location, navigate]);
+
+  useEffect(() => {
+    fetch("http://localhost:8080/api/science-plans")
+      .then((res) => res.json())
+      .then((data) => {
+        const mappedPlans = data.map((p) => ({
+          planId: p.planId,
+          planName: p.planName,
+          target: p.target,
+          telescope: p.telescopeSite,
+          status: p.state,
+          funding: `$${p.funding}`,
+          startDate: p.startDate?.split("T")[0],
+          endDate: p.endDate?.split("T")[0],
+          creator: p.creator?.name,
+          objective: p.objective,
+          updatedAt: p.lastModified,
+
+          dataProcessing: {
+            fileType: p.requirements?.fileType,
+            fileQuality: p.requirements?.fileQuality,
+            colorMode: p.requirements?.colorType,
+            contrast: p.requirements?.contrast,
+            exposure: p.requirements?.exposure,
+            brightness: p.requirements?.brightness,
+            saturation: p.requirements?.saturation,
+            luminance: "-",
+            hue: "-",
+          },
+
+          history: [],
+          raw: p,
+        }));
+
+        setPlans(mappedPlans);
+      })
+      .catch((err) => {
+        console.error("Failed to fetch science plans:", err);
+      });
+  }, []);
 
   const handleLogout = () => {
-    localStorage.removeItem('user')
-    navigate('/')
-  }
+    localStorage.removeItem("user");
+    navigate("/");
+  };
 
-  const openViewModal = (plan) => { setSelectedPlan(plan); setIsModalOpen(true) }
-  const openTestModal = (plan) => { setSelectedPlan(plan); setIsTestModalOpen(true) }
+  const openViewModal = (plan) => {
+    setSelectedPlan(plan);
+    setIsModalOpen(true);
+  };
+  const openTestModal = (plan) => {
+    setSelectedPlan(plan);
+    setIsTestModalOpen(true);
+  };
 
   const filteredSorted = [...plans]
     .filter((p) => {
       const matchSearch =
         p.planName.toLowerCase().includes(searchTerm.toLowerCase()) ||
         p.target.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        p.planId.toLowerCase().includes(searchTerm.toLowerCase())
-      const matchStatus = statusFilter === 'ALL' || p.status === statusFilter
-      return matchSearch && matchStatus
+        p.planId.toLowerCase().includes(searchTerm.toLowerCase());
+      const matchStatus = statusFilter === "ALL" || p.status === statusFilter;
+      return matchSearch && matchStatus;
     })
     .sort((a, b) => {
-      const da = new Date(a.updatedAt).getTime()
-      const db = new Date(b.updatedAt).getTime()
-      return sortBy === 'modified-newest' ? db - da : da - db
-    })
+      const da = new Date(a.updatedAt).getTime();
+      const db = new Date(b.updatedAt).getTime();
+      return sortBy === "modified-newest" ? db - da : da - db;
+    });
 
   return (
     <>
@@ -221,63 +367,19 @@ export function AstronomerDashboard() {
       <Modal
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
-        title={selectedPlan ? `Science Plan Details: ${selectedPlan.planId}` : ''}
-        footer={<button className="btn btn-secondary" onClick={() => setIsModalOpen(false)}>Close</button>}
+        title={
+          selectedPlan ? `Science Plan Details: ${selectedPlan.planId}` : ""
+        }
+        footer={
+          <button
+            className="btn btn-secondary"
+            onClick={() => setIsModalOpen(false)}
+          >
+            Close
+          </button>
+        }
       >
         <PlanDetails plan={selectedPlan} />
-      </Modal>
-
-      <Modal
-        isOpen={isTestModalOpen}
-        onClose={() => setIsTestModalOpen(false)}
-        title={selectedPlan ? `Testing Science Plan: ${selectedPlan.planId}` : ''}
-        footer={<button className="btn btn-primary" style={{ minWidth: '80px' }} onClick={() => setIsTestModalOpen(false)}>Finish</button>}
-      >
-        <div className="test-modal-content">
-          <p className="test-subtext">Running validation tests on the virtual telescope environment...</p>
-          <div className="test-row pass">
-            <div className="test-row-header">
-              <span className="test-label">Star System Selection Test</span>
-              <span className="test-status">
-                <svg width="16" height="16" viewBox="0 0 20 20" fill="currentColor"><path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" /></svg>
-                Pass
-              </span>
-            </div>
-          </div>
-          <div className="test-row fail">
-            <div className="test-row-header">
-              <span className="test-label">Image Processing Configuration Test</span>
-              <span className="test-status">Fail</span>
-            </div>
-            <div className="error-msg-box">Contrast must be greater than 0.</div>
-          </div>
-          <div className="test-row pass">
-            <div className="test-row-header">
-              <span className="test-label">Telescope Location Test</span>
-              <span className="test-status">
-                <svg width="16" height="16" viewBox="0 0 20 20" fill="currentColor"><path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" /></svg>
-                Pass
-              </span>
-            </div>
-          </div>
-          <div className="test-row fail">
-            <div className="test-row-header">
-              <span className="test-label">Observation Duration Test</span>
-              <span className="test-status">
-                <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5"><path strokeLinecap="round" strokeLinejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" /></svg>
-                Fail
-              </span>
-            </div>
-            <div className="error-msg-box">Insufficient funding for the requested observation duration. <br />Minimum $1000 required.</div>
-          </div>
-          <div className="test-failure-banner">
-            <div className="banner-header">
-              <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2"><path strokeLinecap="round" strokeLinejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" /></svg>
-              <strong>Testing failed</strong>
-            </div>
-            <p>Please review the errors above, edit your science plan, and try testing again.</p>
-          </div>
-        </div>
       </Modal>
 
       <div className="app">
@@ -294,8 +396,21 @@ export function AstronomerDashboard() {
               <div className="user-name">{user.name}</div>
               <div className="user-role">{user.role}</div>
             </div>
-            <button className="logout-btn" title="Sign out" onClick={handleLogout}>
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <button
+              className="logout-btn"
+              title="Sign out"
+              onClick={handleLogout}
+            >
+              <svg
+                width="20"
+                height="20"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              >
                 <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
                 <polyline points="16 17 21 12 16 7"></polyline>
                 <line x1="21" y1="12" x2="9" y2="12"></line>
@@ -307,18 +422,83 @@ export function AstronomerDashboard() {
         <main>
           <div className="page-header">
             <h1>My Science Plans</h1>
-            <button className="btn btn-primary" onClick={() => navigate('/create-plan')}>
-              <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
-                <path strokeLinecap="round" strokeLinejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
-              </svg>
-              Create Science Plan
-            </button>
-          </div>
+            <div className="button-group">
+              <button
+                className="btn btn-primary"
+                onClick={() => navigate("/create-plan")}
+              >
+                <svg
+                  width="16"
+                  height="16"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                  strokeWidth="2.5"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M12 4.5v15m7.5-7.5h-15"
+                  />
+                </svg>
+                Create Science Plan
+              </button>
+              <button
+                className="btn btn-primary"
+                onClick={() => navigate("/test-plan")}
+              >
+                <svg
+                  width="16"
+                  height="16"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                  strokeWidth="2.5"
+                >
+                  {/* play icon */}
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M5 3l14 9-14 9V3z"
+                  />
+                </svg>
+                Test Plan
+              </button>
 
+              <button
+                className="btn btn-primary"
+                onClick={() => navigate("/submit-plan")}
+              >
+                <svg
+                  width="16"
+                  height="16"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                  strokeWidth="2.5"
+                >
+                  {/* upload / submit icon */}
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M12 16V4m0 0l-4 4m4-4l4 4M4 20h16"
+                  />
+                </svg>
+                Submit Plan
+              </button>
+            </div>
+          </div>
           <div className="controls">
             <div className="search-wrap">
-              <svg className="search-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
-                <circle cx="11" cy="11" r="8" /><path d="m21 21-4.35-4.35" />
+              <svg
+                className="search-icon"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+                strokeWidth="2"
+              >
+                <circle cx="11" cy="11" r="8" />
+                <path d="m21 21-4.35-4.35" />
               </svg>
               <input
                 type="text"
@@ -328,21 +508,41 @@ export function AstronomerDashboard() {
               />
             </div>
             <div className="sel-wrap">
-              <svg className="sel-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
+              <svg
+                className="sel-icon"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+                strokeWidth="2"
+              >
                 <path d="M12 3c2.755 0 5.455.232 8.083.678.533.09.917.556.917 1.096v1.044a2.25 2.25 0 01-.659 1.591l-5.432 5.432a2.25 2.25 0 00-.659 1.591v2.927a2.25 2.25 0 01-1.244 2.013L9.75 21v-6.568a2.25 2.25 0 00-.659-1.591L3.659 7.409A2.25 2.25 0 013 5.818V4.774c0-.54.384-1.006.917-1.096A48.32 48.32 0 0112 3z" />
               </svg>
-              <select value={statusFilter} onChange={(e) => setStatusFilter(e.target.value)}>
+              <select
+                value={statusFilter}
+                onChange={(e) => setStatusFilter(e.target.value)}
+              >
                 <option value="ALL">All Statuses</option>
                 <option value="CREATED">Created</option>
+                <option value="TESTED">Tested</option>
                 <option value="SUBMITTED">Submitted</option>
+                <option value="VALIDATED">Validated</option>
                 <option value="INVALIDATED">Invalidated</option>
               </select>
             </div>
             <div className="sel-wrap">
-              <svg className="sel-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
+              <svg
+                className="sel-icon"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+                strokeWidth="2"
+              >
                 <path d="M3 7.5L7.5 3m0 0L12 7.5M7.5 3v13.5m13.5 0L16.5 21m0 0L12 16.5m4.5 4.5V7.5" />
               </svg>
-              <select value={sortBy} onChange={(e) => setSortBy(e.target.value)}>
+              <select
+                value={sortBy}
+                onChange={(e) => setSortBy(e.target.value)}
+              >
                 <option value="modified-newest">Last Modified (Newest)</option>
                 <option value="modified-oldest">Last Modified (Oldest)</option>
               </select>
@@ -358,36 +558,40 @@ export function AstronomerDashboard() {
                   <th>Target</th>
                   <th>Telescope</th>
                   <th>Status</th>
-                  <th style={{ textAlign: 'right' }}>Actions</th>
+                  <th style={{ textAlign: "right" }}>Actions</th>
                 </tr>
               </thead>
               <tbody>
                 {filteredSorted.map((plan) => (
                   <tr key={plan.planId}>
-                    <td><span className="plan-id">{plan.planId}</span></td>
+                    <td>
+                      <span className="plan-id">{plan.planId}</span>
+                    </td>
                     <td>{plan.planName}</td>
                     <td className="text-muted">{plan.target}</td>
                     <td className="text-muted">{plan.telescope}</td>
-                    <td><StatusBadge status={plan.status} /></td>
-                    <td style={{ textAlign: 'right' }}>
+                    <td>
+                      <StatusBadge status={plan.status} />
+                    </td>
+                    <td style={{ textAlign: "right" }}>
                       <div className="actions-wrapper">
-                        <button className="icon-btn" title="View" onClick={() => openViewModal(plan)}>
-                          <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
+                        <button
+                          className="icon-btn"
+                          title="View"
+                          onClick={() => openViewModal(plan)}
+                        >
+                          <svg
+                            width="18"
+                            height="18"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                            stroke="currentColor"
+                            strokeWidth="2"
+                          >
                             <path d="M2.036 12.322a1.012 1.012 0 010-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178z" />
                             <circle cx="12" cy="12" r="3" />
                           </svg>
                         </button>
-                        {plan.status !== 'SUBMITTED' && (
-                          <>
-                            <button className="icon-btn" title="Edit" onClick={() => navigate('/edit-plan', { state: { plan } })}>
-                              <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                                <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
-                                <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
-                              </svg>
-                            </button>
-                            <button className="btn-test" onClick={() => openTestModal(plan)}>Test</button>
-                          </>
-                        )}
                       </div>
                     </td>
                   </tr>
@@ -398,7 +602,7 @@ export function AstronomerDashboard() {
         </main>
       </div>
     </>
-  )
+  );
 }
 
 const css = `
@@ -475,6 +679,7 @@ const css = `
   .test-failure-banner { margin-top: 24px; padding: 16px; background: #FEF2F2; border: 1px solid #FCA5A5; border-radius: 8px; color: #991B1B; }
   .banner-header { display: flex; align-items: center; gap: 8px; margin-bottom: 4px; }
   .test-failure-banner p { font-size: 13px; padding-left: 24px; }
+  .button-group { display: flex; gap: 12px; }
 `;
 
 export default AstronomerDashboard;

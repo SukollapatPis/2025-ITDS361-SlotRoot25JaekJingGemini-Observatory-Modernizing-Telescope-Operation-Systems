@@ -4,6 +4,9 @@ import LoginPage from './pages/LoginPage';
 import { AstronomerDashboard } from './pages/AstronomerDashboard';
 import { ObserverDashboard } from './pages/ObserverDashboard';
 import CreateSciencePlan from './pages/CreateSciencePlan';
+import TestPlanPage from './pages/TestSciencePlan';
+import SubmitSciencePlan from './pages/SubmitSciencePlan';
+
 
 function App() {
   return (
@@ -14,6 +17,8 @@ function App() {
         <Route path="/astronomer-dashboard" element={<AstronomerDashboard />} />
         <Route path="/observer-dashboard" element={<ObserverDashboard />} />
         <Route path="/create-plan" element={<CreateSciencePlan />} />
+        <Route path="/test-plan" element={<TestPlanPage />} />
+        <Route path="/submit-plan" element={<SubmitSciencePlan />} />
       </Routes>
     </BrowserRouter>
   );

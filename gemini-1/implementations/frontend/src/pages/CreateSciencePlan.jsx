@@ -117,19 +117,34 @@ export default function CreateSciencePlan() {
       targetName: formData.targetName,
       telescopeSite: formData.telescopeSite,
       startDate: formData.startDate
-        ? new Date(formData.startDate).toISOString()
+        ? `${formData.startDate}T22:00:00.000+07:00`
         : null,
       endDate: formData.endDate
-        ? new Date(formData.endDate).toISOString()
+        ? `${formData.endDate}T23:00:00.000+07:00`
         : null,
       fileType: formData.fileType,
       fileQuality: formData.fileQuality,
       colorType: formData.colorType,
-      brightness: parseFloat(formData.brightness),
+
       contrast: parseFloat(formData.contrast),
       exposure: parseFloat(formData.exposure),
-      saturation: parseFloat(formData.saturation),
+
+      ...(formData.colorType === "COLOR" && {
+        brightness: parseFloat(formData.brightness),
+        saturation: parseFloat(formData.saturation),
+        luminance: parseFloat(formData.luminance),
+        hue: parseFloat(formData.hue),
+      }),
+
+      ...(formData.colorType === "BW" && {
+        highlights: parseFloat(formData.highlights),
+        shadows: parseFloat(formData.shadows),
+        whites: parseFloat(formData.whites),
+        blacks: parseFloat(formData.blacks),
+      }),
     };
+
+    console.log("CREATE BODY:", body);
 
     try {
       const res = await fetch("/api/science-plans", {
@@ -138,7 +153,12 @@ export default function CreateSciencePlan() {
         body: JSON.stringify(body),
       });
 
-      if (!res.ok) throw new Error("Failed to create plan");
+      const responseText = await res.text();
+
+      if (!res.ok) {
+        console.error("CREATE API ERROR:", responseText);
+        throw new Error(responseText);
+      }
 
       navigate("/astronomer-dashboard", {
         state: {

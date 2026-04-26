@@ -211,13 +211,13 @@ Test reports are generated at:
 
 ## Summary Table
 
-| # | Pattern Name | Category | File(s) | Status |
-|---|-------------|----------|---------|--------|
-| 1 | **Singleton** | Creational | `UserService.java`, `SciencePlanServiceProxy.java`, `SciencePlanServiceImpl.java`, `SciencePlanController.java` | ✅ Fully Implemented |
-| 2 | **Proxy** | Structural | `SciencePlanServiceProxy.java`, `SciencePlanRepository.java`, `UserRepository.java` | ✅ Fully Implemented |
-| 3 | **Adapter** | Structural | `LegacyOCSAdapter.java`, `OCSClient.java`, `LegacyOCSService.java` | ✅ Fully Implemented |
-| 4 | **Factory (Static Factory Method)** | Creational | `SciencePlanFactory.java` | ✅ Fully Implemented |
-| 5 | **MVC** | Architectural | All files | ✅ Fully Implemented |
+| # | Pattern Name | Category | File(s) |
+|---|-------------|----------|---------|
+| 1 | **Singleton** | Creational | `UserService.java`, `SciencePlanServiceProxy.java`, `SciencePlanServiceImpl.java`, `SciencePlanController.java` |
+| 2 | **Proxy** | Structural | `SciencePlanServiceProxy.java`, `SciencePlanRepository.java`, `UserRepository.java` |
+| 3 | **Adapter** | Structural | `LegacyOCSAdapter.java`, `OCSClient.java`, `LegacyOCSService.java` |
+| 4 | **Factory (Static Factory Method)** | Creational | `SciencePlanFactory.java` | 
+| 5 | **MVC** | Architectural | All files | 
 
 ---
 
@@ -547,18 +547,7 @@ SciencePlan (H2 Database)  ── @Entity ──────► Persistent model
 
 ## Conclusion
 
-### Overall Assessment
-
-| Dimension | Coverage | Comment |
-|-----------|----------|---------|
-| **ความครอบคลุมของแพตเทิร์น (Pattern Coverage)** | ✅ | MVC, Singleton, Proxy, Adapter, และ Factory ครอบคลุมครบ |
-| **ความถูกต้องของแพตเทิร์น (Pattern Correctness)** | ✅ | ทุก pattern มี implementation ที่ชัดเจนและเป็น textbook |
-| **คุณภาพของโค้ด (Code Quality)** | ✅ | ครบถ้วนและปลอดภัย |
-| **ความสามารถในการบำรุงรักษา (Maintainability)** | ✅ | Structure ต่างๆ เขียนตามหลัก Software Design Principles ทำให้ดูและรักษาง่าย |
-
 ### Summary
-
-โปรเจกต์นี้แสดงให้เห็นถึง **การประยุกต์ใช้ Design Patterns อย่างครอบคลุมและถูกต้อง** ผ่านเฟรมเวิร์ก Spring Boot:
 
 - แพตเทิร์น **Singleton** ถูกนำมาใช้งานผ่าน Spring IoC Container สำหรับ service และ controller ทุกตัว
 - **Proxy Pattern** ถูก implement อย่างชัดเจนผ่าน `SciencePlanServiceProxy` ซึ่งทำหน้าที่เป็น Access Control และ Audit Logging layer ก่อนส่งต่อให้ `SciencePlanServiceImpl` — นอกจากนี้ Spring Data JPA repositories ก็เป็น Proxy เช่นกัน

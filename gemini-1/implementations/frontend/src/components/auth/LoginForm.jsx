@@ -29,7 +29,14 @@ const LoginForm = () => {
     try {
       const data = await loginAPI(email, password);
       if (data.success) {
-        navigate('/dashboard', { state: { name: data.name, role: data.role } });
+        // data = { name: "Bob", success: true, userId: 2, role: "SCIENCE_OBSERVER" }
+        localStorage.setItem('user', JSON.stringify(data));
+
+        if (data.role === 'SCIENCE_OBSERVER') {
+          navigate('/observer-dashboard', { state: { name: data.name, role: data.role, justLoggedIn: true } });
+        } else if (data.role === 'ASTRONOMER') {
+          navigate('/astronomer-dashboard', { state: { name: data.name, role: data.role, justLoggedIn: true } });
+        }
       }
     } catch (err) {
       setErrors({ email: 'Invalid email or password.', password: ' ' });
@@ -62,7 +69,7 @@ const LoginForm = () => {
               setEmail(e.target.value);
               setErrors(prev => ({ ...prev, email: '' }));
             }}
-            placeholder="edwin@gemini.edu"
+            placeholder="you@example.com"
           />
         </div>
         {errors.email && (
@@ -111,9 +118,9 @@ const LoginForm = () => {
 
       {/* Demo Accounts */}
       <div className="mt-6 pt-5 border-t border-slate-100 text-center text-sm text-slate-400">
-        <p className="mb-1">Demo Accounts (Password: password123)</p>
-        <p className="text-slate-600"><span className="font-semibold">Astronomer:</span> edwin@gemini.edu</p>
-        <p className="text-slate-600"><span className="font-semibold">Observer:</span> jocelyn@gemini.edu</p>
+        <p className="mb-1">Demo Accounts</p>
+        <p className="text-slate-600"><span className="font-semibold">Science Observer:</span> bob@gmail.com</p>
+        <p className="text-slate-600"><span className="font-semibold">Astronomer:</span> andy@gmail.com</p>
       </div>
 
     </form>

@@ -100,6 +100,8 @@ public class SciencePlanController {
         allEnums.put("fileQualities", Arrays.stream(FileQuality.values()).map(Enum::name).toList());
         allEnums.put("planStatuses", Arrays.stream(PlanStatus.values()).map(Enum::name).toList());
         allEnums.put("targets", Arrays.stream(StarSystem.CONSTELLATIONS.values()).map(Enum::name).toList());
+        allEnums.put("colorTypes", Arrays.stream(ColorType.values()).map(Enum::name).toList());
+        allEnums.put("quadrants", Arrays.stream(Quadrant.values()).map(Enum::name).toList());
 
         if (types != null && !types.isEmpty()) {
             Map<String, Object> filteredEnums = new HashMap<>();

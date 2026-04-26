@@ -1,268 +1,484 @@
-import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { Telescope } from 'lucide-react';
+import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import { Telescope } from "lucide-react";
 
 export default function CreateSciencePlan() {
-    const navigate = useNavigate();
+  const navigate = useNavigate();
 
-    const [creatorName, setCreatorName] = useState('');
-    const [showDiscardModal, setShowDiscardModal] = useState(false);
+  const [creatorName, setCreatorName] = useState("");
+  const [showDiscardModal, setShowDiscardModal] = useState(false);
+  const [metadata, setMetadata] = useState({
+    targets: [],
+    telescopeSites: [],
+    fileTypes: [],
+    fileQualities: [],
+    colorTypes: [],
+  });
+  const rangeFields = [
+    "contrast",
+    "exposure",
+    "brightness",
+    "saturation",
+    "highlights",
+    "shadows",
+    "whites",
+    "blacks",
+    "luminance",
+    "hue",
+  ];
 
-    useEffect(() => {
-        const savedUser = localStorage.getItem('user');
-        if (savedUser) {
-            const user = JSON.parse(savedUser);
-            setCreatorName(user.name);
-        }
-    }, []);
+  useEffect(() => {
+    const savedUser = localStorage.getItem("user");
+    if (savedUser) {
+      const user = JSON.parse(savedUser);
+      setCreatorName(user.name);
+    }
+  }, []);
 
-    const [formData, setFormData] = useState({
-        planName: '',
-        funding: 0,
-        targetName: 'Auriga',
-        objective: '',
-        startDate: '',
-        endDate: '',
-        telescopeSite: 'HAWAII',
-        fileType: 'JPEG',
-        fileQuality: 'Low',
-        colorType: 'COLOR',
-        contrast: 1,
-        exposure: 1,
-        brightness: 1,
-        saturation: 1,
-    });
+  useEffect(() => {
+    fetch("/api/science-plans/metadata/enums")
+      .then((res) => res.json())
+      .then((data) => {
+        setMetadata(data);
+      })
+      .catch((err) => {
+        console.error("Failed to fetch metadata:", err);
+      });
+  }, []);
 
-    const handleChange = (e) => {
-        const { name, value } = e.target;
-        setFormData((prev) => ({ ...prev, [name]: value }));
+  const [formData, setFormData] = useState({
+    planName: "",
+    funding: 0,
+    targetName: "Auriga",
+    objective: "",
+    startDate: "",
+    endDate: "",
+    telescopeSite: "HAWAII",
+    fileType: "JPEG",
+    fileQuality: "Low",
+    colorType: "COLOR",
+    contrast: 1,
+    exposure: 1,
+    brightness: 1,
+    saturation: 1,
+    luminance: 1,
+    hue: 1,
+    highlights: 1,
+    shadows: 1,
+    whites: 1,
+    blacks: 1,
+  });
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+
+    if (name === "planName" && value.length > 50) return;
+
+    if (name === "funding") {
+      const num = Math.max(0, Number(value));
+      setFormData((prev) => ({
+        ...prev,
+        [name]: num,
+      }));
+      return;
+    }
+
+    if (rangeFields.includes(name)) {
+      if (value === "") {
+        setFormData((prev) => ({
+          ...prev,
+          [name]: "",
+        }));
+        return;
+      }
+
+      const num = Number(value);
+      if (num < 0 || num > 50) return;
+    }
+
+    setFormData((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
+  };
+
+  const handleBackAttempt = (e) => {
+    if (e) e.preventDefault();
+    setShowDiscardModal(true);
+  };
+
+  const handleSave = async (e) => {
+    if (e) e.preventDefault();
+
+    const body = {
+      planName: formData.planName,
+      funding: parseFloat(formData.funding),
+      objective: formData.objective,
+      targetName: formData.targetName,
+      telescopeSite: formData.telescopeSite,
+      startDate: formData.startDate
+        ? new Date(formData.startDate).toISOString()
+        : null,
+      endDate: formData.endDate
+        ? new Date(formData.endDate).toISOString()
+        : null,
+      fileType: formData.fileType,
+      fileQuality: formData.fileQuality,
+      colorType: formData.colorType,
+      brightness: parseFloat(formData.brightness),
+      contrast: parseFloat(formData.contrast),
+      exposure: parseFloat(formData.exposure),
+      saturation: parseFloat(formData.saturation),
     };
 
-    const handleBackAttempt = (e) => {
-        if (e) e.preventDefault();
-        setShowDiscardModal(true);
-    };
+    try {
+      const res = await fetch("/api/science-plans", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(body),
+      });
 
-    const handleSave = async (e) => {
-        if (e) e.preventDefault();
+      if (!res.ok) throw new Error("Failed to create plan");
 
-        const body = {
-            planName: formData.planName,
-            funding: parseFloat(formData.funding),
-            objective: formData.objective,
-            targetName: formData.targetName,
-            telescopeSite: formData.telescopeSite,
-            startDate: formData.startDate ? new Date(formData.startDate).toISOString() : null,
-            endDate: formData.endDate ? new Date(formData.endDate).toISOString() : null,
-            fileType: formData.fileType,
-            fileQuality: formData.fileQuality,
-            colorType: formData.colorType,
-            brightness: parseFloat(formData.brightness),
-            contrast: parseFloat(formData.contrast),
-            exposure: parseFloat(formData.exposure),
-            saturation: parseFloat(formData.saturation),
-        };
+      navigate("/astronomer-dashboard", {
+        state: {
+          justSaved: true,
+          message:
+            "Science Plan created successfully. Please test before submitting.",
+        },
+      });
+    } catch (err) {
+      console.error("❌ Create plan error:", err);
+      alert("Failed to save science plan. Please try again.");
+    }
+  };
 
-        try {
-            const res = await fetch('/api/science-plans', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(body),
-            });
+  const handleLogout = () => {
+    localStorage.removeItem("user");
+    navigate("/");
+  };
 
-            if (!res.ok) throw new Error('Failed to create plan');
+  const NumberField = ({ name, label }) => (
+    <div className="form-group">
+      <label>{label}</label>
+      <input
+        type="number"
+        step="0.1"
+        min="0"
+        max="50"
+        name={name}
+        value={formData[name]}
+        onChange={handleChange}
+      />
+    </div>
+  );
 
-            navigate('/astronomer-dashboard', {
-                state: {
-                    justSaved: true,
-                    message: 'Science Plan created successfully. Please test before submitting.',
-                },
-            });
-        } catch (err) {
-            console.error('❌ Create plan error:', err);
-            alert('Failed to save science plan. Please try again.');
-        }
-    };
+  return (
+    <>
+      <style>{css}</style>
 
-    const handleLogout = () => {
-        localStorage.removeItem('user');
-        navigate('/');
-    };
-
-    return (
-        <>
-            <style>{css}</style>
-
-            {showDiscardModal && (
-                <div className="modal-overlay">
-                    <div className="discard-modal">
-                        <div className="modal-header-simple">
-                            <span className="modal-title">Discard Changes?</span>
-                            <button className="close-x" onClick={() => setShowDiscardModal(false)}>✕</button>
-                        </div>
-                        <div className="modal-body-simple">
-                            <p>Are you sure you want to discard your changes? Any unsaved data will be lost.</p>
-                        </div>
-                        <div className="modal-footer-simple">
-                            <button className="btn-keep" onClick={() => setShowDiscardModal(false)}>Keep Editing</button>
-                            <button className="btn-discard" onClick={() => navigate('/astronomer-dashboard')}>Discard Changes</button>
-                        </div>
-                    </div>
-                </div>
-            )}
-
-            <div className="app">
-                <nav>
-                    <div className="logo">
-                        <div className="logo-icon">
-                            <Telescope className="w-5 h-5 text-white" strokeWidth={1.8} />
-                        </div>
-                        <span className="logo-name">Gemini OCS</span>
-                    </div>
-                    <div className="nav-user">
-                        <div className="user-info">
-                            <div className="user-name">{creatorName}</div>
-                            <div className="user-role">Astronomer</div>
-                        </div>
-                        <button className="logout-btn" title="Sign out" onClick={handleLogout}>
-                            <svg width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="1.5">
-                                <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 9V5.25A2.25 2.25 0 0013.5 3h-6a2.25 2.25 0 00-2.25 2.25v13.5A2.25 2.25 0 007.5 21h6a2.25 2.25 0 002.25-2.25V15M12 9l-3 3m0 0l3 3m-3-3h12.75" />
-                            </svg>
-                        </button>
-                    </div>
-                </nav>
-
-                <main className="form-main">
-                    <div className="form-header">
-                        <button className="back-btn" onClick={handleBackAttempt}>
-                            <svg width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
-                                <path strokeLinecap="round" strokeLinejoin="round" d="M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18" />
-                            </svg>
-                        </button>
-                        <h1>Create Science Plan</h1>
-                    </div>
-
-                    <form className="form-card" onSubmit={handleSave}>
-                        {/* Section 1: General Information */}
-                        <div className="form-section">
-                            <h3 className="section-title">General Information</h3>
-
-                            <div className="form-grid-2">
-                                <div className="form-group">
-                                    <label>Plan Name</label>
-                                    <input type="text" name="planName" value={formData.planName} onChange={handleChange} placeholder="Enter plan name" />
-                                </div>
-                                <div className="form-group">
-                                    <label>Creator</label>
-                                    <input type="text" value={creatorName} disabled className="input-disabled" />
-                                </div>
-
-                                <div className="form-group">
-                                    <label>Funding ($)</label>
-                                    <input type="number" name="funding" value={formData.funding} onChange={handleChange} />
-                                </div>
-                                <div className="form-group">
-                                    <label>Target (Star Catalog)</label>
-                                    <select name="targetName" value={formData.targetName} onChange={handleChange}>
-                                        <option value="Auriga">Auriga</option>
-                                        <option value="M31">M31 (Andromeda Galaxy)</option>
-                                        <option value="M42">M42 (Orion Nebula)</option>
-                                        <option value="Moon">Moon</option>
-                                        <option value="Jupiter">Jupiter</option>
-                                    </select>
-                                </div>
-                            </div>
-
-                            <div className="form-group mt-3">
-                                <label>Objective</label>
-                                <textarea name="objective" rows="3" value={formData.objective} onChange={handleChange} placeholder="Describe the science objective..."></textarea>
-                            </div>
-
-                            <div className="form-grid-2 mt-3">
-                                <div className="form-group">
-                                    <label>Start Date</label>
-                                    <input type="date" name="startDate" value={formData.startDate} onChange={handleChange} />
-                                </div>
-                                <div className="form-group">
-                                    <label>End Date</label>
-                                    <input type="date" name="endDate" value={formData.endDate} onChange={handleChange} />
-                                </div>
-                                <div className="form-group">
-                                    <label>Telescope Assigned</label>
-                                    <select name="telescopeSite" value={formData.telescopeSite} onChange={handleChange}>
-                                        <option value="HAWAII">Hawaii</option>
-                                        <option value="CHILE">Chile</option>
-                                    </select>
-                                </div>
-                            </div>
-                        </div>
-
-                        {/* Section 2: Data Processing Requirements */}
-                        <div className="form-section mt-5">
-                            <h3 className="section-title">Data Processing Requirements</h3>
-
-                            <div className="form-grid-3">
-                                <div className="form-group">
-                                    <label>File Type</label>
-                                    <select name="fileType" value={formData.fileType} onChange={handleChange}>
-                                        <option value="JPEG">JPEG</option>
-                                        <option value="RAW">RAW</option>
-                                        <option value="PNG">PNG</option>
-                                        <option value="FITS">FITS</option>
-                                    </select>
-                                </div>
-                                <div className="form-group">
-                                    <label>File Quality</label>
-                                    <select name="fileQuality" value={formData.fileQuality} onChange={handleChange}>
-                                        <option value="Fine">Fine</option>
-                                        <option value="Standard">Standard</option>
-                                        <option value="Low">Low</option>
-                                    </select>
-                                </div>
-                                <div className="form-group">
-                                    <label>Color Type</label>
-                                    <select name="colorType" value={formData.colorType} onChange={handleChange}>
-                                        <option value="COLOR">Color</option>
-                                        <option value="BW">B&W</option>
-                                        <option value="GRAYSCALE">Grayscale</option>
-                                    </select>
-                                </div>
-
-                                <div className="form-group">
-                                    <label>Contrast</label>
-                                    <input type="number" step="0.1" name="contrast" value={formData.contrast} onChange={handleChange} />
-                                </div>
-                                <div className="form-group">
-                                    <label>Exposure</label>
-                                    <input type="number" step="0.1" name="exposure" value={formData.exposure} onChange={handleChange} />
-                                </div>
-                                <div className="form-group">
-                                    <label>Brightness</label>
-                                    <input type="number" step="0.1" name="brightness" value={formData.brightness} onChange={handleChange} />
-                                </div>
-
-                                <div className="form-group">
-                                    <label>Saturation</label>
-                                    <input type="number" step="0.1" name="saturation" value={formData.saturation} onChange={handleChange} />
-                                </div>
-                            </div>
-                        </div>
-
-                        {/* Footer Actions */}
-                        <div className="form-actions">
-                            <button type="button" className="btn-cancel" onClick={handleBackAttempt}>Cancel</button>
-                            <button type="submit" className="btn-save">
-                                <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
-                                    <path strokeLinecap="round" strokeLinejoin="round" d="M8 7H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-3m-1 4l-3 3m0 0l-3-3m3 3V4" />
-                                </svg>
-                                Save Science Plan
-                            </button>
-                        </div>
-                    </form>
-                </main>
+      {showDiscardModal && (
+        <div className="modal-overlay">
+          <div className="discard-modal">
+            <div className="modal-header-simple">
+              <span className="modal-title">Discard Changes?</span>
+              <button
+                className="close-x"
+                onClick={() => setShowDiscardModal(false)}
+              >
+                ✕
+              </button>
             </div>
-        </>
-    );
+            <div className="modal-body-simple">
+              <p>
+                Are you sure you want to discard your changes? Any unsaved data
+                will be lost.
+              </p>
+            </div>
+            <div className="modal-footer-simple">
+              <button
+                className="btn-keep"
+                onClick={() => setShowDiscardModal(false)}
+              >
+                Keep Editing
+              </button>
+              <button
+                className="btn-discard"
+                onClick={() => navigate("/astronomer-dashboard")}
+              >
+                Discard Changes
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      <div className="app">
+        <nav>
+          <div className="logo">
+            <div className="logo-icon">
+              <Telescope className="w-5 h-5 text-white" strokeWidth={1.8} />
+            </div>
+            <span className="logo-name">Gemini OCS</span>
+          </div>
+          <div className="nav-user">
+            <div className="user-info">
+              <div className="user-name">{creatorName}</div>
+              <div className="user-role">Astronomer</div>
+            </div>
+            <button
+              className="logout-btn"
+              title="Sign out"
+              onClick={handleLogout}
+            >
+              <svg
+                width="20"
+                height="20"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+                strokeWidth="1.5"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M15.75 9V5.25A2.25 2.25 0 0013.5 3h-6a2.25 2.25 0 00-2.25 2.25v13.5A2.25 2.25 0 007.5 21h6a2.25 2.25 0 002.25-2.25V15M12 9l-3 3m0 0l3 3m-3-3h12.75"
+                />
+              </svg>
+            </button>
+          </div>
+        </nav>
+
+        <main className="form-main">
+          <div className="form-header">
+            <button className="back-btn" onClick={handleBackAttempt}>
+              <svg
+                width="20"
+                height="20"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+                strokeWidth="2.5"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18"
+                />
+              </svg>
+            </button>
+            <h1>Create Science Plan</h1>
+          </div>
+
+          <form className="form-card" onSubmit={handleSave}>
+            {/* Section 1: General Information */}
+            <div className="form-section">
+              <h3 className="section-title">General Information</h3>
+
+              <div className="form-grid-2">
+                <div className="form-group">
+                  <label>Plan Name</label>
+                  <input
+                    type="text"
+                    name="planName"
+                    value={formData.planName}
+                    onChange={handleChange}
+                    placeholder="Enter plan name"
+                    maxLength={50}
+                  />
+                  <small>{formData.planName.length}/50 characters</small>
+                </div>
+                <div className="form-group">
+                  <label>Creator</label>
+                  <input
+                    type="text"
+                    value={creatorName}
+                    disabled
+                    className="input-disabled"
+                  />
+                </div>
+
+                <div className="form-group">
+                  <label>Funding ($)</label>
+                  <input
+                    type="number"
+                    name="funding"
+                    value={formData.funding}
+                    onChange={handleChange}
+                    min="0"
+                    step={100}
+                  />
+                </div>
+                <div className="form-group">
+                  <label>Target (Star Catalog)</label>
+                  <select
+                    name="targetName"
+                    value={formData.targetName}
+                    onChange={handleChange}
+                  >
+                    <option value="">-- Select Target --</option>
+
+                    {metadata.targets.map((t) => (
+                      <option key={t} value={t}>
+                        {t}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+              </div>
+
+              <div className="form-group mt-3">
+                <label>Objective</label>
+                <textarea
+                  name="objective"
+                  rows="3"
+                  value={formData.objective}
+                  onChange={handleChange}
+                  placeholder="Describe the science objective..."
+                ></textarea>
+              </div>
+
+              <div className="form-grid-2 mt-3">
+                <div className="form-group">
+                  <label>Start Date</label>
+                  <input
+                    type="date"
+                    name="startDate"
+                    value={formData.startDate}
+                    onChange={handleChange}
+                  />
+                </div>
+                <div className="form-group">
+                  <label>End Date</label>
+                  <input
+                    type="date"
+                    name="endDate"
+                    value={formData.endDate}
+                    onChange={handleChange}
+                  />
+                </div>
+                <div className="form-group">
+                  <label>Telescope Assigned</label>
+                  <select
+                    name="telescopeSite"
+                    value={formData.telescopeSite}
+                    onChange={handleChange}
+                  >
+                    <option value="">-- Select Telescope --</option>
+
+                    {metadata.telescopeSites.map((t) => (
+                      <option key={t} value={t}>
+                        {t}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+              </div>
+            </div>
+
+            {/* Section 2: Data Processing Requirements */}
+            <div className="form-section mt-5">
+              <h3 className="section-title">Data Processing Requirements</h3>
+
+              <div className="form-grid-3">
+                <div className="form-group">
+                  <label>File Type</label>
+                  <select
+                    name="fileType"
+                    value={formData.fileType}
+                    onChange={handleChange}
+                  >
+                    {metadata.fileTypes.map((t) => (
+                      <option key={t} value={t}>
+                        {t}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+                <div className="form-group">
+                  <label>File Quality</label>
+                  <select
+                    name="fileQuality"
+                    value={formData.fileQuality}
+                    onChange={handleChange}
+                  >
+                    {metadata.fileQualities.map((q) => (
+                      <option key={q} value={q}>
+                        {q}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+                <div className="form-group">
+                  <label>Color Type</label>
+                  <select
+                    name="colorType"
+                    value={formData.colorType}
+                    onChange={handleChange}
+                  >
+                    {metadata.colorTypes.map((q) => (
+                      <option key={q} value={q}>
+                        {q}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+
+                <NumberField name="contrast" label="Contrast" />
+                <NumberField name="exposure" label="Exposure" />
+
+                {formData.colorType === "COLOR" && (
+                  <>
+                    <NumberField name="brightness" label="Brightness" />
+                    <NumberField name="saturation" label="Saturation" />
+                    <NumberField name="luminance" label="Luminance" />
+                    <NumberField name="hue" label="Hue" />
+                  </>
+                )}
+
+                {formData.colorType === "BW" && (
+                  <>
+                    <NumberField name="highlights" label="Highlights" />
+                    <NumberField name="shadows" label="Shadows" />
+                    <NumberField name="whites" label="Whites" />
+                    <NumberField name="blacks" label="Blacks" />
+                  </>
+                )}
+              </div>
+            </div>
+
+            {/* Footer Actions */}
+            <div className="form-actions">
+              <button
+                type="button"
+                className="btn-cancel"
+                onClick={handleBackAttempt}
+              >
+                Cancel
+              </button>
+              <button type="submit" className="btn-save">
+                <svg
+                  width="16"
+                  height="16"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M8 7H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-3m-1 4l-3 3m0 0l-3-3m3 3V4"
+                  />
+                </svg>
+                Save Science Plan
+              </button>
+            </div>
+          </form>
+        </main>
+      </div>
+    </>
+  );
 }
 
 const css = `

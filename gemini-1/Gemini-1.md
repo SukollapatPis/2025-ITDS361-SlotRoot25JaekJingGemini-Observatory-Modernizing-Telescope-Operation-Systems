@@ -213,7 +213,7 @@ Test reports are generated at:
 
 | # | Pattern Name | Category | File(s) |
 |---|-------------|----------|---------|
-| 1 | **Singleton** | Creational | `UserService.java`, `SciencePlanServiceProxy.java`, `SciencePlanServiceImpl.java`, `SciencePlanController.java` |
+| 1 | **Singleton** | Creational | `UserService.java`, `SciencePlanServiceProxy.java`, `SciencePlanServiceImpl.java`, `SciencePlanController.java`, `AuditLogger.java` |
 | 2 | **Proxy** | Structural | `SciencePlanServiceProxy.java`, `SciencePlanRepository.java`, `UserRepository.java` |
 | 3 | **Adapter** | Structural | `LegacyOCSAdapter.java`, `OCSClient.java`, `LegacyOCSService.java` |
 | 4 | **Factory (Static Factory Method)** | Creational | `SciencePlanFactory.java` | 
@@ -235,6 +235,7 @@ Test reports are generated at:
 | `src/main/java/.../Application/SciencePlanServiceImpl.java` | Line 22 | `@Service` |
 | `src/main/java/.../Controller/UserController.java` | Line 14 | `@Controller` |
 | `src/main/java/.../Controller/SciencePlanController.java` | Line 20 | `@RestController` |
+| `src/main/java/.../infrastructure/logging/AuditLogger.java` | Line 8 | `@Component` |
 
 ### Code Snippet
 
@@ -281,7 +282,7 @@ public class SciencePlanServiceProxy implements SciencePlanService {
 | **การควบคุมสถานะที่ใช้ร่วมกัน (Shared state control)** | อินสแตนซ์ service เพียงตัวเดียวรับประกันพฤติกรรมที่สม่ำเสมอสำหรับทุก operation |
 | **ธรรมเนียมปฏิบัติของเฟรมเวิร์ก (Framework convention)** | scope เริ่มต้นของ Spring (`singleton`) สอดคล้องกับพฤติกรรมที่ควรจะเป็นของ service components แบบ stateless ใน Web Application |
 
-**เหตุผลที่ Singleton มีความเหมาะสม:** `UserService`, `SciencePlanServiceProxy`, และ `SciencePlanServiceImpl` ล้วนเป็น stateless (ไม่มี mutable instance state) Spring IoC Container จัดการ lifecycle และรับประกัน instance เดียวต่อ application context โดยอัตโนมัติผ่าน annotation ต่างๆ
+**เหตุผลที่ Singleton มีความเหมาะสม:** `UserService`, `SciencePlanServiceProxy`, `SciencePlanServiceImpl`, และ `AuditLogger` ล้วนเป็น stateless (ไม่มี mutable instance state) Spring IoC Container จัดการ lifecycle และรับประกัน instance เดียวต่อ application context โดยอัตโนมัติผ่าน annotation ต่างๆ โดยเฉพาะ `AuditLogger` ที่ annotated ด้วย `@Component` ทำให้ถูก inject เป็น singleton เดียวกันในทุก class ที่ต้องการใช้งาน
 
 ---
 

@@ -3,62 +3,6 @@ import { useNavigate, useLocation } from "react-router-dom";
 import { Telescope } from "lucide-react";
 
 // ============================================================
-// MOCK DATA
-// ============================================================
-const mockPlans = [
-  {
-    planId: "SP-1001",
-    planName: "Andromeda Galaxy Survey",
-    target: "M31",
-    telescope: "Hawaii",
-    status: "CREATED",
-    funding: "$50,000",
-    startDate: "2026-04-01",
-    endDate: "2026-04-15",
-    creator: "Dr. Edwin Hubble",
-    objective: "Detailed mapping of the Andromeda galaxy spiral arms.",
-    dataProcessing: {
-      fileType: "RAW",
-      fileQuality: "Fine",
-      colorMode: "Color",
-      contrast: 1.2,
-      exposure: 2,
-      brightness: 1,
-      saturation: 1.5,
-      luminance: 1,
-      hue: 0,
-    },
-    history: [],
-    updatedAt: "2025-04-17T10:30:00Z",
-  },
-  {
-    planId: "SP-1002",
-    planName: "Crab Nebula Spectroscopy",
-    target: "M1",
-    telescope: "Chile",
-    status: "SUBMITTED",
-    funding: "$30,000",
-    startDate: "2026-05-01",
-    endDate: "2026-05-10",
-    creator: "Dr. Edwin Hubble",
-    objective: "Spectroscopic analysis of the Crab Nebula pulsar wind.",
-    dataProcessing: {
-      fileType: "FITS",
-      fileQuality: "Fine",
-      colorMode: "Grayscale",
-      contrast: 1,
-      exposure: 3,
-      brightness: 1.2,
-      saturation: 1,
-      luminance: 1.1,
-      hue: 0,
-    },
-    history: [],
-    updatedAt: "2025-04-16T08:15:00Z",
-  },
-];
-
-// ============================================================
 // STATUS BADGE COMPONENT
 // ============================================================
 const statusConfig = {
@@ -221,6 +165,22 @@ function PlanDetails({ plan }) {
             <label>Hue</label>
             <p>{plan.dataProcessing?.hue}</p>
           </div>
+          <div className="detail-item">
+            <label>Highlights</label>
+            <p>{plan.dataProcessing?.highlights}</p>
+          </div>
+          <div className="detail-item">
+            <label>Shadows</label>
+            <p>{plan.dataProcessing?.shadows}</p>
+          </div>
+          <div className="detail-item">
+            <label>Whites</label>
+            <p>{plan.dataProcessing?.whites}</p>
+          </div>
+          <div className="detail-item">
+            <label>Blacks</label>
+            <p>{plan.dataProcessing?.blacks}</p>
+          </div>
         </div>
       </div>
     </div>
@@ -313,10 +273,16 @@ export function AstronomerDashboard() {
             colorMode: p.requirements?.colorType,
             contrast: p.requirements?.contrast,
             exposure: p.requirements?.exposure,
+
             brightness: p.requirements?.brightness,
             saturation: p.requirements?.saturation,
-            luminance: "-",
-            hue: "-",
+            luminance: p.requirements?.luminance,
+            hue: p.requirements?.hue,
+
+            highlights: p.requirements?.highlights,
+            shadows: p.requirements?.shadows,
+            whites: p.requirements?.whites,
+            blacks: p.requirements?.blacks,
           },
 
           history: [],

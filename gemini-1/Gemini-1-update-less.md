@@ -200,7 +200,7 @@ Test reports are generated at:
 ## Table of Contents Design Pattern Analysis
 
 1. [Summary Table](#summary-table)
-2. [Pattern 1 — Singleton (via Spring IoC)](#pattern-1--singleton-via-spring-ioc)
+2. [Pattern 1 — Singleton](#pattern-1--singleton)
 3. [Pattern 2 — Proxy (SciencePlanServiceProxy)](#pattern-2--proxy-scienceplanserviceproxy)
 4. [Pattern 3 — Adapter (LegacyOCSAdapter)](#pattern-3--adapter-legacyocsadapter)
 5. [Pattern 4 — Factory (SciencePlanFactory)](#pattern-4--factory-static-factory-method)
@@ -210,7 +210,7 @@ Test reports are generated at:
 
 ---
 
-## Pattern 1 — Singleton (via Spring IoC)
+## Pattern 1 — Singleton
 
 ### Category
 **Creational Pattern**
@@ -224,7 +224,7 @@ Test reports are generated at:
 | **การควบคุมสถานะที่ใช้ร่วมกัน (Shared state control)** | อินสแตนซ์ service เพียงตัวเดียวรับประกันพฤติกรรมที่สม่ำเสมอสำหรับทุก operation |
 | **ธรรมเนียมปฏิบัติของเฟรมเวิร์ก (Framework convention)** | scope เริ่มต้นของ Spring (`singleton`) สอดคล้องกับพฤติกรรมที่ควรจะเป็นของ service components แบบ stateless ใน Web Application |
 
-**เหตุผลที่ Singleton มีความเหมาะสม:** `UserService`, `SciencePlanServiceProxy`, `SciencePlanServiceImpl`, และ `AuditLogger` ล้วนเป็น stateless (ไม่มี mutable instance state) Spring IoC Container จัดการ lifecycle และรับประกัน instance เดียวต่อ application context โดยอัตโนมัติผ่าน annotation ต่างๆ โดยเฉพาะ `AuditLogger` ที่ annotated ด้วย `@Component` ทำให้ถูก inject เป็น singleton เดียวกันในทุก class ที่ต้องการใช้งาน
+**เหตุผลที่ Singleton มีความเหมาะสม:** `UserService`, `SciencePlanServiceProxy`, `SciencePlanServiceImpl`, และ `AuditLogger` ล้วนเป็น stateless (ไม่มี mutable instance state) Spring Container จัดการ lifecycle และรับประกัน instance เดียวต่อ application context โดยอัตโนมัติผ่าน annotation ต่างๆ โดยเฉพาะ `AuditLogger` ที่ annotated ด้วย `@Component` ทำให้ถูก inject เป็น singleton เดียวกันในทุก class ที่ต้องการใช้งาน
 
 ---
 
@@ -315,7 +315,7 @@ Test reports are generated at:
 
 ### Summary
 
-- แพตเทิร์น **Singleton** ถูกนำมาใช้งานผ่าน Spring IoC Container สำหรับ service และ controller ทุกตัว
+- แพตเทิร์น **Singleton** ถูกนำมาใช้งานผ่าน Spring Container สำหรับ service และ controller ทุกตัว
 - **Proxy Pattern** ถูก implement อย่างชัดเจนผ่าน `SciencePlanServiceProxy` ซึ่งทำหน้าที่เป็น Access Control และ Audit Logging layer ก่อนส่งต่อให้ `SciencePlanServiceImpl` — นอกจากนี้ Spring Data JPA repositories ก็เป็น Proxy เช่นกัน
 - **Adapter Pattern** ถูก implement ผ่าน `LegacyOCSAdapter` เพื่อเชื่อมระบบใหม่กับ Gemini OCS Library ที่มี API format แตกต่างกัน
 - **Factory Pattern** ถูก implement ผ่าน `SciencePlanFactory` ที่รวม object creation logic และ DTO-to-Entity mapping ไว้ที่เดียว

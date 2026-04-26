@@ -55,15 +55,77 @@
 
 ```
 gemini-1/implementations/
-├── backend/          ← Spring Boot application
+├── backend/                          ← Spring Boot application
 │   ├── src/
-│   ├── data/         
+│   │   ├── main/
+│   │   │   ├── java/com/slotjeakjing/backend/
+│   │   │   │   ├── Application/               ← Service layer
+│   │   │   │   │   ├── SciencePlanService.java        (interface)
+│   │   │   │   │   ├── SciencePlanServiceImpl.java    (real subject)
+│   │   │   │   │   ├── SciencePlanServiceProxy.java   (proxy)
+│   │   │   │   │   └── UserService.java
+│   │   │   │   ├── Controller/                ← HTTP handlers
+│   │   │   │   │   ├── SciencePlanController.java
+│   │   │   │   │   └── UserController.java
+│   │   │   │   ├── Domain/
+│   │   │   │   │   ├── DTO/
+│   │   │   │   │   │   └── SciencePlanDTO.java
+│   │   │   │   │   └── Model/
+│   │   │   │   │       ├── DataProcessingRequirements.java
+│   │   │   │   │       ├── LogEntry.java
+│   │   │   │   │       ├── SciencePlan.java
+│   │   │   │   │       ├── StarSystem.java
+│   │   │   │   │       └── User.java
+│   │   │   │   ├── Enum/                      ← Enumerations
+│   │   │   │   │   ├── ColorType.java
+│   │   │   │   │   ├── FileQuality.java
+│   │   │   │   │   ├── FileType.java
+│   │   │   │   │   ├── PlanStatus.java
+│   │   │   │   │   └── TelescopeSite.java
+│   │   │   │   ├── Factory/
+│   │   │   │   │   └── SciencePlanFactory.java        (static factory)
+│   │   │   │   ├── Repository/                ← Spring Data JPA
+│   │   │   │   │   ├── LogRepository.java
+│   │   │   │   │   ├── SciencePlanRepository.java
+│   │   │   │   │   └── UserRepository.java
+│   │   │   │   ├── infrastructure/
+│   │   │   │   │   ├── OCS/                   ← Adapter to legacy OCS
+│   │   │   │   │   │   ├── OCSClient.java         (target interface)
+│   │   │   │   │   │   ├── LegacyOCSAdapter.java  (adapter)
+│   │   │   │   │   │   └── LegacyOCSService.java  (adaptee)
+│   │   │   │   │   ├── logging/
+│   │   │   │   │   │   └── AuditLogger.java
+│   │   │   │   │   └── security/
+│   │   │   │   │       └── AccessControlService.java
+│   │   │   │   └── BackendApplication.java
+│   │   │   └── resources/
+│   │   │       ├── application.properties
+│   │   │       └── schema.sql
+│   │   └── test/
+│   │       └── java/com/slotjeakjing/backend/
+│   │           ├── BackendApplicationTests.java
+│   │           └── SciencePlanTests.java
 │   ├── build.gradle
 │   └── gradlew
-└── frontend/        
-│   └── public/
-│   └── src/    
-└── data/
+├── frontend/                         ← React application
+│   ├── src/
+│   │   ├── components/
+│   │   │   └── auth/
+│   │   │       └── LoginForm.jsx
+│   │   ├── pages/
+│   │   │   ├── Dashboard.jsx
+│   │   │   └── LoginPage.jsx
+│   │   ├── services/
+│   │   │   └── authService.js
+│   │   ├── utils/
+│   │   │   └── validators.js
+│   │   ├── App.jsx
+│   │   └── main.jsx
+│   ├── public/
+│   ├── index.html
+│   └── package.json
+└── data/                             ← H2 database file
+    └── test.db.mv.db
 ```
 ---
 
@@ -130,7 +192,7 @@ Test reports are generated at:
 # 🏗️ Design Pattern Analysis — SlotRoot25 JaekJing (Gemini-1)
 
 > **Project:** 2025-ITDS361 SlotRoot25 JaekJing   
-> **Date:** 25 April 2026  
+> **Date:** 26 April 2026  
 > **Codebase:** `gemini-1/implementations/backend`
 
 ---
@@ -139,9 +201,9 @@ Test reports are generated at:
 
 1. [Summary Table](#summary-table)
 2. [Pattern 1 — Singleton (via Spring IoC)](#pattern-1--singleton-via-spring-ioc)
-3. [Pattern 2 — Proxy (Spring Data JPA Repository)](#pattern-2--proxy-spring-data-jpa-repository)
-4. [Pattern 3 — Facade (Service Layer)](#pattern-3--facade-service-layer)
-5. [Pattern 4 — Factory Method (Partial — User Hierarchy)](#pattern-4--factory-method-partial--user-hierarchy)
+3. [Pattern 2 — Proxy (SciencePlanServiceProxy)](#pattern-2--proxy-scienceplanserviceproxy)
+4. [Pattern 3 — Adapter (LegacyOCSAdapter)](#pattern-3--adapter-legacyocsadapter)
+5. [Pattern 4 — Factory (SciencePlanFactory)](#pattern-4--factory-static-factory-method)
 6. [Pattern 5 — MVC Architectural Pattern](#pattern-5--mvc-architectural-pattern)
 7. [Conclusion](#conclusion)
 
@@ -151,10 +213,10 @@ Test reports are generated at:
 
 | # | Pattern Name | Category | File(s) | Status |
 |---|-------------|----------|---------|--------|
-| 1 | **Singleton** | Creational | `UserService.java`, `UserController.java` | ✅ Fully Implemented |
-| 2 | **Proxy** | Structural | `UserRepository.java` | ✅ Fully Implemented |
-| 3 | **Facade** | Structural | `UserService.java` | ✅ Fully Implemented |
-| 4 | **Factory Method** | Creational | `User.java`, `UserController.java` | ✅ Partial (product hierarchy) |
+| 1 | **Singleton** | Creational | `UserService.java`, `SciencePlanServiceProxy.java`, `SciencePlanServiceImpl.java`, `SciencePlanController.java` | ✅ Fully Implemented |
+| 2 | **Proxy** | Structural | `SciencePlanServiceProxy.java`, `SciencePlanRepository.java`, `UserRepository.java` | ✅ Fully Implemented |
+| 3 | **Adapter** | Structural | `LegacyOCSAdapter.java`, `OCSClient.java`, `LegacyOCSService.java` | ✅ Fully Implemented |
+| 4 | **Factory (Static Factory Method)** | Creational | `SciencePlanFactory.java` | ✅ Fully Implemented |
 | 5 | **MVC** | Architectural | All files | ✅ Fully Implemented |
 
 ---
@@ -168,13 +230,16 @@ Test reports are generated at:
 
 | File | Line | Annotation |
 |------|------|------------|
-| `src/main/java/.../Service/UserService.java` | Line 9 | `@Service` |
+| `src/main/java/.../Application/UserService.java` | Line 10 | `@Service` |
+| `src/main/java/.../Application/SciencePlanServiceProxy.java` | Line 19 | `@Service @Primary` |
+| `src/main/java/.../Application/SciencePlanServiceImpl.java` | Line 22 | `@Service` |
 | `src/main/java/.../Controller/UserController.java` | Line 14 | `@Controller` |
+| `src/main/java/.../Controller/SciencePlanController.java` | Line 20 | `@RestController` |
 
 ### Code Snippet
 
 ```java
-// UserService.java — Lines 9–15
+// UserService.java — Lines 10–15
 @Service
 public class UserService {
     private final UserRepository userRepository;
@@ -186,194 +251,234 @@ public class UserService {
 ```
 
 ```java
-// UserController.java — Lines 14–20
-@Controller
-public class UserController {
-    private final UserService userService;
-    private final UserRepository userRepository;
+// SciencePlanServiceProxy.java — Lines 19–35
+@Service
+@Primary
+public class SciencePlanServiceProxy implements SciencePlanService {
 
-    public UserController(UserService userService, UserRepository userRepository) {
-        this.userService = userService;
-        this.userRepository = userRepository;
-    }
+    @Autowired
+    @Qualifier("sciencePlanServiceImpl")
+    private SciencePlanService actualService;
+
+    @Autowired
+    private AccessControlService accessControl;
+
+    @Autowired
+    private OCSClient ocsClient;
+
+    @Autowired
+    private HttpSession session;
+
+    @Autowired
+    private AuditLogger logger;
 ```
 
 ### เหตุผลที่เลือกใช้ Singleton
 
 | ข้อดี | คำอธิบาย |
 |---------|-------------|
-| **ประสิทธิภาพด้านทรัพยากร (Resource efficiency)** | การสร้าง `UserService` ใหม่ต่อหนึ่ง request จะเป็นการสิ้นเปลือง เนื่องจาก service ไม่มี state ที่เปลี่ยนแปลงได้ต่อ request |
-| **การควบคุมสถานะที่ใช้ร่วมกัน (Shared state control)** | อินสแตนซ์ `UserService` เพียงตัวเดียวรับประกันพฤติกรรมที่สม่ำเสมอสำหรับการเรียกใช้ `login()` และ `findByEmail()` ทั้งหมด |
+| **ประสิทธิภาพด้านทรัพยากร (Resource efficiency)** | การสร้าง Service ใหม่ต่อหนึ่ง request จะเป็นการสิ้นเปลือง เนื่องจาก service ไม่มี state ที่เปลี่ยนแปลงได้ต่อ request |
+| **การควบคุมสถานะที่ใช้ร่วมกัน (Shared state control)** | อินสแตนซ์ service เพียงตัวเดียวรับประกันพฤติกรรมที่สม่ำเสมอสำหรับทุก operation |
 | **ธรรมเนียมปฏิบัติของเฟรมเวิร์ก (Framework convention)** | scope เริ่มต้นของ Spring (`singleton`) สอดคล้องกับพฤติกรรมที่ควรจะเป็นของ service components แบบ stateless ใน Web Application |
 
-
-**เหตุผลที่ Singleton มีความเหมาะ:** `UserService` เป็นแบบ stateless (มีเพียงการอ้างอิงแบบ final ไปยัง repository ซึ่งถูกกำหนดค่าเพียงครั้งเดียว) การใช้อินสแตนซ์ร่วมกันเพียงตัวเดียว ปลอดภัย และ มีประสิทธิภาพสูงสุด
+**เหตุผลที่ Singleton มีความเหมาะสม:** `UserService`, `SciencePlanServiceProxy`, และ `SciencePlanServiceImpl` ล้วนเป็น stateless (ไม่มี mutable instance state) Spring IoC Container จัดการ lifecycle และรับประกัน instance เดียวต่อ application context โดยอัตโนมัติผ่าน annotation ต่างๆ
 
 ---
 
-## Pattern 2 — Proxy (Spring Data JPA Repository)
+## Pattern 2 — Proxy (SciencePlanServiceProxy)
 
 ### Category
 **Structural Pattern**
 
 ### Location
 
-| File | Line | Code |
+| File | Line | Role |
 |------|------|------|
-| `src/main/java/.../Repositories/UserRepository.java` | Lines 6–8 | `extends CrudRepository<User, Integer>` |
+| `src/main/java/.../Application/SciencePlanService.java` | Line 9 | Subject Interface |
+| `src/main/java/.../Application/SciencePlanServiceImpl.java` | Line 22 | Real Subject (actual implementation) |
+| `src/main/java/.../Application/SciencePlanServiceProxy.java` | Line 19 | Proxy (wraps Real Subject) |
+| `src/main/java/.../infrastructure/security/AccessControlService.java` | All | Access control logic |
+| `src/main/java/.../infrastructure/logging/AuditLogger.java` | All | Logging logic |
 
 ### Code Snippet
 
 ```java
-// UserRepository.java — Lines 1–9
-package com.slotjeakjing.backend.Repositories;
-
-import com.slotjeakjing.backend.Model.User;
-import org.springframework.data.repository.CrudRepository;
-import java.util.Optional;
-
-public interface UserRepository extends CrudRepository<User, Integer> {
-    Optional<User> findByEmail(String email);
+// SciencePlanService.java — Subject Interface
+public interface SciencePlanService {
+    SciencePlan createPlan(SciencePlanDTO dto);
+    void updatePlan(int planId, SciencePlanDTO dto);
+    void submitPlan(int planId);
+    String testPlan(int planId);
+    void approvePlan(int planId);
+    void invalidatePlan(int planId, String feedback);
+    // ...
 }
 ```
 
-
-### เหตุผลที่เลือกใช้ Proxy
-
-| ข้อดี | คำอธิบาย |
-|---------|-------------|
-| **ซ่อนความซับซ้อนของการทำงานกับฐานข้อมูล (Hides complex database operations)** | ผู้เรียกใช้ไม่จำเป็นต้องเขียน JPQL/SQL, จัดการ transactions หรือโต้ตอบกับ `EntityManager` โดยตรง |
-| **การสร้างออบเจกต์แบบ Lazy (Lazy object generation)** | การอิมพลีเมนต์จริง (proxy class) จะถูกสร้างขึ้นเมื่อ application context โหลดเท่านั้น ไม่ใช่ในขณะคอมไพล์ (compile-time) |
-| **แหล่งความจริงเดียว (Single source of truth)** | การประกาศ `findByEmail` ในอินเทอร์เฟซเดียวช่วยป้องกันความซ้ำซ้อนของ logic การ query |
-| **ความสามารถในการขยาย (Extensibility)** | สามารถเพิ่ม query ใหม่ๆ ได้โดยการประกาศเมธอดโดยไม่ต้องเขียนโค้ดอิมพลีเมนต์ |
-
-
-**เหตุผลที่ Proxy มีความเหมาะสม:** การสร้าง proxy ของ Spring Data เป็นวิธีที่เป็นแบบแผน (idiomatic) และ ช่วยลดโค้ดที่ซ้ำซากในการอิมพลีเมนต์ data access layer ใน Spring Boot ซึ่งให้ประโยชน์ทั้งหมดของแพตเทิร์น Proxy (การควบคุมการเข้าถึง, การซ่อนความซับซ้อนของออบเจกต์จริง) โดยอัตโนมัติ
-
----
-
-## Pattern 3 — Facade (Service Layer)
-
-### Category
-**Structural Pattern**
-
-### Location
-
-| File | Lines | Role |
-|------|-------|------|
-| `src/main/java/.../Service/UserService.java` | All | Facade provider |
-| `src/main/java/.../Controller/UserController.java` | Lines 48–75 | Facade consumer |
-
-### Code Snippet
-
 ```java
-// UserService.java — The Facade
+// SciencePlanServiceProxy.java — Proxy: intercepts calls, checks access, logs
 @Service
-public class UserService {
-    private final UserRepository userRepository;
+@Primary
+public class SciencePlanServiceProxy implements SciencePlanService {
 
     @Autowired
-    public UserService(UserRepository userRepository) {
-        this.userRepository = userRepository;
-    }
+    @Qualifier("sciencePlanServiceImpl")
+    private SciencePlanService actualService;   // ← wraps the Real Subject
 
-    // Facade method: hides "find user → check password" orchestration
-    public boolean login(String email, String rawPassword) {
-        User user = userRepository.findByEmail(email)
-                .orElseThrow(() -> new RuntimeException("User not found"));
-        return rawPassword.equals(user.getPasswd());
-    }
+    @Autowired
+    private AccessControlService accessControl;
 
-    public Optional<User> findByEmail(String email) {
-        return userRepository.findByEmail(email);
-    }
-}
-```
+    @Autowired
+    private AuditLogger logger;
 
-```java
-// UserController.java — Calls Facade, not subsystem directly
-@PostMapping("/login")
-public ResponseEntity<Map<String, Object>> login(@RequestBody Map<String, String> body) {
-    String email = body.get("email");
-    String password = body.get("password");
-
-    // Controller calls simple Facade methods — not repository directly
-    Optional<User> optionalUser = userService.findByEmail(email);
-    if (optionalUser.isPresent()) {
-        User user = optionalUser.get();
-        if (userService.login(email, password)) {  // ← Facade hides find+compare logic
-            // ...
+    @Override
+    public SciencePlan createPlan(SciencePlanDTO dto) {
+        User user = getCurrentUser();
+        if (accessControl.canCreate(user)) {
+            logger.log("CREATE", "INFO", "Attempting to create plan: " + dto.getPlanName(), "SYSTEM", 0);
+            SciencePlan plan = actualService.createPlan(dto);   // ← delegates to Real Subject
+            logger.log("CREATE", "INFO", "Plan created successfully", "SYSTEM", plan.getPlanId());
+            return plan;
+        } else {
+            logger.log("CREATE", "WARNING", "Unauthorized creation attempt", "SYSTEM", 0);
+            throw new RuntimeException("Only Astronomers can create plans");
         }
     }
 }
 ```
 
-### เหตุผลที่เลือกใช้ Facade
+> **หมายเหตุเพิ่มเติม:** Spring Data JPA repositories (`SciencePlanRepository`, `UserRepository`) ที่ extend `JpaRepository` ก็เป็น Proxy เช่นกัน กล่าวคือ Spring สร้าง implementation จริงให้ ณ runtime โดยอัตโนมัติ ทำให้นักพัฒนาประกาศแค่ interface โดยไม่ต้องเขียน SQL เอง
+
+### เหตุผลที่เลือกใช้ Proxy
 
 | ข้อดี | คำอธิบาย |
 |---------|-------------|
-| **ลดความซับซ้อนของคอนโทรลเลอร์ (Reduced controller complexity)** | endpoint การเข้าสู่ระบบมีความสะอาดและอ่านง่าย โดยไม่มีตรรกะทางธุรกิจปะปนอยู่ |
-| **ความสามารถในการทดสอบ (Testability)** | คอนโทรลเลอร์สามารถถูกทดสอบได้ด้วย mock `UserService` โดยไม่ต้องพึ่งพาฐานข้อมูลจริง |
-| **การแยกส่วนความรับผิดชอบ (Separation of concerns)** | Business rules (authentication logic) จะอยู่ใน service ไม่ใช่อยู่ในตัวจัดการ HTTP |
+| **การควบคุมการเข้าถึง (Access control)** | `SciencePlanServiceProxy` ตรวจสอบสิทธิ์ผ่าน `AccessControlService` ก่อนทุก operation โดยที่ Real Subject (`SciencePlanServiceImpl`) ไม่ต้องสนใจ |
+| **Audit logging** | `AuditLogger` บันทึกทุก event ก่อนและหลังการเรียกใช้ Real Subject โดยไม่แทรกซึมเข้า Business Logic |
+| **Single Responsibility** | `SciencePlanServiceImpl` มุ่งเน้นที่ Business Logic ส่วน Proxy ดูแลเรื่อง Cross-cutting Concerns (security, logging) แยกต่างหาก |
 
-**เหตุผลที่ Facade มีความเหมาะสมกว่า:** service layer ถือเป็นแนวทางปฏิบัติที่ดีที่สุดที่ได้รับการยอมรับสำหรับสถาปัตยกรรมแบบแบ่งชั้นในแอปพลิเคชัน Spring Boot ซึ่งช่วยแยกเรื่องของการจัดการ HTTP (คอนโทรลเลอร์) ออกจากตรรกะของโดเมน (service) และการจัดเก็บข้อมูล (repository) ได้อย่างชัดเจน
+**เหตุผลที่ Proxy มีความเหมาะสม:** `SciencePlanServiceProxy` เป็น textbook Proxy pattern โดยมี interface เหมือน Real Subject ทุกประการ (`implements SciencePlanService`) แต่ดักทำงานพิเศษ (access control + audit logging) ก่อนส่งต่อให้ `SciencePlanServiceImpl` จัดการ Business Logic จริง
 
 ---
 
-## Pattern 4 — Factory Method (Partial — User Hierarchy)
+## Pattern 3 — Adapter (LegacyOCSAdapter)
+
+### Category
+**Structural Pattern**
+
+### Location
+
+| File | Role |
+|------|------|
+| `src/main/java/.../infrastructure/OCS/OCSClient.java` | Target Interface (ที่ระบบใหม่ต้องการ) |
+| `src/main/java/.../infrastructure/OCS/LegacyOCSAdapter.java` | Adapter (แปลงจาก Target ไปยัง Legacy) |
+| `src/main/java/.../infrastructure/OCS/LegacyOCSService.java` | Adaptee (ระบบ Legacy เดิม) |
+
+### Code Snippet
+
+```java
+// OCSClient.java — Target Interface (new system expects this)
+public interface OCSClient {
+    int createPlan(SciencePlanDTO dto);
+    String testPlan(int ocsPlanNo);
+    void changeStatus(int ocsPlanNo, String status);
+    List<SciencePlan> getAllSciencePlans();
+}
+```
+
+```java
+// LegacyOCSAdapter.java — Adapter: implements OCSClient, translates to Legacy OCS
+@Component
+public class LegacyOCSAdapter implements OCSClient {
+
+    private final LegacyOCSService legacyOCSService = new LegacyOCSService(true);
+
+    @Override
+    public int createPlan(SciencePlanDTO dto) {
+        // Translate modern DTO → Legacy OCS SciencePlan object
+        SciencePlan legacyPlan = new SciencePlan();
+        legacyPlan.setCreator(dto.getCreator());
+        legacyPlan.setFundingInUSD(dto.getFunding());
+        legacyPlan.setObjectives(dto.getObjective());
+        // ... date format conversion (dd/MM/yyyy HH:mm:ss), enum mapping ...
+        System.out.println("[Adapter] Calling LegacyOCSService to create plan in OCS...");
+        return legacyOCSService.sendLegacyPlan(legacyPlan);   // ← delegates to Adaptee
+    }
+}
+```
+
+### เหตุผลที่เลือกใช้ Adapter
+
+| ข้อดี | คำอธิบาย |
+|---------|-------------|
+| **แยก Legacy API ออกจากโค้ดหลัก (Isolation of Legacy API)** | โค้ดใน Application layer ใช้แค่ `OCSClient` interface โดยไม่รู้ว่าข้างหลังคือ Legacy OCS หรือไม่ |
+| **แปลง Type และ Format อัตโนมัติ (Type/format translation)** | Adapter แปลง `SciencePlanDTO` (ระบบใหม่) ไปเป็น `edu.gemini.app.ocs.model.SciencePlan` (ระบบ Legacy) รวมถึงแปลง enum และ date format |
+| **ความสามารถในการเปลี่ยนระบบ (Replaceability)** | หากต้องการเปลี่ยนระบบ OCS ในอนาคต เพียงสร้าง Adapter ใหม่ที่ implement `OCSClient` โดยไม่ต้องแก้ไขโค้ดส่วนอื่น |
+
+**เหตุผลที่ Adapter มีความเหมาะสม:** ระบบต้องติดต่อกับ Gemini OCS Library ซึ่งเป็นระบบภายนอก (Legacy) ที่มี API แตกต่างจากระบบใหม่ทั้งหมด `LegacyOCSAdapter` ทำหน้าที่เป็นตัวกลางแปลงภาษาระหว่าง modern DTO-based API กับ legacy API โดยที่ทั้ง Application layer และ OCS Library ไม่ต้องรู้จักกันตรงๆ
+
+---
+
+## Pattern 4 — Factory (Static Factory Method)
 
 ### Category
 **Creational Pattern**
 
 ### Location
 
-| File | Lines | Role |
-|------|-------|------|
-| `src/main/java/.../Model/User.java` | Lines 1–50 | Abstract product + concrete products |
-| `src/main/java/.../Controller/UserController.java` | Lines 23–39 | Direct instantiation (no factory) |
+| File | Role |
+|------|------|
+| `src/main/java/.../Factory/SciencePlanFactory.java` | Factory (สร้างและแปลง SciencePlan objects) |
+| `src/main/java/.../Domain/DTO/SciencePlanDTO.java` | Input DTO |
+| `src/main/java/.../Domain/Model/SciencePlan.java` | Product (entity ที่ถูกสร้าง) |
 
 ### Code Snippet
 
 ```java
-// User.java — Abstract "Product" with concrete subtypes
-@Entity
-@Table(name = "users")
-@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
-@DiscriminatorColumn(name = "user_type", discriminatorType = DiscriminatorType.STRING)
-public abstract class User {       // ← Abstract Product
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private Integer id;
-    private String name;
-    private String passwd;
-    private String email;
-    // ... getters/setters ...
+// SciencePlanFactory.java — Static Factory Methods
+public class SciencePlanFactory {
 
-    @Entity
-    @DiscriminatorValue("ASTRONOMER")
-    public static class Astronomer extends User { }    // ← Concrete Product A
+    // Factory Method: สร้าง SciencePlan entity จาก DTO
+    public static SciencePlan createPlan(SciencePlanDTO dto) {
+        SciencePlan plan = new SciencePlan();
+        updateEntityFromDTO(plan, dto);
+        plan.setState(PlanStatus.CREATED);
+        plan.setLastModified(LocalDateTime.now());
+        return plan;
+    }
 
-    @Entity
-    @DiscriminatorValue("OBSERVER")
-    public static class ScienceObserver extends User { }  // ← Concrete Product B
+    // Factory Method: แปลง SciencePlan entity กลับเป็น DTO
+    public static SciencePlanDTO convertToDTO(SciencePlan plan) {
+        if (plan == null) return null;
+        SciencePlanDTO dto = new SciencePlanDTO();
+        dto.setId(plan.getPlanId());
+        dto.setPlanName(plan.getPlanName());
+        // ...
+        return dto;
+    }
 }
 ```
-
 
 ```java
-// UserController.java — Lines 56–63: instanceof check (anti-pattern for Factory Method)
-String role = "USER";
-if (user instanceof User.Astronomer) {
-    role = "ASTRONOMER";
-} else if (user instanceof User.ScienceObserver) {
-    role = "SCIENCE_OBSERVER";
+// SciencePlanServiceImpl.java — calls Factory
+@Override
+public SciencePlan createPlan(SciencePlanDTO dto) {
+    validateDates(dto);
+    SciencePlan plan = SciencePlanFactory.createPlan(dto);  // ← Factory creates object
+    // ...
+    return repository.save(plan);
 }
 ```
 
+### เหตุผลที่เลือกใช้ Factory
 
-### เหตุใดจึงใช้ Singleton/การสร้างอินสแตนซ์โดยตรงแทน
+| ข้อดี | คำอธิบาย |
+|---------|-------------|
+| **รวม object creation logic (Centralized creation logic)** | ตรรกะการแปลง DTO → Entity อยู่ที่เดียวใน `SciencePlanFactory` ไม่กระจายใน Service หรือ Controller |
+| **ลด code duplication** | `createPlan()` และ `updateEntityFromDTO()` ถูกใช้ซ้ำใน `SciencePlanServiceImpl` และ `SciencePlanServiceProxy` ทำให้ไม่ต้องเขียน mapping ซ้ำ |
+| **ตั้งค่า Default State (Default state initialization)** | Factory กำหนด `PlanStatus.CREATED` และ `lastModified` ให้อัตโนมัติ ผู้เรียกใช้ไม่ต้องกังวล |
 
-โปรเจกต์ในปัจจุบันมีขนาดเล็ก (มี entity ประเภทเดียว, สอง endpoints) จึงเลือกที่จะรักษาความเรียบง่าย โดยการสร้างอินสแตนซ์ของคลาสย่อยโดยตรงในคอนโทรลเลอร์ สำหรับขอบเขตปัจจุบัน วิธีนี้สามารถทำงานได้
+**เหตุผลที่ Factory มีความเหมาะสม:** `SciencePlanFactory` รวม object creation logic ของ `SciencePlan` ไว้ที่เดียว รวมถึงการตั้งค่า initial state และการแมป enum/date จาก DTO โดยที่ Service layer ไม่ต้องรู้รายละเอียดการสร้าง object
 
 ---
 
@@ -386,11 +491,16 @@ if (user instanceof User.Astronomer) {
 
 | File | MVC Role |
 |------|----------|
-| `src/main/java/.../Model/User.java` | **Model** — domain entity |
+| `src/main/java/.../Domain/Model/User.java` | **Model** — domain entity |
+| `src/main/java/.../Domain/Model/SciencePlan.java` | **Model** — domain entity |
+| `src/main/java/.../Domain/Model/DataProcessingRequirements.java` | **Model** — domain entity |
 | `src/main/java/.../Controller/UserController.java` | **Controller** — handles HTTP requests |
+| `src/main/java/.../Controller/SciencePlanController.java` | **Controller** — handles HTTP requests |
 | JSON `ResponseEntity` bodies | **View** — REST API responses |
-| `src/main/java/.../Service/UserService.java` | Business logic layer (between C and M) |
-| `src/main/java/.../Repositories/UserRepository.java` | Data access (below Model) |
+| `src/main/java/.../Application/UserService.java` | Business logic layer (between C and M) |
+| `src/main/java/.../Application/SciencePlanServiceProxy.java` | Business logic layer with Proxy (between C and M) |
+| `src/main/java/.../Repository/SciencePlanRepository.java` | Data access (below Model) |
+| `src/main/java/.../Repository/UserRepository.java` | Data access (below Model) |
 
 ### Code Snippet
 
@@ -398,25 +508,28 @@ if (user instanceof User.Astronomer) {
 HTTP Request
     │
     ▼
-UserController  ──── @Controller ────► Handles request, calls service
+SciencePlanController  ── @RestController ──► Handles request, calls service
     │
     ▼
-UserService  ──── @Service ──────────► Business logic (Facade)
+SciencePlanServiceProxy  ── @Service @Primary ──► Access control + Logging (Proxy)
     │
     ▼
-UserRepository  ── @Repository ──────► Data access (Proxy)
+SciencePlanServiceImpl  ── @Service ──────────► Business logic (Real Subject)
     │
     ▼
-User (H2 Database)  ── @Entity ──────► Persistent model
+SciencePlanRepository  ── @Repository ──────► Data access (Spring Data JPA Proxy)
+    │
+    ▼
+SciencePlan (H2 Database)  ── @Entity ──────► Persistent model
 ```
 
 ### วิธีการนำ MVC มาใช้งาน
 
-- **Model (`User.java`):** กำหนดโครงสร้างข้อมูล ใช้ JPA Annotation สำหรับการจัดเก็บข้อมูล (persistence) เป็นแหล่งความจริงเดียว (single source of truth) ของนิยามคำว่า "ผู้ใช้"
-- **View:** ไม่มี HTML template นี่คือ REST API ดังนั้น "วิว" จึงเป็นเนื้อหา JSON ที่ส่งกลับมาผ่าน `ResponseEntity` โดยnAnnotation `@ResponseBody` ของ Spring จะทำการแปลง Java objects ให้เป็น JSON โดยอัตโนมัติ
-- **Controller (`UserController.java`):** รับ HTTP requests ผ่าน `@GetMapping` / `@PostMapping`, สกัดเอาข้อมูลนำเข้า, มอบหมายการทำงานให้กับ service, และจัดรูปแบบการตอบกลับ
+- **Model (`User.java`, `SciencePlan.java`, `DataProcessingRequirements.java`):** กำหนดโครงสร้างข้อมูล ใช้ JPA Annotation สำหรับการจัดเก็บข้อมูล (persistence) เป็นแหล่งความจริงเดียว (single source of truth) ของนิยามข้อมูลในระบบ
+- **View:** ไม่มี HTML template นี่คือ REST API ดังนั้น "วิว" จึงเป็นเนื้อหา JSON ที่ส่งกลับมาผ่าน `ResponseEntity` โดย Annotation `@ResponseBody` ของ Spring จะทำการแปลง Java objects ให้เป็น JSON โดยอัตโนมัติ
+- **Controller (`UserController.java`, `SciencePlanController.java`):** รับ HTTP requests ผ่าน `@GetMapping` / `@PostMapping` / `@PutMapping`, สกัดเอาข้อมูลนำเข้า, มอบหมายการทำงานให้กับ service, และจัดรูปแบบการตอบกลับ
 
-รูปแบบ MVC ดั้งเดิมถูกขยายเพิ่มเติมด้วย **Service Layer** ที่คั่นระหว่าง Controller และ Model ซึ่งถือเป็นมาตรฐานในแอปพลิเคชัน Spring ระดับ enterprise (บางครั้งเรียกว่า MVC+S หรือ layered architecture)
+รูปแบบ MVC ดั้งเดิมถูกขยายเพิ่มเติมด้วย **Service Layer + Proxy** ที่คั่นระหว่าง Controller และ Model ซึ่งถือเป็นมาตรฐานในแอปพลิเคชัน Spring ระดับ enterprise (บางครั้งเรียกว่า MVC+S หรือ layered architecture)
 
 ### เหตุผลที่เลือกใช้ MVC
 
@@ -425,7 +538,7 @@ User (H2 Database)  ── @Entity ──────► Persistent model
 | **การแยกส่วนความรับผิดชอบ (Separation of concerns)** | การจัดการ HTTP, business logic และ การจัดเก็บข้อมูลถูกแยกออกจากกันอย่างเป็นอิสระ |
 | **ความสามารถในการทดสอบแยกอิสระ (Independent testability)** | แต่ละชั้นสามารถทำ unit-test แบบแยกอิสระได้ |
 | **ความสอดคล้องกับเฟรมเวิร์ก (Framework alignment)** | Spring Boot ถูกสร้างขึ้นโดยมีพื้นฐานมาจาก MVC การพยายามฝืนใช้รูปแบบอื่นจะเพิ่มความซับซ้อนโดยไม่จำเป็น |
-| **ความสามารถในการบำรุงรักษา (Maintainability)** | การเพิ่ม endpoint ใหม่ ต้องการเพียงการเปลี่ยนแปลงในค Controller เท่านั้น ไม่ใช่ใน โมเดล หรือ service |
+| **ความสามารถในการบำรุงรักษา (Maintainability)** | การเพิ่ม endpoint ใหม่ต้องการเพียงการเปลี่ยนแปลงใน Controller เท่านั้น ไม่ใช่ใน Model หรือ Service |
 
 ---
 ---
@@ -436,22 +549,22 @@ User (H2 Database)  ── @Entity ──────► Persistent model
 
 ### Overall Assessment
 
-| Dimension | Coverage| Comment |
-|-----------|--------|---------|
-| **ความครอบคลุมของแพตเทิร์น (Pattern Coverage)** | ✅ | MVC, Singleton, Proxy, และ Facade มีความแข็งแกร่ง |
-| **ความถูกต้องของแพตเทิร์น (Pattern Correctness)** | ✅ | มี Factory Method ครบ |
+| Dimension | Coverage | Comment |
+|-----------|----------|---------|
+| **ความครอบคลุมของแพตเทิร์น (Pattern Coverage)** | ✅ | MVC, Singleton, Proxy, Adapter, และ Factory ครอบคลุมครบ |
+| **ความถูกต้องของแพตเทิร์น (Pattern Correctness)** | ✅ | ทุก pattern มี implementation ที่ชัดเจนและเป็น textbook |
 | **คุณภาพของโค้ด (Code Quality)** | ✅ | ครบถ้วนและปลอดภัย |
 | **ความสามารถในการบำรุงรักษา (Maintainability)** | ✅ | Structure ต่างๆ เขียนตามหลัก Software Design Principles ทำให้ดูและรักษาง่าย |
 
 ### Summary
 
-โปรเจกต์นี้แสดงให้เห็นถึง **ความเข้าใจพื้นฐานที่แข็งแกร่งเกี่ยวกับดีไซน์แพตเทิร์นด้านโครงสร้างและการสร้าง** ซึ่งประยุกต์ใช้ผ่านเฟรมเวิร์ก Spring Boot:
+โปรเจกต์นี้แสดงให้เห็นถึง **การประยุกต์ใช้ Design Patterns อย่างครอบคลุมและถูกต้อง** ผ่านเฟรมเวิร์ก Spring Boot:
 
-- แพตเทิร์น **Singleton**, **Proxy**, และ **Facade** ถูกนำมาใช้งานอย่างถูกต้องและเป็นไปตามแบบแผน โดยใช้ประโยชน์จากการสนับสนุนที่มีอยู่แล้วในระบบของ Spring
-- **แพตเทิร์นสถาปัตยกรรม MVC** ถูกประยุกต์ใช้อย่างเหมาะสมด้วยการแบ่งชั้นการทำงานสามชั้นที่ชัดเจน
-- ลำดับชั้นของผลิตภัณฑ์ใน **Factory Method** ได้ถูกจัดเตรียมไว้แล้ว (`User` → `Astronomer` / `ScienceObserver`) แต่ตัว factory เองยังไม่ได้รับการอิมพลีเมนต์ — คอนโทรลเลอร์ข้ามขั้นตอนดังกล่าวด้วยการเรียกใช้ `new` โดยตรง และใช้การตรวจสอบด้วย `instanceof`
-
-การเปลี่ยนแปลงเหล่านี้ จะยกระดับฐานโค้ดจากต้นแบบที่ใช้งานได้ ไปสู่ Web Application ที่มีสถาปัตยกรรมที่ดี และ สามารถบำรุงรักษาได้ง่ายในระยะยาว
+- แพตเทิร์น **Singleton** ถูกนำมาใช้งานผ่าน Spring IoC Container สำหรับ service และ controller ทุกตัว
+- **Proxy Pattern** ถูก implement อย่างชัดเจนผ่าน `SciencePlanServiceProxy` ซึ่งทำหน้าที่เป็น Access Control และ Audit Logging layer ก่อนส่งต่อให้ `SciencePlanServiceImpl` — นอกจากนี้ Spring Data JPA repositories ก็เป็น Proxy เช่นกัน
+- **Adapter Pattern** ถูก implement ผ่าน `LegacyOCSAdapter` เพื่อเชื่อมระบบใหม่กับ Gemini OCS Library ที่มี API format แตกต่างกัน
+- **Factory Pattern** ถูก implement ผ่าน `SciencePlanFactory` ที่รวม object creation logic และ DTO-to-Entity mapping ไว้ที่เดียว
+- **MVC Architectural Pattern** ถูกประยุกต์ใช้อย่างเหมาะสมด้วยการแบ่งชั้นการทำงานที่ชัดเจน ครอบคลุมทั้ง `UserController`, `SciencePlanController`, domain models, และ repositories
 
 ---
 ---

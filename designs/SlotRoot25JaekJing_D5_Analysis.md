@@ -3,7 +3,7 @@
 <img width="4204" height="4484" alt="ACTVD create" src="https://github.com/user-attachments/assets/2b274b40-1b5c-4403-aa1a-d45ef1347563" />
 
 ## Sequence Diagram
-<img width="2348" height="1535" alt="SqD CreateSciencePlan" src="https://github.com/user-attachments/assets/1efebc5c-aef4-46a8-a8e1-2711afbb6961" />
+<img width="3077" height="2780" alt="science_plan_creation" src="https://github.com/user-attachments/assets/778e5e69-ed75-4530-b3bb-4be356826d99" />
 
 ---
 
@@ -12,7 +12,7 @@
 <img width="4768" height="5444" alt="ACTVD Test" src="https://github.com/user-attachments/assets/bd577438-d466-45c6-8fcb-e440952affef" />
 
 ## Sequence Diagram
-<img width="2469" height="1546" alt="SqD TestSciencePlan" src="https://github.com/user-attachments/assets/e7054c7f-fdc7-49e9-bc2e-e07ceff6d6ef" />
+<img width="1238" height="1383" alt="science_plan_test" src="https://github.com/user-attachments/assets/065b63c4-efd4-4d1c-84a2-d1a4a8784892" />
 
 ---
 
@@ -21,9 +21,9 @@
 <img width="4768" height="4684" alt="ACTVD Validate" src="https://github.com/user-attachments/assets/3bbacfcc-e7c3-4789-998d-0d427b3836e0" />
 
 ## Sequence Diagram
-<img width="1655" height="1602" alt="SqD ValidateSciencePlan" src="https://github.com/user-attachments/assets/6dd50b94-b9ee-4f93-ac85-41232194b9cd" />
+<img width="2968" height="4591" alt="science_plan_validation" src="https://github.com/user-attachments/assets/45a3bea6-c421-4122-a453-5ed54254be2d" />
 
 ---
 
 # Class Diagram
-<img width="3012" height="1504" alt="ClassD Phase2 Ver2" src="https://github.com/user-attachments/assets/3df831ef-fc8a-42f6-ba19-db32e4355fed" />
+<img width="1213" height="2270" alt="ClassD Phase2 Ver3" src="https://github.com/user-attachments/assets/223ef263-79f1-4016-82c9-129c716de932" />

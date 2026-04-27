@@ -48,7 +48,8 @@ export default function SubmitSciencePlan() {
       }
 
       setMessage(`Plan ${plan.planId} submitted successfully.`);
-      fetchPlans();
+
+      setPlans((prev) => prev.filter((p) => p.planId !== plan.planId));
     } catch (err) {
       console.error("Submit error:", err);
       setMessage("Failed to submit plan. Please try again.");
@@ -56,10 +57,11 @@ export default function SubmitSciencePlan() {
   };
 
   const filteredSorted = [...plans]
-    .filter((p) =>
-      p.planName.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      p.target.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      String(p.planId).includes(searchTerm)
+    .filter(
+      (p) =>
+        p.planName.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        p.target.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        String(p.planId).includes(searchTerm),
     )
     .sort((a, b) => {
       const da = new Date(a.updatedAt).getTime();
@@ -106,7 +108,10 @@ export default function SubmitSciencePlan() {
             </div>
 
             <div className="sel-wrap">
-              <select value={sortBy} onChange={(e) => setSortBy(e.target.value)}>
+              <select
+                value={sortBy}
+                onChange={(e) => setSortBy(e.target.value)}
+              >
                 <option value="modified-newest">Last Modified (Newest)</option>
                 <option value="modified-oldest">Last Modified (Oldest)</option>
               </select>
@@ -129,11 +134,15 @@ export default function SubmitSciencePlan() {
               <tbody>
                 {filteredSorted.map((plan) => (
                   <tr key={plan.planId}>
-                    <td><span className="plan-id">{plan.planId}</span></td>
+                    <td>
+                      <span className="plan-id">{plan.planId}</span>
+                    </td>
                     <td>{plan.planName}</td>
                     <td className="text-muted">{plan.target}</td>
                     <td className="text-muted">{plan.telescope}</td>
-                    <td><span className="badge badge-created">{plan.status}</span></td>
+                    <td>
+                      <span className="badge badge-created">{plan.status}</span>
+                    </td>
                     <td style={{ textAlign: "right" }}>
                       <button
                         className="btn-primary"
@@ -147,7 +156,10 @@ export default function SubmitSciencePlan() {
 
                 {filteredSorted.length === 0 && (
                   <tr>
-                    <td colSpan="6" style={{ textAlign: "center", padding: "32px" }}>
+                    <td
+                      colSpan="6"
+                      style={{ textAlign: "center", padding: "32px" }}
+                    >
                       No science plans available for submission.
                     </td>
                   </tr>

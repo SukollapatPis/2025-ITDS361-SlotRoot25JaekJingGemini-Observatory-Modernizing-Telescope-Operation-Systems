@@ -124,87 +124,75 @@ function PlanDetails({ plan }) {
             </p>
           </div>
 
-          {(plan.dataProcessing?.colorMode ||
-            plan.raw?.requirements?.colorType) === "COLOR" && (
-            <>
-              <div className="detail-item">
-                <label>Brightness</label>
-                <p>
-                  {plan.dataProcessing?.brightness ??
-                    plan.raw?.requirements?.brightness ??
-                    "-"}
-                </p>
-              </div>
+          <div className="detail-item">
+            <label>Brightness</label>
+            <p>
+              {plan.dataProcessing?.brightness ??
+                plan.raw?.requirements?.brightness ??
+                "-"}
+            </p>
+          </div>
 
-              <div className="detail-item">
-                <label>Saturation</label>
-                <p>
-                  {plan.dataProcessing?.saturation ??
-                    plan.raw?.requirements?.saturation ??
-                    "-"}
-                </p>
-              </div>
+          <div className="detail-item">
+            <label>Saturation</label>
+            <p>
+              {plan.dataProcessing?.saturation ??
+                plan.raw?.requirements?.saturation ??
+                "-"}
+            </p>
+          </div>
 
-              <div className="detail-item">
-                <label>Luminance</label>
-                <p>
-                  {plan.dataProcessing?.luminance ??
-                    plan.raw?.requirements?.luminance ??
-                    "-"}
-                </p>
-              </div>
+          <div className="detail-item">
+            <label>Luminance</label>
+            <p>
+              {plan.dataProcessing?.luminance ??
+                plan.raw?.requirements?.luminance ??
+                "-"}
+            </p>
+          </div>
 
-              <div className="detail-item">
-                <label>Hue</label>
-                <p>
-                  {plan.dataProcessing?.hue ??
-                    plan.raw?.requirements?.hue ??
-                    "-"}
-                </p>
-              </div>
-            </>
-          )}
+          <div className="detail-item">
+            <label>Hue</label>
+            <p>
+              {plan.dataProcessing?.hue ?? plan.raw?.requirements?.hue ?? "-"}
+            </p>
+          </div>
 
-          {(plan.dataProcessing?.colorMode ||
-            plan.raw?.requirements?.colorType) === "BW" && (
-            <>
-              <div className="detail-item">
-                <label>Highlights</label>
-                <p>
-                  {plan.dataProcessing?.highlights ??
-                    plan.raw?.requirements?.highlights ??
-                    "-"}
-                </p>
-              </div>
+          <div className="detail-item">
+            <label>Highlights</label>
+            <p>
+              {plan.dataProcessing?.highlights ??
+                plan.raw?.requirements?.highlights ??
+                "-"}
+            </p>
+          </div>
 
-              <div className="detail-item">
-                <label>Shadows</label>
-                <p>
-                  {plan.dataProcessing?.shadows ??
-                    plan.raw?.requirements?.shadows ??
-                    "-"}
-                </p>
-              </div>
+          <div className="detail-item">
+            <label>Shadows</label>
+            <p>
+              {plan.dataProcessing?.shadows ??
+                plan.raw?.requirements?.shadows ??
+                "-"}
+            </p>
+          </div>
 
-              <div className="detail-item">
-                <label>Whites</label>
-                <p>
-                  {plan.dataProcessing?.whites ??
-                    plan.raw?.requirements?.whites ??
-                    "-"}
-                </p>
-              </div>
+          <div className="detail-item">
+            <label>Whites</label>
+            <p>
+              {plan.dataProcessing?.whites ??
+                plan.raw?.requirements?.whites ??
+                "-"}
+            </p>
+          </div>
 
-              <div className="detail-item">
-                <label>Blacks</label>
-                <p>
-                  {plan.dataProcessing?.blacks ??
-                    plan.raw?.requirements?.blacks ??
-                    "-"}
-                </p>
-              </div>
-            </>
-          )}
+          <div className="detail-item">
+            <label>Blacks</label>
+            <p>
+              {plan.dataProcessing?.blacks ??
+                plan.raw?.requirements?.blacks ??
+                "-"}
+            </p>
+          </div>
         </div>
       </div>
     </div>

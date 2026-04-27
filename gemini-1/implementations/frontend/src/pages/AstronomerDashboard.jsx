@@ -9,6 +9,8 @@ const statusConfig = {
   CREATED: { label: "CREATED", className: "badge-created" },
   SUBMITTED: { label: "SUBMITTED", className: "badge-submitted" },
   INVALIDATED: { label: "INVALIDATED", className: "badge-invalidated" },
+  VALIDATED: { label: "VALIDATED", className: "badge-validated" },
+  TESTED: { label: "TESTED", className: "badge-tested" },
 };
 
 function StatusBadge({ status }) {
@@ -614,6 +616,14 @@ const css = `
   .badge-created { background: #F1F5F9; color: #475569; }
   .badge-submitted { background: #F3E8FF; color: #7E22CE; }
   .badge-invalidated { background: #FEE2E2; color: #DC2626; }
+ .badge-validated {
+  background: #DBEAFE;  
+  color: #1D4ED8;        
+}
+  .badge-tested {
+  background: #D1FAE5;  
+  color: #059669;       
+}
   .btn-primary { display: inline-flex; align-items: center; gap: 6px; padding: 0 16px; height: 40px; background: var(--brand); color: #fff; border-radius: 6px; border: none; font-weight: 500; cursor: pointer; }
   .btn-secondary { background: #F8FAFC; border: 1px solid var(--border); padding: 8px 16px; border-radius: 6px; cursor: pointer; }
   .actions-wrapper { display: flex; align-items: center; justify-content: flex-end; gap: 12px; }

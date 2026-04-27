@@ -26,4 +26,5 @@
 ---
 
 # Class Diagram
-<img width="1213" height="2270" alt="ClassD Phase2 Ver3" src="https://github.com/user-attachments/assets/223ef263-79f1-4016-82c9-129c716de932" />
+<img width="1734" height="3401" alt="ClassD Phase2 Ver3" src="https://github.com/user-attachments/assets/b1923f72-424a-4e8a-84ec-afc3f4e6e272" />
+

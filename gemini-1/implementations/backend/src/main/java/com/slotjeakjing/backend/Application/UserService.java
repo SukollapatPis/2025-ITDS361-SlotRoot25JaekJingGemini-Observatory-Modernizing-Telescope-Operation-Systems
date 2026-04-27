@@ -1,7 +1,7 @@
-package com.slotjeakjing.backend.Service;
+package com.slotjeakjing.backend.Application;
 
-import com.slotjeakjing.backend.Model.User;
-import com.slotjeakjing.backend.Repositories.UserRepository;
+import com.slotjeakjing.backend.Domain.Model.User;
+import com.slotjeakjing.backend.Repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.util.Optional;

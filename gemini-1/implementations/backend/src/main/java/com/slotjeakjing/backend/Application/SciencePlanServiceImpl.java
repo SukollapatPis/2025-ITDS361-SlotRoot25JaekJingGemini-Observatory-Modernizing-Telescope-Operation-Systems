@@ -70,7 +70,7 @@ public class SciencePlanServiceImpl implements SciencePlanService {
 
         String result = ocsClient.testPlan(plan.getOcsPlanNo());
 
-        if (result != null && !result.contains("Please check")) {
+        if (result != null && !result.contains("Please check") && !result.contains("problem")) {
             plan.setState(PlanStatus.TESTED);
             plan.setLastModified(LocalDateTime.now());
             repository.save(plan);

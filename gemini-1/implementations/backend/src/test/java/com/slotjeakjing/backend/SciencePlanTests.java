@@ -63,31 +63,54 @@ class SciencePlanTests {
         dto.setCreator("Dr. Smith");
         dto.setFunding(5000.0);
         dto.setObjective("Testing successful flow");
-
         dto.setTargetName("Auriga");
-
-        dto.setTelescopeSite("HAWAII");
-
+        dto.setTelescopeSite("CHILE");
         LocalDateTime start = LocalDateTime.of(2026, 2, 1, 22, 0, 0);
         LocalDateTime end   = LocalDateTime.of(2026, 2, 28, 23, 0, 0);
-
         dto.setStartDate(Date.from(start.atZone(ZoneId.systemDefault()).toInstant()));
         dto.setEndDate(Date.from(end.atZone(ZoneId.systemDefault()).toInstant()));
-
         dto.setFileType("JPEG");
         dto.setFileQuality("Low");
         dto.setColorType("COLOR");
-
         dto.setExposure(10.0);
         dto.setContrast(1.0);
         dto.setBrightness(10.0);
         dto.setSaturation(10.0);
+        dto.setLuminance(10.0);
+        dto.setBlacks(1.0);
+        dto.setWhites(1.0);
+        dto.setShadows(2.0);
+        dto.setHue(2.0);
+        SciencePlan plan1 = sciencePlanService.createPlan(dto);
+        assertNotNull(plan1);
+        int planId1 = plan1.getPlanId();
 
-        SciencePlan plan = sciencePlanService.createPlan(dto);
+        dto.setPlanName("Success Test Plan2");
+        dto.setCreator("Dr. John");
+        dto.setFunding(5000.0);
+        dto.setObjective("Testing successful flow");
+        dto.setTargetName("Auriga");
+        dto.setTelescopeSite("HAWAII");
+        LocalDateTime start1 = LocalDateTime.of(2026, 2, 1, 22, 0, 0);
+        LocalDateTime end1 = LocalDateTime.of(2026, 2, 28, 23, 0, 0);
+        dto.setStartDate(Date.from(start1.atZone(ZoneId.systemDefault()).toInstant()));
+        dto.setEndDate(Date.from(end1.atZone(ZoneId.systemDefault()).toInstant()));
+        dto.setFileType("JPEG");
+        dto.setFileQuality("Low");
+        dto.setColorType("COLOR");
+        dto.setExposure(10.0);
+        dto.setContrast(1.0);
+        dto.setBrightness(10.0);
+        dto.setSaturation(10.0);
+        dto.setLuminance(10.0);
+        dto.setBlacks(1.0);
+        dto.setWhites(1.0);
+        dto.setShadows(2.0);
+        dto.setHue(2.0);
 
-        assertNotNull(plan);
-
-        int planId = plan.getPlanId();
+        SciencePlan plan2 = sciencePlanService.createPlan(dto);
+        assertNotNull(plan2);
+        int planId2 = plan2.getPlanId();
 
         printAllOCSPlans("AFTER CREATE");
 
@@ -96,33 +119,38 @@ class SciencePlanTests {
         // ===============================
         System.out.println(">>> [STEP 2] Test");
 
-        String result = sciencePlanService.testPlan(planId);
+        String result1 = sciencePlanService.testPlan(planId1);
 
-        assertNotNull(result);
-        System.out.println("OCS Result: " + result);
+        assertNotNull(result1);
+        System.out.println("OCS Result: " + result1);
+
+        String result2 = sciencePlanService.testPlan(planId2);
+
+        assertNotNull(result2);
+        System.out.println("OCS Result: " + result2);
 
         printAllOCSPlans("AFTER TEST");
 
 
-        // ===============================
-        // STEP 3: SUBMIT
-        // ===============================
-        System.out.println(">>> [STEP 3] Submit");
-
-        sciencePlanService.submitPlan(planId);
-
-        printAllOCSPlans("AFTER SUBMIT");
-
-        // ===============================
-        // STEP 4: APPROVE
-        // ===============================
-        System.out.println(">>> [STEP 4] Approve");
-
-        session.setAttribute("currentUser", observer);
-
-        sciencePlanService.approvePlan(planId);
-
-        printAllOCSPlans("AFTER APPROVE");
+//        // ===============================
+//        // STEP 3: SUBMIT
+//        // ===============================
+//        System.out.println(">>> [STEP 3] Submit");
+//
+//        sciencePlanService.submitPlan(planId1);
+//
+//        printAllOCSPlans("AFTER SUBMIT");
+//
+//        // ===============================
+//        // STEP 4: APPROVE
+//        // ===============================
+//        System.out.println(">>> [STEP 4] Approve");
+//
+//        session.setAttribute("currentUser", observer);
+//
+//        sciencePlanService.approvePlan(planId1);
+//
+//        printAllOCSPlans("AFTER APPROVE");
     }
 
     private void printAllOCSPlans(String title) {

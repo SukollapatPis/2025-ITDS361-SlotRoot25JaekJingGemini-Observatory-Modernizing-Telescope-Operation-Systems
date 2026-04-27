@@ -1,42 +1,54 @@
-import { useState, useEffect } from 'react'
-import { useNavigate } from 'react-router-dom'
-import { Telescope } from 'lucide-react';
+import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import { Telescope } from "lucide-react";
 
 // ============================================================
 // STATUS BADGE
 // ============================================================
 const statusConfig = {
-  SUBMITTED: { label: 'Submitted', className: 'badge-submitted' },
-  VALIDATED: { label: 'Validated', className: 'badge-validated' },
-  INVALIDATED: { label: 'Invalidated', className: 'badge-invalidated' },
-  RUNNING: { label: 'Running', className: 'badge-running' },
-  CREATED: { label: 'Created', className: 'badge-created' },
-  TESTED: { label: 'Tested', className: 'badge-tested' },
-  COMPLETE: { label: 'Complete', className: 'badge-complete' },
-  CANCELLED: { label: 'Cancelled', className: 'badge-cancelled' },
-}
+  SUBMITTED: { label: "Submitted", className: "badge-submitted" },
+  VALIDATED: { label: "Validated", className: "badge-validated" },
+  INVALIDATED: { label: "Invalidated", className: "badge-invalidated" },
+  RUNNING: { label: "Running", className: "badge-running" },
+  CREATED: { label: "Created", className: "badge-created" },
+  TESTED: { label: "Tested", className: "badge-tested" },
+  COMPLETE: { label: "Complete", className: "badge-complete" },
+  CANCELLED: { label: "Cancelled", className: "badge-cancelled" },
+};
 
 function StatusBadge({ status }) {
-  const cfg = statusConfig[status] || { label: status, className: 'badge-created' }
-  return <span className={`badge ${cfg.className}`}>{cfg.label}</span>
+  const cfg = statusConfig[status] || {
+    label: status,
+    className: "badge-created",
+  };
+  return <span className={`badge ${cfg.className}`}>{cfg.label}</span>;
 }
 
 // ============================================================
 // PLAN DETAILS
 // ============================================================
 function PlanDetails({ plan }) {
-  const dp = plan.requirements || {}
+  const dp = plan.requirements || {};
   return (
     <div>
       <div className="detail-grid">
-        <div className="detail-item detail-full" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+        <div
+          className="detail-item detail-full"
+          style={{
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "flex-start",
+          }}
+        >
           <div>
             <label>Plan Name</label>
             <p style={{ fontWeight: 600 }}>{plan.planName}</p>
           </div>
-          <div style={{ textAlign: 'right' }}>
+          <div style={{ textAlign: "right" }}>
             <label>Status</label>
-            <p><StatusBadge status={plan.state} /></p>
+            <p>
+              <StatusBadge status={plan.state} />
+            </p>
           </div>
         </div>
         <div className="detail-item">
@@ -49,11 +61,17 @@ function PlanDetails({ plan }) {
         </div>
         <div className="detail-item">
           <label>Start Date</label>
-          <p>{plan.startDate ? new Date(plan.startDate).toLocaleDateString() : '-'}</p>
+          <p>
+            {plan.startDate
+              ? new Date(plan.startDate).toLocaleDateString()
+              : "-"}
+          </p>
         </div>
         <div className="detail-item">
           <label>End Date</label>
-          <p>{plan.endDate ? new Date(plan.endDate).toLocaleDateString() : '-'}</p>
+          <p>
+            {plan.endDate ? new Date(plan.endDate).toLocaleDateString() : "-"}
+          </p>
         </div>
         <div className="detail-item">
           <label>Telescope</label>
@@ -65,28 +83,91 @@ function PlanDetails({ plan }) {
         </div>
         <div className="detail-item detail-full">
           <label>Objective</label>
-          <div style={{ background: 'var(--bg)', border: '1px solid var(--border)', borderRadius: 8, padding: '10px 12px', marginTop: 4 }}>
+          <div
+            style={{
+              background: "var(--bg)",
+              border: "1px solid var(--border)",
+              borderRadius: 8,
+              padding: "10px 12px",
+              marginTop: 4,
+            }}
+          >
             <p>{plan.objective}</p>
           </div>
         </div>
       </div>
 
       {plan.requirements && (
-        <div style={{ borderTop: '1px solid var(--border)', marginTop: 20, paddingTop: 16 }}>
-          <p style={{ fontWeight: 700, fontSize: 14, marginBottom: 14 }}>Data Processing Requirements</p>
+        <div
+          style={{
+            borderTop: "1px solid var(--border)",
+            marginTop: 20,
+            paddingTop: 16,
+          }}
+        >
+          <p style={{ fontWeight: 700, fontSize: 14, marginBottom: 14 }}>
+            Data Processing Requirements
+          </p>
           <div className="detail-grid">
-            <div className="detail-item"><label>File Type</label><p>{dp.fileType}</p></div>
-            <div className="detail-item"><label>File Quality</label><p>{dp.fileQuality}</p></div>
-            <div className="detail-item"><label>Color Type</label><p>{dp.colorType}</p></div>
-            <div className="detail-item"><label>Contrast</label><p>{dp.contrast}</p></div>
-            <div className="detail-item"><label>Exposure</label><p>{dp.exposure}</p></div>
-            <div className="detail-item"><label>Brightness</label><p>{dp.brightness}</p></div>
-            <div className="detail-item"><label>Saturation</label><p>{dp.saturation}</p></div>
+            <div className="detail-item">
+              <label>File Type</label>
+              <p>{dp.fileType ?? "-"}</p>
+            </div>
+            <div className="detail-item">
+              <label>File Quality</label>
+              <p>{dp.fileQuality ?? "-"}</p>
+            </div>
+            <div className="detail-item">
+              <label>Color Type</label>
+              <p>{dp.colorType ?? "-"}</p>
+            </div>
+            <div className="detail-item">
+              <label>Contrast</label>
+              <p>{dp.contrast ?? "-"}</p>
+            </div>
+            <div className="detail-item">
+              <label>Exposure</label>
+              <p>{dp.exposure ?? "-"}</p>
+            </div>
+
+            <div className="detail-item">
+              <label>Brightness</label>
+              <p>{dp.brightness ?? "-"}</p>
+            </div>
+            <div className="detail-item">
+              <label>Saturation</label>
+              <p>{dp.saturation ?? "-"}</p>
+            </div>
+            <div className="detail-item">
+              <label>Luminance</label>
+              <p>{dp.luminance ?? "-"}</p>
+            </div>
+            <div className="detail-item">
+              <label>Hue</label>
+              <p>{dp.hue ?? "-"}</p>
+            </div>
+
+            <div className="detail-item">
+              <label>Highlights</label>
+              <p>{dp.highlights ?? "-"}</p>
+            </div>
+            <div className="detail-item">
+              <label>Shadows</label>
+              <p>{dp.shadows ?? "-"}</p>
+            </div>
+            <div className="detail-item">
+              <label>Whites</label>
+              <p>{dp.whites ?? "-"}</p>
+            </div>
+            <div className="detail-item">
+              <label>Blacks</label>
+              <p>{dp.blacks ?? "-"}</p>
+            </div>
           </div>
         </div>
       )}
     </div>
-  )
+  );
 }
 
 // ============================================================
@@ -101,188 +182,240 @@ function Toast({ toasts }) {
         </div>
       ))}
     </div>
-  )
+  );
 }
 
 // ============================================================
 // MODAL
 // ============================================================
 function Modal({ isOpen, onClose, title, children, footer }) {
-  if (!isOpen) return null
+  if (!isOpen) return null;
   return (
-    <div className="overlay" onClick={(e) => e.target.classList.contains('overlay') && onClose()}>
+    <div
+      className="overlay"
+      onClick={(e) => e.target.classList.contains("overlay") && onClose()}
+    >
       <div className="modal">
         <div className="modal-header">
           <span className="modal-title">{title}</span>
-          <button className="modal-close" onClick={onClose}>✕</button>
+          <button className="modal-close" onClick={onClose}>
+            ✕
+          </button>
         </div>
         <div className="modal-body">{children}</div>
         {footer && <div className="modal-footer">{footer}</div>}
       </div>
     </div>
-  )
+  );
 }
 
 // ============================================================
 // MAIN COMPONENT
 // ============================================================
 export function ObserverDashboard() {
-  const navigate = useNavigate()
-  const [plans, setPlans] = useState([])
-  const [loading, setLoading] = useState(true)
-  const [searchTerm, setSearchTerm] = useState('')
-  const [sortBy, setSortBy] = useState('modified-newest')
+  const navigate = useNavigate();
+  const [plans, setPlans] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [sortBy, setSortBy] = useState("modified-newest");
 
-  const [selectedPlan, setSelectedPlan] = useState(null)
-  const [isModalOpen, setIsModalOpen] = useState(false)
-  const [modalMode, setModalMode] = useState('action')
-  const [rejectReason, setRejectReason] = useState('')
-  const [toasts, setToasts] = useState([])
+  const [selectedPlan, setSelectedPlan] = useState(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [modalMode, setModalMode] = useState("action");
+  const [rejectReason, setRejectReason] = useState("");
+  const [toasts, setToasts] = useState([]);
 
-  const [user, setUser] = useState({ name: '', role: '' })
+  const [user, setUser] = useState({ name: "", role: "" });
 
   useEffect(() => {
-    const savedUser = localStorage.getItem('user')
+    const savedUser = localStorage.getItem("user");
     if (savedUser) {
-      const parsed = JSON.parse(savedUser)
-      const roleLabel = parsed.role === 'SCIENCE_OBSERVER' ? 'Science Observer'
-        : parsed.role === 'ASTRONOMER' ? 'Astronomer'
-          : parsed.role || ''
-      setUser({ name: parsed.name || '', role: roleLabel })
+      const parsed = JSON.parse(savedUser);
+      const roleLabel =
+        parsed.role === "SCIENCE_OBSERVER"
+          ? "Science Observer"
+          : parsed.role === "ASTRONOMER"
+            ? "Astronomer"
+            : parsed.role || "";
+      setUser({ name: parsed.name || "", role: roleLabel });
     }
-  }, [])
+  }, []);
 
   useEffect(() => {
     const fetchPlans = async () => {
       try {
-        setLoading(true)
-        const res = await fetch('/api/science-plans/status/SUBMITTED')
-        if (!res.ok) throw new Error('API error')
-        const data = await res.json()
-        setPlans(Array.isArray(data) ? data : [])
+        setLoading(true);
+        const res = await fetch("/api/science-plans/status/SUBMITTED");
+        if (!res.ok) throw new Error("API error");
+        const data = await res.json();
+        setPlans(Array.isArray(data) ? data : []);
       } catch (err) {
-        console.error('Failed to fetch plans:', err)
-        setPlans([])
+        console.error("Failed to fetch plans:", err);
+        setPlans([]);
       } finally {
-        setLoading(false)
+        setLoading(false);
       }
-    }
-    fetchPlans()
-  }, [])
+    };
+    fetchPlans();
+  }, []);
 
-  const showToast = (message, type = 'success') => {
-    const id = Date.now()
-    setToasts((prev) => [...prev, { id, message, type }])
-    setTimeout(() => setToasts((prev) => prev.filter((t) => t.id !== id)), 3500)
-  }
+  const showToast = (message, type = "success") => {
+    const id = Date.now();
+    setToasts((prev) => [...prev, { id, message, type }]);
+    setTimeout(
+      () => setToasts((prev) => prev.filter((t) => t.id !== id)),
+      3500,
+    );
+  };
 
   const updatePlanStatus = (planId, newStatus) => {
     setPlans((prev) =>
       prev.map((p) =>
-        p.planId === planId ? { ...p, state: newStatus, lastModified: new Date().toISOString() } : p
-      )
-    )
-  }
+        p.planId === planId
+          ? { ...p, state: newStatus, lastModified: new Date().toISOString() }
+          : p,
+      ),
+    );
+  };
 
   const handleLogout = () => {
-    localStorage.removeItem('user')
-    navigate('/')
-  }
+    localStorage.removeItem("user");
+    navigate("/");
+  };
 
   const filteredSorted = [...plans]
     .filter((p) => {
       const matchSearch =
         p.planName?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        p.target?.toLowerCase().includes(searchTerm.toLowerCase())
-      return matchSearch
+        p.target?.toLowerCase().includes(searchTerm.toLowerCase());
+      return matchSearch;
     })
     .sort((a, b) => {
-      if (sortBy === 'planId-asc') return a.planId - b.planId
-      if (sortBy === 'planId-desc') return b.planId - a.planId
-      const da = new Date(a.lastModified).getTime()
-      const db = new Date(b.lastModified).getTime()
-      return sortBy === 'modified-newest' ? db - da : da - db
-    })
+      if (sortBy === "planId-asc") return a.planId - b.planId;
+      if (sortBy === "planId-desc") return b.planId - a.planId;
+      const da = new Date(a.lastModified).getTime();
+      const db = new Date(b.lastModified).getTime();
+      return sortBy === "modified-newest" ? db - da : da - db;
+    });
 
   const openValidate = (plan) => {
-    setSelectedPlan(plan)
-    setModalMode('action')
-    setRejectReason('')
-    setIsModalOpen(true)
-  }
+    setSelectedPlan(plan);
+    setModalMode("action");
+    setRejectReason("");
+    setIsModalOpen(true);
+  };
 
   const openView = (plan) => {
-    setSelectedPlan(plan)
-    setModalMode('view')
-    setIsModalOpen(true)
-  }
+    setSelectedPlan(plan);
+    setModalMode("view");
+    setIsModalOpen(true);
+  };
 
-const handleApprove = async () => {
-  try {
-    const res = await fetch(
-      `/api/science-plans/${selectedPlan.planId}/validate?result=true&feedback=Looks good`,
-      { method: 'POST' }
-    )
-    if (!res.ok) throw new Error('API error')
-    updatePlanStatus(selectedPlan.planId, 'VALIDATED')
-    showToast(`Plan ${selectedPlan.planId} validated successfully.`, 'success')
-    setIsModalOpen(false)
-  } catch (err) {
-    console.error('Approve error:', err)
-    showToast('Failed to validate plan. Please try again.', 'error')
-  }
-}
+  const handleApprove = async () => {
+    try {
+      const res = await fetch(
+        `/api/science-plans/${selectedPlan.planId}/validate?result=true&feedback=Looks good`,
+        { method: "POST" },
+      );
+      if (!res.ok) throw new Error("API error");
+      updatePlanStatus(selectedPlan.planId, "VALIDATED");
+      showToast(
+        `Plan ${selectedPlan.planId} validated successfully.`,
+        "success",
+      );
+      setIsModalOpen(false);
+    } catch (err) {
+      console.error("Approve error:", err);
+      showToast("Failed to validate plan. Please try again.", "error");
+    }
+  };
 
-const handleReject = async () => {
-  if (!rejectReason.trim()) {
-    showToast('Please provide a reason for rejection.', 'error')
-    return
-  }
-  try {
-    const res = await fetch(
-      `/api/science-plans/${selectedPlan.planId}/validate?result=false&feedback=${encodeURIComponent(rejectReason)}`,
-      { method: 'POST' }
-    )
-    if (!res.ok) throw new Error('API error')
-    updatePlanStatus(selectedPlan.planId, 'INVALIDATED')
-    showToast(`Plan ${selectedPlan.planId} has been rejected.`, 'error')
-    setIsModalOpen(false)
-  } catch (err) {
-    console.error('Reject error:', err)
-    showToast('Failed to reject plan. Please try again.', 'error')
-  }
-}
+  const handleReject = async () => {
+    if (!rejectReason.trim()) {
+      showToast("Please provide a reason for rejection.", "error");
+      return;
+    }
+    try {
+      const res = await fetch(
+        `/api/science-plans/${selectedPlan.planId}/validate?result=false&feedback=${encodeURIComponent(rejectReason)}`,
+        { method: "POST" },
+      );
+      if (!res.ok) throw new Error("API error");
+      updatePlanStatus(selectedPlan.planId, "INVALIDATED");
+      showToast(`Plan ${selectedPlan.planId} has been rejected.`, "error");
+      setIsModalOpen(false);
+    } catch (err) {
+      console.error("Reject error:", err);
+      showToast("Failed to reject plan. Please try again.", "error");
+    }
+  };
 
   const renderFooter = () => {
-    if (modalMode === 'view')
-      return <button className="btn btn-secondary" onClick={() => setIsModalOpen(false)}>Close</button>
-    if (modalMode === 'rejecting')
+    if (modalMode === "view")
+      return (
+        <button
+          className="btn btn-secondary"
+          onClick={() => setIsModalOpen(false)}
+        >
+          Close
+        </button>
+      );
+    if (modalMode === "rejecting")
       return (
         <>
-          <button className="btn btn-secondary" onClick={() => setModalMode('action')}>Back</button>
-          <button className="btn btn-danger" onClick={handleReject}>Confirm Reject</button>
+          <button
+            className="btn btn-secondary"
+            onClick={() => setModalMode("action")}
+          >
+            Back
+          </button>
+          <button className="btn btn-danger" onClick={handleReject}>
+            Confirm Reject
+          </button>
         </>
-      )
-    if (modalMode === 'confirming')
+      );
+    if (modalMode === "confirming")
       return (
         <>
-          <button className="btn btn-secondary" onClick={() => setModalMode('action')}>Back</button>
-          <button className="btn btn-primary" onClick={handleApprove}>Confirm Validate</button>
+          <button
+            className="btn btn-secondary"
+            onClick={() => setModalMode("action")}
+          >
+            Back
+          </button>
+          <button className="btn btn-primary" onClick={handleApprove}>
+            Confirm Validate
+          </button>
         </>
-      )
+      );
     return (
       <>
-        <button className="btn btn-secondary" onClick={() => setIsModalOpen(false)}>Cancel</button>
-        <button className="btn btn-danger" onClick={() => setModalMode('rejecting')}>Reject</button>
-        <button className="btn btn-primary" onClick={() => setModalMode('confirming')}>Approve</button>
+        <button
+          className="btn btn-secondary"
+          onClick={() => setIsModalOpen(false)}
+        >
+          Cancel
+        </button>
+        <button
+          className="btn btn-danger"
+          onClick={() => setModalMode("rejecting")}
+        >
+          Reject
+        </button>
+        <button
+          className="btn btn-primary"
+          onClick={() => setModalMode("confirming")}
+        >
+          Approve
+        </button>
       </>
-    )
-  }
+    );
+  };
 
   const modalTitle =
-    selectedPlan?.state === 'SUBMITTED'
+    selectedPlan?.state === "SUBMITTED"
       ? `Validate Science Plan: #${selectedPlan?.planId}`
-      : `Science Plan Details: #${selectedPlan?.planId}`
+      : `Science Plan Details: #${selectedPlan?.planId}`;
 
   return (
     <>
@@ -302,11 +435,33 @@ const handleReject = async () => {
               <div className="user-role">{user.role}</div>
             </div>
             <div className="avatar">
-              {user.name ? user.name.split(' ').map(n => n[0]).join('').slice(-2).toUpperCase() : '?'}
+              {user.name
+                ? user.name
+                    .split(" ")
+                    .map((n) => n[0])
+                    .join("")
+                    .slice(-2)
+                    .toUpperCase()
+                : "?"}
             </div>
-            <button className="logout-btn" title="Sign out" onClick={handleLogout}>
-              <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
-                <path strokeLinecap="round" strokeLinejoin="round" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+            <button
+              className="logout-btn"
+              title="Sign out"
+              onClick={handleLogout}
+            >
+              <svg
+                width="16"
+                height="16"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+                strokeWidth="2"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"
+                />
               </svg>
             </button>
           </div>
@@ -317,8 +472,15 @@ const handleReject = async () => {
 
           <div className="controls">
             <div className="search-wrap">
-              <svg className="search-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
-                <circle cx="11" cy="11" r="8" /><path strokeLinecap="round" d="m21 21-4.35-4.35" />
+              <svg
+                className="search-icon"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+                strokeWidth="2"
+              >
+                <circle cx="11" cy="11" r="8" />
+                <path strokeLinecap="round" d="m21 21-4.35-4.35" />
               </svg>
               <input
                 type="text"
@@ -329,10 +491,19 @@ const handleReject = async () => {
             </div>
 
             <div className="sel-wrap">
-              <svg className="sel-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
+              <svg
+                className="sel-icon"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+                strokeWidth="2"
+              >
                 <path strokeLinecap="round" d="M3 7h18M6 12h12M9 17h6" />
               </svg>
-              <select value={sortBy} onChange={(e) => setSortBy(e.target.value)}>
+              <select
+                value={sortBy}
+                onChange={(e) => setSortBy(e.target.value)}
+              >
                 <option value="modified-newest">Last Modified (Newest)</option>
                 <option value="modified-oldest">Last Modified (Oldest)</option>
                 <option value="planId-asc">Plan ID (A–Z)</option>
@@ -350,43 +521,91 @@ const handleReject = async () => {
                   <th>Creator</th>
                   <th>Target</th>
                   <th>Status</th>
-                  <th style={{ textAlign: 'right' }}>Actions</th>
+                  <th style={{ textAlign: "right" }}>Actions</th>
                 </tr>
               </thead>
               <tbody>
                 {loading ? (
                   <tr>
-                    <td colSpan={6} style={{ textAlign: 'center', padding: '48px', color: '#9CA3AF' }}>
+                    <td
+                      colSpan={6}
+                      style={{
+                        textAlign: "center",
+                        padding: "48px",
+                        color: "#9CA3AF",
+                      }}
+                    >
                       Loading...
                     </td>
                   </tr>
                 ) : filteredSorted.length === 0 ? (
                   <tr>
-                    <td colSpan={6} style={{ textAlign: 'center', padding: '48px', color: '#9CA3AF' }}>
+                    <td
+                      colSpan={6}
+                      style={{
+                        textAlign: "center",
+                        padding: "48px",
+                        color: "#9CA3AF",
+                      }}
+                    >
                       There are currently no submitted science plans.
                     </td>
                   </tr>
                 ) : (
                   filteredSorted.map((plan) => (
                     <tr key={plan.planId}>
-                      <td><span className="plan-id">#{plan.planId}</span></td>
+                      <td>
+                        <span className="plan-id">#{plan.planId}</span>
+                      </td>
                       <td>{plan.planName}</td>
                       <td className="text-muted">{plan.creator?.name}</td>
                       <td className="text-muted">{plan.target}</td>
-                      <td><StatusBadge status={plan.state} /></td>
-                      <td style={{ textAlign: 'right' }}>
-                        {plan.state === 'SUBMITTED' ? (
-                          <button className="btn btn-primary" onClick={() => openValidate(plan)}>
-                            <svg width="13" height="13" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
-                              <path strokeLinecap="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                      <td>
+                        <StatusBadge status={plan.state} />
+                      </td>
+                      <td style={{ textAlign: "right" }}>
+                        {plan.state === "SUBMITTED" ? (
+                          <button
+                            className="btn btn-primary"
+                            onClick={() => openValidate(plan)}
+                          >
+                            <svg
+                              width="13"
+                              height="13"
+                              fill="none"
+                              viewBox="0 0 24 24"
+                              stroke="currentColor"
+                              strokeWidth="2.5"
+                            >
+                              <path
+                                strokeLinecap="round"
+                                d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
+                              />
                             </svg>
                             Validate
                           </button>
                         ) : (
-                          <button className="btn btn-ghost" onClick={() => openView(plan)} title="View Info">
-                            <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
-                              <path strokeLinecap="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                              <path strokeLinecap="round" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                          <button
+                            className="btn btn-ghost"
+                            onClick={() => openView(plan)}
+                            title="View Info"
+                          >
+                            <svg
+                              width="14"
+                              height="14"
+                              fill="none"
+                              viewBox="0 0 24 24"
+                              stroke="currentColor"
+                              strokeWidth="2"
+                            >
+                              <path
+                                strokeLinecap="round"
+                                d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
+                              />
+                              <path
+                                strokeLinecap="round"
+                                d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"
+                              />
                             </svg>
                           </button>
                         )}
@@ -408,10 +627,16 @@ const handleReject = async () => {
       >
         <div className="space-y-4">
           {selectedPlan && <PlanDetails plan={selectedPlan} />}
-          {modalMode === 'rejecting' && (
-            <div style={{ borderTop: '1px solid #E5E7EB', marginTop: 16, paddingTop: 16 }}>
+          {modalMode === "rejecting" && (
+            <div
+              style={{
+                borderTop: "1px solid #E5E7EB",
+                marginTop: 16,
+                paddingTop: 16,
+              }}
+            >
               <label className="reject-label">
-                Reason for Rejection <span style={{ color: '#EF4444' }}>*</span>
+                Reason for Rejection <span style={{ color: "#EF4444" }}>*</span>
               </label>
               <textarea
                 rows={4}
@@ -421,10 +646,13 @@ const handleReject = async () => {
               />
             </div>
           )}
-          {modalMode === 'confirming' && (
+          {modalMode === "confirming" && (
             <div className="confirm-box">
               <h4>Confirm Validation</h4>
-              <p>Are you sure you want to validate this science plan? This will approve the plan for execution.</p>
+              <p>
+                Are you sure you want to validate this science plan? This will
+                approve the plan for execution.
+              </p>
             </div>
           )}
         </div>
@@ -432,7 +660,7 @@ const handleReject = async () => {
 
       <Toast toasts={toasts} />
     </>
-  )
+  );
 }
 
 const css = `
@@ -534,6 +762,6 @@ const css = `
   .toast-success { border-left: 3px solid #10B981; }
   .toast-error   { border-left: 3px solid #EF4444; }
   @keyframes slideIn { from { transform: translateX(20px); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
-`
+`;
 
-export default ObserverDashboard
+export default ObserverDashboard;

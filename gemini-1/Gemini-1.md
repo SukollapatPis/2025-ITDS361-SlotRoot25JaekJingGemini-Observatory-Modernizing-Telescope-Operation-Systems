@@ -130,6 +130,13 @@ gemini-1/implementations/
 ---
 
 ## 1 — Install Dependencies & Run Backend
+**สำหรับ MacOS / Linux:**
+```bash
+cd gemini-1/implementations/backend
+./gradlew bootRun
+```
+
+**สำหรับ Windows:**
 ```bash
  cd .\gemini-1\implementations\backend\
 ./gradlew bootRun
@@ -138,6 +145,16 @@ gemini-1/implementations/
 ---
 
 ## 2 — Install Dependencies & Run Frontend 
+**สำหรับ MacOS / Linux:**
+```bash
+
+cd gemini-1/implementations/frontend
+npm install
+npm run dev
+```
+
+
+**สำหรับ Windows:**
 ```bash
 cd .\gemini-1\implementations\frontend
 npm install

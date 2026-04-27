@@ -129,62 +129,30 @@ gemini-1/implementations/
 ```
 ---
 
-## 1 — Install Dependencies Backend
-
+## 1 — Install Dependencies & Run Backend
 ```bash
-cd gemini-1/implementations/backend บลาๆๆๆๆ
-```
-
-## 2 — Install Dependencies Frontend
-```bash
-cd gemini-1/implementations/frontend บลาๆๆๆๆ
+ cd .\gemini-1\implementations\backend\
+./gradlew bootRun
 ```
 
 ---
 
-## 3 — Run the Development Server
+## 2 — Install Dependencies & Run Frontend 
 ```bash
-บลาๆๆๆๆ
+cd .\gemini-1\implementations\frontend
+npm install
+npm run dev
 ```
-
----
-## 4 — Available Endpoints
-
-| Method | Path | Description | Required Parameters / Body |
-|:---:|:---|:---|:---|
-| `GET` | `/...` | ... | ... |
-| `GET` | `/...` | ... | ... |
-| `POST` | `/...` | ... | ... |
-| `...` | `/...` | ... | ... |
+**Endpoint:** http://localhost:5173/
 
 ---
 
-### Request Body Format (Mockup)
-สำหรับ Endpoint ที่ต้องส่งข้อมูลแบบ JSON กรุณาใส่ตัวอย่างด้านล่างนี้:
+## 3 — Add User
+[Add Astronomer](http://localhost:8080/add-astronomer?name=Andy&email=andy@gmail.com ) 
 
-```json
-{
-  "key": "value",
-  "key": "value"
-}
-```
+[Add Oserver](http://localhost:8080/add-scienceObserver?name=Bob&email=bob@gmail.com)
 
 ---
-
-## 5 — Run Tests
-
-```bash
-บลาๆๆๆๆ
-```
-
-Test reports are generated at:
-
-```
-บลาๆๆๆๆ
-```
-
-
-
 
 ---
 ---

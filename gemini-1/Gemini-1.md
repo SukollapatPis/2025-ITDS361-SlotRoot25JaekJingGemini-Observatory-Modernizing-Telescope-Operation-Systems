@@ -167,7 +167,9 @@ npm run dev
 ## 3 — Add User
 [Add Astronomer](http://localhost:8080/add-astronomer?name=Andy&email=andy@gmail.com ) 
 
-[Add Oserver](http://localhost:8080/add-scienceObserver?name=Bob&email=bob@gmail.com)
+[Add Observer](http://localhost:8080/add-scienceObserver?name=Bob&email=bob@gmail.com)
+
+password: 1234
 
 ---
 
